@@ -1,0 +1,2 @@
+# InvoiceScannerApp
+Final thesis sketch
