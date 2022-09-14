@@ -1,2 +1,6 @@
 .idea/*
 test_dir/*
+resources/*
+table_extractor/models/*
+table_extractor/output_examples/*
+table_extractor/to_be_tested/*
