@@ -1,16 +1,23 @@
+from columns_seperator.column_seperator import ColumnsSeperator
 from invoice_straightener.invoice_straightener import InvoiceStraightener
 from table_extractor.table_extractor import TableExtractor
 import cv2
 
+from text_handler.cells_creator import CellsCreator
+from text_handler.text_reader import TextReader
+
+common_output_test_path = "resources/test_outputs/test_output_1.png"
 
 if __name__ == "__main__":
     file_path = "resources/censored_invoices/Invoice 1 censored.png"
-    output_straightened_path = "resources/straightened_invoices/Invoice 1 straightened.png"
-    output_extracted_table = "resources/extracted_tabled/Invoice 1 extracted table.png"
 
     straightened_invoice = InvoiceStraightener(file_path).straighten_image()
-    cv2.imwrite(output_straightened_path, straightened_invoice)
+    cv2.imwrite("resources/test_outputs/entire_flow/1.Rotated invoice.png", straightened_invoice)
 
-    table = TableExtractor(output_straightened_path).extract_table()
-    print(f"Writing image to {output_extracted_table}")
-    cv2.imwrite(output_extracted_table, table)
+    table = TableExtractor(straightened_invoice).extract_table()
+    cv2.imwrite("resources/test_outputs/entire_flow/2.Extracted table.png", table)
+
+    rotated_table, cells_in_columns = ColumnsSeperator(table).separate_cells_in_columns()
+    text_with_position = TextReader("resources/test_outputs/entire_flow/4.Table rotated by small angle.png").read_words()
+    print(text_with_position)
+    cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()

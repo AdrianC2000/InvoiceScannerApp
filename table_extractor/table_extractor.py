@@ -3,18 +3,16 @@ import cv2
 
 class TableExtractor:
 
-    def __init__(self, image_path):
-        self.image_path = image_path
+    def __init__(self, image):
+        self.image = image
 
     def extract_table(self):
-        print(f"Starting extracting the table for the image: {self.image_path}")
-        image = cv2.imread(self.image_path, cv2.IMREAD_COLOR)
-        contours = self._get_contours(image)
-        return self._find_table(image, contours, 2000)
+        contours = self._get_contours()
+        return self._find_table(contours, 2000)
 
-    def _get_contours(self, image):
+    def _get_contours(self):
         # Convert to gray scale image
-        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        gray = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
 
         # Simple threshold
         _, thr = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
@@ -27,12 +25,15 @@ class TableExtractor:
 
         return contours
 
-    def _find_table(self, image, contours, biggest_area):
+    def _find_table(self, contours, biggest_area):
         table = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
             if area > biggest_area:
                 biggest_area = area
                 x, y, width, height = cv2.boundingRect(cnt)
-                table = image[y:y + height - 1, x:x + width - 1]
+                try:
+                    table = self.image[y - 2:y + height + 2, x - 2:x + width + 2]
+                except IndexError:
+                    table = self.image[y:y + height, x:x + width]
         return table
