@@ -36,11 +36,11 @@ class ColumnsSeperator:
 
         # Get original table contours
         original_contours_image, original_table_contours = contours_definer_on_rotated.get_table_contours()
-        cv2.imwrite("resources/test_outputs/entire_flow/5.Original contours.png", original_contours_image)
+        cv2.imwrite("resources/entire_flow/5.Original contours.png", original_contours_image)
 
         # Get fixed table contours
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
-        cv2.imwrite("resources/test_outputs/entire_flow/6.Fixed contours.png", fixed_table_contours_image)
+        cv2.imwrite("resources/entire_flow/6.Fixed contours.png", fixed_table_contours_image)
 
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -57,7 +57,7 @@ class ColumnsSeperator:
             for cell in columns:
                 cv2.rectangle(table_image_copy, (cell[0], cell[1]), (cell[0] + cell[2], cell[1] + cell[3]),
                               color, 1)
-        cv2.imwrite("resources/test_outputs/entire_flow/7.Table with bounding boxes.png", table_image_copy)
+        cv2.imwrite("resources/entire_flow/7.Table with bounding boxes.png", table_image_copy)
 
     def image_to_grayscale(self):
         # thresholding the image to a binary image
@@ -67,5 +67,5 @@ class ColumnsSeperator:
             pass
         thresh, img_bin = cv2.threshold(self.table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         img_bin = 255 - img_bin
-        cv2.imwrite("resources/test_outputs/entire_flow/3.Table in grayscale.png", img_bin)
+        cv2.imwrite("resources/test_outputs/3.Table in grayscale.png", img_bin)
         return img_bin

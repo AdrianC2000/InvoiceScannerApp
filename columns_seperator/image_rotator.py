@@ -50,7 +50,7 @@ class ImageRotator:
         angle = calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
         rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                     fillcolor=255)
-        rotated_table.save("resources/test_outputs/entire_flow/4.Table rotated by small angle.png")
+        rotated_table.save("resources/entire_flow/4.Table rotated by small angle.png")
 
         return np.asarray(rotated_table)
 

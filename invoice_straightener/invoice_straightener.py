@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from PIL import Image
-from matplotlib import pyplot as plt
 from skimage import io
 from skimage.transform import rotate
 from skimage.color import rgb2gray
