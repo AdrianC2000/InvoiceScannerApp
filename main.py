@@ -1,4 +1,6 @@
 import cv2
+
+from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
 from invoice_straightener.invoice_straightener import InvoiceStraightener
 from table_extractor.table_extractor import TableExtractor
@@ -23,3 +25,4 @@ if __name__ == "__main__":
 
     cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()
     cells_with_phrases = WordsConverter(cells_with_words).merge_words_into_phrases()
+    columns_ordered = HeadersClassifier(cells_with_phrases[0]).find_corresponding_columns()

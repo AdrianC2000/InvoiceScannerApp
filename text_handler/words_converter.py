@@ -2,6 +2,9 @@ import pandas as pd
 from text_handler.cells_creator import check_percentage_inclusion
 from text_handler.entities.text_position import TextPosition
 
+SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
+SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
+
 
 def get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition) -> int:
     index = 0
@@ -40,9 +43,14 @@ def write_to_xls(cells_with_phrases: list[list[str]]):
     writer.save()
 
 
+def get_new_text(actual_text: str, text: str) -> str:
+    if actual_text[-1] in SIGNS_WITHOUT_SPACE_AFTER or text[0] in SIGNS_WITHOUT_SPACE_BEFORE:
+        return actual_text + text
+    else:
+        return actual_text + " " + text
+
+
 class WordsConverter:
-    SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
-    SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
 
     def __init__(self, texts_in_cells_with_positions: list[list[list[TextPosition]]]):
         self.__texts_in_cells_with_positions = texts_in_cells_with_positions
@@ -72,11 +80,5 @@ class WordsConverter:
                 rows_in_cell.append(text_position)
             else:
                 actual_text = rows_in_cell[row_number].text
-                new_text = self.get_new_text(actual_text, text_position.text)
+                new_text = get_new_text(actual_text, text_position.text)
                 rows_in_cell[row_number].text = new_text
-
-    def get_new_text(self, actual_text: str, text: str) -> str:
-        if actual_text[-1] in self.SIGNS_WITHOUT_SPACE_AFTER or text[0] in self.SIGNS_WITHOUT_SPACE_BEFORE:
-            return actual_text + text
-        else:
-            return actual_text + " " + text
