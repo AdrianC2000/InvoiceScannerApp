@@ -1,16 +1,19 @@
 import cv2
+from numpy import ndarray
+
+from text_handler.entities.position import Position
 
 
 class TableExtractor:
 
-    def __init__(self, image):
+    def __init__(self, image: ndarray):
         self.image = image
 
-    def extract_table(self):
+    def extract_table(self) -> tuple[ndarray, Position]:
         contours = self._get_contours()
         return self._find_table(contours, 2000)
 
-    def _get_contours(self):
+    def _get_contours(self) -> tuple[ndarray]:
         # Convert to gray scale image
         gray = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
 
@@ -25,8 +28,9 @@ class TableExtractor:
 
         return contours
 
-    def _find_table(self, contours, biggest_area):
+    def _find_table(self, contours: tuple[ndarray], biggest_area: int) -> tuple[ndarray, Position]:
         table = []
+        x, y, width, height = 0, 0, 0, 0
         for cnt in contours:
             area = cv2.contourArea(cnt)
             if area > biggest_area:
@@ -36,4 +40,4 @@ class TableExtractor:
                     table = self.image[y - 2:y + height + 2, x - 2:x + width + 2]
                 except IndexError:
                     table = self.image[y:y + height, x:x + width]
-        return table
+        return table, Position(x, y, x + width, y + height)

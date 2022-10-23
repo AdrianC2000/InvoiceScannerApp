@@ -38,7 +38,7 @@ def append_text_to_final_phrase(rows_in_cell: list[TextPosition]) -> str:
 def write_to_xls(cells_with_phrases: list[list[str]]):
     df = pd.DataFrame(cells_with_phrases)
     writer = pd.ExcelWriter("resources/entire_flow/9.Extracted table.xlsx", engine='xlsxwriter',
-                            options={'strings_to_numbers': True})
+                            engine_kwargs={'options': {'strings_to_numbers': True}})
     df.to_excel(writer, sheet_name='Extracted table', index=False)
     writer.save()
 
@@ -48,6 +48,21 @@ def get_new_text(actual_text: str, text: str) -> str:
         return actual_text + text
     else:
         return actual_text + " " + text
+
+
+def process_single_text_in_cell(rows_in_cell: list[TextPosition], text_position: TextPosition):
+    if len(rows_in_cell) == 0:
+        rows_in_cell.append(text_position)
+    else:
+        row_number = get_row_number(rows_in_cell, text_position)
+        if row_number == -1:
+            rows_in_cell.insert(0, text_position)
+        elif row_number == len(rows_in_cell):
+            rows_in_cell.append(text_position)
+        else:
+            actual_text = rows_in_cell[row_number].text
+            new_text = get_new_text(actual_text, text_position.text)
+            rows_in_cell[row_number].text = new_text
 
 
 class WordsConverter:
@@ -62,23 +77,9 @@ class WordsConverter:
             for cells in rows:
                 rows_in_cell = []
                 for text_position in cells:
-                    self.process_single_text_in_cell(rows_in_cell, text_position)
+                    process_single_text_in_cell(rows_in_cell, text_position)
                 final_phrase_in_cell = append_text_to_final_phrase(rows_in_cell)
                 row_cells.append(final_phrase_in_cell)
             cells_with_phrases.append(row_cells)
         write_to_xls(cells_with_phrases)
         return cells_with_phrases
-
-    def process_single_text_in_cell(self, rows_in_cell: list[TextPosition], text_position: TextPosition):
-        if len(rows_in_cell) == 0:
-            rows_in_cell.append(text_position)
-        else:
-            row_number = get_row_number(rows_in_cell, text_position)
-            if row_number == -1:
-                rows_in_cell.insert(0, text_position)
-            elif row_number == len(rows_in_cell):
-                rows_in_cell.append(text_position)
-            else:
-                actual_text = rows_in_cell[row_number].text
-                new_text = get_new_text(actual_text, text_position.text)
-                rows_in_cell[row_number].text = new_text
