@@ -14,6 +14,3 @@ class MatchingHeader:
     @property
     def confidence_calculation(self) -> ConfidenceCalculation:
         return self.__confidence_calculation
-
-
-

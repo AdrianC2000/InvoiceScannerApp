@@ -7,7 +7,7 @@
   "gross_price": ["cena", "jednostkowa", "jedn", "brutto", "zł"],
   "net_price": ["cena", "jednostkowa", "jedn", "netto", "zł"],
   "net_value": ["wartość", "netto", "zł"],
-  "VAT": ["stawka", "vat", "%"],
-  "VAT_value": ["wartość", "kwota", "vat", "zł"],
+  "vat": ["stawka", "vat", "%"],
+  "vat_value": ["wartość", "kwota", "vat", "zł"],
   "gross_value": ["wartość", "brutto", "zł"]
 }

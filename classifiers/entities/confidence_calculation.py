@@ -11,6 +11,3 @@ class ConfidenceCalculation:
     @property
     def confidence(self) -> float:
         return self.__confidence
-
-
-
