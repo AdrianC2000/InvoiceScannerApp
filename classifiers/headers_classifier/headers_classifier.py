@@ -8,7 +8,7 @@ from text_handler.words_converter import SIGNS_WITHOUT_SPACE_BEFORE, SIGNS_WITHO
 
 
 def load_data():
-    f = open('classifiers/headers_classifier/temporary_database.json', mode="r", encoding="utf-8")
+    f = open('classifiers/headers_classifier/temporary_table_database.json', mode="r", encoding="utf-8")
     return json.load(f)
 
 
@@ -21,13 +21,7 @@ def find_best_fit(header: str, column_patterns: json) -> ConfidenceCalculation:
         all_header_patterns = patterns[1]
         for word in header.split(" "):
             word = prepare_word(word)
-            best_actual_word_compatibility = 0
-            for header_single_word_pattern in all_header_patterns:
-                compatibility = ratio(word, header_single_word_pattern)
-                if compatibility > best_actual_word_compatibility:
-                    best_actual_word_compatibility = compatibility
-                    if compatibility > 0.9:
-                        break
+            best_actual_word_compatibility = process_all_header_patterns(all_header_patterns, word)
             summarized_compatibility += best_actual_word_compatibility
         if summarized_compatibility > actual_biggest_compatibility:
             actual_biggest_compatibility = summarized_compatibility
@@ -35,6 +29,52 @@ def find_best_fit(header: str, column_patterns: json) -> ConfidenceCalculation:
             if (summarized_compatibility / len(header.split(' '))) > 0.9:
                 break
     return ConfidenceCalculation(best_fit, (actual_biggest_compatibility / len(header.split(' '))))
+
+
+def find_best_data_fit(header: str, column_patterns: json) -> ConfidenceCalculation:
+    actual_biggest_compatibility = 0
+    best_fit = ""
+    for patterns in column_patterns.items():
+        summarized_compatibility = 0
+        column_pattern_name = patterns[0]
+        all_patterns = patterns[1].get('patterns')
+        enough_fit = patterns[1].get('enough_fit')
+        enough_fit_counter = 0
+        for word in header.split(" "):
+            word = prepare_word(word)
+            best_actual_word_compatibility = process_all_header_patterns(all_patterns, word)
+            summarized_compatibility += best_actual_word_compatibility
+            if best_actual_word_compatibility > 0.8:
+                enough_fit_counter += 1
+                if enough_fit_counter == enough_fit:
+                    return ConfidenceCalculation(column_pattern_name, 1)
+        if summarized_compatibility > actual_biggest_compatibility:
+            actual_biggest_compatibility = summarized_compatibility
+            best_fit = column_pattern_name
+            if (summarized_compatibility / len(header.split(' '))) > 0.9:
+                break
+    return ConfidenceCalculation(best_fit, (actual_biggest_compatibility / len(header.split(' '))))
+
+
+def process_all_header_patterns(all_header_patterns, word):
+    best_actual_word_compatibility = 0
+    for header_single_word_pattern in all_header_patterns:
+        compatibility = ratio(word, header_single_word_pattern)
+        if compatibility > best_actual_word_compatibility:
+            best_actual_word_compatibility = compatibility
+            if compatibility > 0.9:
+                break
+    return best_actual_word_compatibility
+
+def process_all_data_patterns(all_header_patterns, word):
+    best_actual_word_compatibility = 0
+    for header_single_word_pattern in all_header_patterns:
+        compatibility = ratio(word, header_single_word_pattern)
+        if compatibility > best_actual_word_compatibility:
+            best_actual_word_compatibility = compatibility
+            if compatibility > 0.9:
+                break
+    return best_actual_word_compatibility
 
 
 def prepare_word(word: str) -> str:

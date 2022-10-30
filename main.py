@@ -2,6 +2,7 @@ import cv2
 
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
+from data_extractor.data_extractor import DataExtractor
 from invoice_processor.invoice_straightener import InvoiceStraightener
 from invoice_processor.table_remover import TableRemover
 from parsers.table_parser import TableParser
@@ -34,5 +35,6 @@ if __name__ == "__main__":
     # Rest of the invoice handling part
     invoice_without_table = TableRemover(straightened_invoice, position).remove_table()
     cv2.imwrite("resources/entire_flow/11.Invoice without table.png", invoice_without_table)
-    blocks_with_position = TextReader("resources/entire_flow/11.Invoice without table.png") \
-        .read_blocks()
+    blocks_with_lines = TextReader("resources/entire_flow/11.Invoice without table.png").read_blocks()
+    extracted_data = DataExtractor(blocks_with_lines).extract_data()
+

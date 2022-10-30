@@ -1,0 +1,22 @@
+{
+  "seller": {
+    "patterns": ["sprzedawca"],
+    "enough_fit": 1
+  },
+  "buyer": {
+    "patterns": ["nabywca"],
+    "enough_fit": 1
+  },
+  "invoice_number": {
+    "patterns": ["faktura", "vat", "nr", "numer"],
+    "enough_fit": 2
+  },
+  "currency": {
+    "patterns": ["waluta"],
+    "enough_fit": 1
+  },
+  "listing_data": {
+    "patterns": ["data", "wystawienia"],
+    "enough_fit": 2
+  }
+}
