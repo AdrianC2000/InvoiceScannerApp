@@ -1,7 +1,7 @@
 .idea/*
 test_dir/*
 resources/*
-table_extractor/models/*
-table_extractor/output_examples/*
-table_extractor/to_be_tested/*
+extractors/table_extractor/models/*
+extractors/table_extractor/output_examples/*
+extractors/table_extractor/to_be_tested/*
 columns_seperator/output_examples/*

@@ -16,6 +16,10 @@ class BlockPosition:
     def rows(self) -> list[TextPosition]:
         return self.__rows
 
+    @rows.setter
+    def rows(self, rows: list[TextPosition]):
+        self.__rows = rows
+
 
 
 

@@ -1,12 +1,14 @@
 import cv2
 
+from classifiers.block_classifier.block_classifier import BlockClassifier
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
-from data_extractor.data_extractor import DataExtractor
+from extractors.data_extractor.blocks_extractor import BlocksExtractor
+from extractors.data_extractor.key_values_extractor import KeyValuesExtractor
 from invoice_processor.invoice_straightener import InvoiceStraightener
 from invoice_processor.table_remover import TableRemover
 from parsers.table_parser import TableParser
-from table_extractor.table_extractor import TableExtractor
+from extractors.table_extractor.table_extractor import TableExtractor
 from text_handler.cells_creator import CellsCreator
 from text_handler.text_reader import TextReader
 from text_handler.words_converter import WordsConverter
@@ -35,6 +37,7 @@ if __name__ == "__main__":
     # Rest of the invoice handling part
     invoice_without_table = TableRemover(straightened_invoice, position).remove_table()
     cv2.imwrite("resources/entire_flow/11.Invoice without table.png", invoice_without_table)
-    blocks_with_lines = TextReader("resources/entire_flow/11.Invoice without table.png").read_blocks()
-    extracted_data = DataExtractor(blocks_with_lines).extract_data()
-
+    blocks_with_rows = BlocksExtractor("resources/entire_flow/11.Invoice without table.png").read_blocks()
+    blocks_with_key_words = BlockClassifier(blocks_with_rows).extract_blocks_with_key_words()
+    extracted_keys_values = KeyValuesExtractor(blocks_with_key_words, blocks_with_rows).extract_key_values()
+    abc = 5

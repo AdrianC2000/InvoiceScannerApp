@@ -1,15 +1,20 @@
 import io
 from random import randrange
-
 import cv2
 from google.cloud import vision
-from google.cloud.vision_v1 import TextAnnotation
-
-from text_handler.entities.block_position import BlockPosition
 from text_handler.entities.position import Position
 from text_handler.entities.text_position import TextPosition
 
 COLORS_LIST = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255)]
+
+
+def get_response(image_path):
+    client = vision.ImageAnnotatorClient()
+    with io.open(image_path, "rb") as image_file:
+        content = image_file.read()
+    image = vision.Image(content=content)
+    response = client.document_text_detection(image=image, image_context={"language_hints": ["pl"]})
+    return response
 
 
 def save_table_with_bounding_boxes(table_image_path: str, texts_with_positions: list[TextPosition], flag: bool):
@@ -65,7 +70,7 @@ class TextReader:
         self.__image_path = image_path
 
     def read_words(self) -> list[TextPosition]:
-        response = self.get_response()
+        response = get_response(self.__image_path)
         texts_with_positions = []
 
         for text in response.text_annotations[1::]:
@@ -75,43 +80,3 @@ class TextReader:
         save_table_with_bounding_boxes(self.__image_path, texts_with_positions, False)
         texts_with_positions.sort()
         return texts_with_positions
-
-    def read_blocks(self) -> list[BlockPosition]:
-        response = self.get_response()
-
-        blocks_with_positions, blocks_with_lines, lines = [], [], []
-        breaks = TextAnnotation.DetectedBreak.BreakType
-
-        for page in response.full_text_annotation.pages:
-            for block in page.blocks:
-                single_block, line = "", ""
-                single_block_with_lines = []
-                for paragraph in block.paragraphs:
-                    for word in paragraph.words:
-                        for symbol in word.symbols:
-                            if line == "":
-                                starting_position = create_position(symbol.bounding_box)
-                            line += symbol.text
-                            if symbol.property.detected_break.type == breaks.SPACE:
-                                line += ' '
-                            elif symbol.property.detected_break.type == breaks.EOL_SURE_SPACE:
-                                line += ' '
-                                line, single_block = process_line(line, lines, single_block,
-                                                                  single_block_with_lines, starting_position,
-                                                                  symbol)
-                            elif symbol.property.detected_break.type == breaks.LINE_BREAK:
-                                line, single_block = process_line(line, lines, single_block,
-                                                                  single_block_with_lines, starting_position,
-                                                                  symbol)
-                blocks_with_lines.append(BlockPosition(create_position(block.bounding_box), single_block_with_lines))
-                blocks_with_positions.append(TextPosition(single_block, create_position(block.bounding_box)))
-        save_table_with_bounding_boxes(self.__image_path, blocks_with_positions, True)
-        return blocks_with_lines
-
-    def get_response(self):
-        client = vision.ImageAnnotatorClient()
-        with io.open(self.__image_path, "rb") as image_file:
-            content = image_file.read()
-        image = vision.Image(content=content)
-        response = client.document_text_detection(image=image, image_context={"language_hints": ["pl"]})
-        return response
