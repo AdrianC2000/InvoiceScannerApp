@@ -61,16 +61,16 @@ class BlockClassifier:
         self.block_positions = block_positions
 
     def extract_blocks_with_key_words(self) -> list[MatchingBlock]:
-        confidence_calculation, index, best_index = "", 0, -1
+        confidence_calculation, index, best_row_index, best_last_word_index = "", 0, -1, -1
         matching_blocks = list()
         data_patterns = load_data()
         for block in self.block_positions:
             for index, row in enumerate(block.rows):
-                best_index, _, confidence_calculation = find_best_data_fit(row.text, data_patterns)
+                best_row_index, best_last_word_index, confidence_calculation = find_best_data_fit(row.text, data_patterns)
                 if confidence_calculation.confidence > 0.9:
                     del data_patterns[confidence_calculation.value]
                     break
-            matching_blocks.append(MatchingBlock(block, confidence_calculation, index, best_index))
+            matching_blocks.append(MatchingBlock(block, confidence_calculation, index, best_row_index, best_last_word_index))
         filtered_matching_blocks = [block for block in matching_blocks if block.confidence_calculation.confidence > 0.5]
         unique_keys_blocks = remove_duplicates(filtered_matching_blocks)
         return unique_keys_blocks

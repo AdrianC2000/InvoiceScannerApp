@@ -1,23 +1,28 @@
 from classifiers.entities.matching_block import MatchingBlock
+from extractors.data_extractor.entities.search_response import SearchResponse
+from extractors.data_extractor.resolvers.currency_resolver import CurrencyResolvers
 from extractors.data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
+from extractors.data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
 from extractors.data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers
-from extractors.data_extractor.resolvers.resolver_utils import remove_redundant_data, rows_to_string
+from extractors.data_extractor.resolvers.resolver_utils import remove_redundant_data, rows_to_string, remove_key_word
+from extractors.value_finding_status import ValueFindingStatus
 from text_handler.entities.block_position import BlockPosition
 
 
-def person_info_resolver(block: MatchingBlock) -> str:
-    person_info_resolvers = PersonInfoResolvers(block)
-    nip_row_index = person_info_resolvers.get_nip_row_index()
-    address_row_index = person_info_resolvers.get_address_row_index()
-    zip_code_row_index = person_info_resolvers.get_zip_code_row_index()
-    last_row = max(nip_row_index, address_row_index, zip_code_row_index)
-    person_info_rows = block.block.rows[0:last_row + 1]
-    return rows_to_string(person_info_rows)
+def person_info_resolver(block: MatchingBlock) -> SearchResponse:
+    return PersonInfoResolvers(block).get_person_info()
 
 
-def invoice_number_resolver(block: MatchingBlock) -> str:
-    invoice_number_resolvers = InvoiceNumberResolvers(block)
-    return invoice_number_resolvers.get_invoice_number()
+def invoice_number_resolver(block: MatchingBlock) -> SearchResponse:
+    return InvoiceNumberResolvers(block).get_invoice_number()
+
+
+def currency_resolver(block: MatchingBlock) -> SearchResponse:
+    return CurrencyResolvers(block).get_currency()
+
+
+def listing_date_resolver(block: MatchingBlock) -> SearchResponse:
+    return ListingDateResolvers(block).get_listing_date()
 
 
 class KeyValuesExtractor:
@@ -29,21 +34,22 @@ class KeyValuesExtractor:
             "seller": person_info_resolver,
             "buyer": person_info_resolver,
             "invoice_number": invoice_number_resolver,
-            "currency": self.currency_resolver,
-            "listing_data": self.listing_data_resolver
+            "currency": currency_resolver,
+            "listing_date": listing_date_resolver
         }
 
-    def extract_key_values(self) -> dict[str, str]:
-        all_data = dict()
+    def preliminary_extract_key_values(self) -> list[SearchResponse]:
+        all_data = list()
         for block in self.matching_blocks_with_keywords:
             keyword = block.confidence_calculation.value
             block = remove_redundant_data(block)
-            text_values = self.methods[keyword](block)
-            all_data[keyword] = text_values
+            response = self.methods[keyword](block)
+            all_data.append(response)
         return all_data
 
-    def currency_resolver(self, block: MatchingBlock):
-         # TODO
-
-    def listing_data_resolver(self, block: MatchingBlock):
-         # TODO
+    def final_extract_key_values(self, preliminary_search_response: list[SearchResponse]) -> list[SearchResponse]:
+        not_found_responses = [response for response in preliminary_search_response
+                            if response.status != ValueFindingStatus.FOUND]
+        found_responses = [response for response in preliminary_search_response if response not in not_found_responses]
+        for response in not_found_responses:
+        # TODO -> process not found responses

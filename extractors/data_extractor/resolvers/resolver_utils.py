@@ -25,14 +25,11 @@ def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict):
 
 def get_row_index_by_regex_with_keyword(regex_pattern: str, row_index: int, rows: list[TextPosition]):
     actual_row = rows[row_index]
-    fuzzy_pattern = f'({regex_pattern}){{e<=3}}'
-    match_actual_row = regex.search(fuzzy_pattern, actual_row.text, regex.BESTMATCH)
-    if match_actual_row is not None:
+    if check_regex_for_single_word(regex_pattern, actual_row.text) is True:
         return row_index
     try:
         next_row = rows[row_index + 1]
-        match_next_row = regex.search(fuzzy_pattern, next_row.text, regex.BESTMATCH)
-        if match_next_row is not None:
+        if check_regex_for_single_word(regex_pattern, next_row.text) is True:
             return row_index + 1
     except IndexError:
         return - 1
@@ -41,12 +38,21 @@ def get_row_index_by_regex_with_keyword(regex_pattern: str, row_index: int, rows
 
 def get_row_index_by_regex(regex_pattern: str, rows: list[TextPosition]) -> int:
     for row_index, row in enumerate(rows):
-        fuzzy_pattern = f'({regex_pattern}){{e<=3}}'
-        match_actual_row = regex.search(fuzzy_pattern, row.text, regex.BESTMATCH)
-        if match_actual_row is not None:
+        if check_regex_for_single_word(regex_pattern, row.text) is True:
             return row_index
     return -1
 
 
+def check_regex_for_single_word(regex_pattern: str, word: str) -> bool:
+    fuzzy_pattern = f'({regex_pattern}){{e<=3}}'
+    match_actual_row = regex.search(fuzzy_pattern, word, regex.BESTMATCH)
+    return match_actual_row is not None
+
+
 def rows_to_string(rows: list[TextPosition]) -> str:
-    return ' '.join([row.text for row in rows])
+    return ' '.join([row.text.strip() for row in rows])
+
+
+def remove_key_word(info: str, matching_block: MatchingBlock) -> str:
+    key_word = matching_block.block.rows[0].text.split(' ')[matching_block.last_word_index]
+    return info.replace(key_word, '').strip()

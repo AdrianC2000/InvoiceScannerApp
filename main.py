@@ -39,5 +39,8 @@ if __name__ == "__main__":
     cv2.imwrite("resources/entire_flow/11.Invoice without table.png", invoice_without_table)
     blocks_with_rows = BlocksExtractor("resources/entire_flow/11.Invoice without table.png").read_blocks()
     blocks_with_key_words = BlockClassifier(blocks_with_rows).extract_blocks_with_key_words()
-    extracted_keys_values = KeyValuesExtractor(blocks_with_key_words, blocks_with_rows).extract_key_values()
+
+    key_values_extractor = KeyValuesExtractor(blocks_with_key_words, blocks_with_rows)
+    preliminary_extracted_keys_values = key_values_extractor.preliminary_extract_key_values()
+    final_keys_extraction = key_values_extractor.final_extract_key_values(preliminary_extracted_keys_values)
     abc = 5
