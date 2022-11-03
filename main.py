@@ -1,46 +1,13 @@
-import cv2
-
-from classifiers.block_classifier.block_classifier import BlockClassifier
-from classifiers.headers_classifier.headers_classifier import HeadersClassifier
-from columns_seperator.column_seperator import ColumnsSeperator
-from extractors.data_extractor.blocks_extractor import BlocksExtractor
-from extractors.data_extractor.key_values_extractor import KeyValuesExtractor
+from skimage import io
 from invoice_processor.invoice_straightener import InvoiceStraightener
-from invoice_processor.table_remover import TableRemover
-from parsers.table_parser import TableParser
-from extractors.table_extractor.table_extractor import TableExtractor
-from text_handler.cells_creator import CellsCreator
-from text_handler.text_reader import TextReader
-from text_handler.words_converter import WordsConverter
-
-common_output_test_path = "resources/test_outputs/test_output_1.png"
+from processors.data_processor import DataProcessor
+from processors.table_processor import TableProcessor
 
 if __name__ == "__main__":
     file_path = "resources/censored_invoices/Invoice 1 faked data.png"
+    invoice_image = io.imread(file_path)[:, :, :3]
 
-    straightened_invoice = InvoiceStraightener(file_path).straighten_image()
-    cv2.imwrite("resources/entire_flow/1.Rotated invoice.png", straightened_invoice)
+    straightened_invoice = InvoiceStraightener(invoice_image).straighten_image()
 
-    # Table handling part
-    table, position = TableExtractor(straightened_invoice).extract_table()
-    cv2.imwrite("resources/entire_flow/2.Extracted table.png", table)
-
-    rotated_table, cells_in_columns = ColumnsSeperator(table).separate_cells_in_columns()
-    text_with_position = TextReader("resources/entire_flow/4.Table rotated by small angle.png")\
-        .read_words()
-
-    cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()
-    cells_with_phrases = WordsConverter(cells_with_words).merge_words_into_phrases()
-    columns_ordered = HeadersClassifier(cells_with_phrases[0]).find_corresponding_columns()
-    parsed_rows = TableParser(columns_ordered, cells_with_phrases).parse_rows()
-
-    # Rest of the invoice handling part
-    invoice_without_table = TableRemover(straightened_invoice, position).remove_table()
-    cv2.imwrite("resources/entire_flow/11.Invoice without table.png", invoice_without_table)
-    blocks_with_rows = BlocksExtractor("resources/entire_flow/11.Invoice without table.png").read_blocks()
-    blocks_with_key_words = BlockClassifier(blocks_with_rows).extract_blocks_with_key_words()
-
-    key_values_extractor = KeyValuesExtractor(blocks_with_key_words, blocks_with_rows)
-    preliminary_extracted_keys_values = key_values_extractor.preliminary_extract_key_values()
-    final_keys_extraction = key_values_extractor.final_extract_key_values(preliminary_extracted_keys_values)
-    abc = 5
+    parsed_rows, invoice_without_table = TableProcessor(straightened_invoice).extract_table_data()
+    parsed_data = DataProcessor(invoice_without_table).extract_key_data()

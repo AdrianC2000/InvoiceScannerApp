@@ -6,6 +6,8 @@ from text_handler.entities.position import Position
 
 class TableExtractor:
 
+    __EXTRACTED_TABLE_OUTPUT_PATH = "resources/entire_flow/2.Extracted table.png"
+
     def __init__(self, image: ndarray):
         self.image = image
 
@@ -40,4 +42,5 @@ class TableExtractor:
                     table = self.image[y - 2:y + height + 2, x - 2:x + width + 2]
                 except IndexError:
                     table = self.image[y:y + height, x:x + width]
+        cv2.imwrite(self.__EXTRACTED_TABLE_OUTPUT_PATH, table)
         return table, Position(x, y, x + width, y + height)

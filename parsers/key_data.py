@@ -1,4 +1,4 @@
-class TableItem:
+class KeyData:
 
     def __init__(self, row: dict[str, str]):
         self.__seller = row.get("seller")

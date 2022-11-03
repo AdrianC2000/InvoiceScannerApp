@@ -49,7 +49,8 @@ class KeyValuesExtractor:
 
     def final_extract_key_values(self, preliminary_search_response: list[SearchResponse]) -> list[SearchResponse]:
         not_found_responses = [response for response in preliminary_search_response
-                            if response.status != ValueFindingStatus.FOUND]
+                               if response.status != ValueFindingStatus.FOUND]
         found_responses = [response for response in preliminary_search_response if response not in not_found_responses]
         for response in not_found_responses:
-        # TODO -> process not found responses
+            return 5
+## TODO -> process not found responses
