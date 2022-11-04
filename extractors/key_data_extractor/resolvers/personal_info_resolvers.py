@@ -2,7 +2,8 @@ from entities.matching_block import MatchingBlock
 from extractors.key_data_extractor.constants_key_words import address, nip
 from entities.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
-    get_row_index_by_regex_with_keyword, get_row_index_by_regex, rows_to_string, remove_key_word
+    get_row_index_by_regex_with_keyword, get_row_index_by_regex, rows_to_string, remove_key_word, \
+    calculate_data_position
 from extractors.value_finding_status import ValueFindingStatus
 
 
@@ -23,9 +24,11 @@ class PersonInfoResolvers:
         if last_row_index != -1:
             person_info_rows = self.__matching_block.block.rows[0:last_row_index + 1]
             value_text = remove_key_word(rows_to_string(person_info_rows), self.__matching_block)
-            return SearchResponse(key_word, value_text, ValueFindingStatus.FOUND)
+            return SearchResponse(key_word, value_text, ValueFindingStatus.FOUND,
+                                  calculate_data_position(self.__matching_block, last_row_index))
         else:
-            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT)
+            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT,
+                                  self.__matching_block.block.rows[0].position)
 
     def __get_nip_row_index(self):
         row_index = get_row_index_by_pattern(self.__matching_block, nip)

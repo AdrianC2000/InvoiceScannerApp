@@ -3,6 +3,7 @@ from regex import regex
 from classifiers.block_classifier.block_classifier import find_best_data_fit
 from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, prepare_row
+from entities.position import Position
 from entities.text_position import TextPosition
 
 
@@ -56,3 +57,13 @@ def rows_to_string(rows: list[TextPosition]) -> str:
 def remove_key_word(info: str, matching_block: MatchingBlock) -> str:
     key_word = matching_block.block.rows[0].text.split(' ')[matching_block.last_word_index]
     return info.replace(key_word, '').strip()
+
+
+def calculate_data_position(matching_block: MatchingBlock, index: int) -> Position:
+    first_row_position = matching_block.block.rows[0].position
+    last_row_position = matching_block.block.rows[index].position
+    starting_x = first_row_position.starting_x
+    starting_y = first_row_position.starting_y
+    ending_x = last_row_position.ending_x
+    ending_y = last_row_position.ending_y
+    return Position(starting_x, starting_y, ending_x, ending_y)

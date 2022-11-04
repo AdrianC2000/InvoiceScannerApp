@@ -1,12 +1,14 @@
+from entities.position import Position
 from extractors.value_finding_status import ValueFindingStatus
 
 
 class SearchResponse:
 
-    def __init__(self, key_word: str, value: str, status: ValueFindingStatus):
+    def __init__(self, key_word: str, value: str, status: ValueFindingStatus, row_position: Position):
         self.__key_word = key_word
         self.__value = value
         self.__status = status
+        self.__row_position = row_position
 
     @property
     def key_word(self) -> str:
@@ -19,3 +21,11 @@ class SearchResponse:
     @property
     def status(self) -> ValueFindingStatus:
         return self.__status
+
+    @status.setter
+    def status(self, status: ValueFindingStatus):
+        self.__status = status
+
+    @property
+    def row_position(self) -> Position:
+        return self.__row_position

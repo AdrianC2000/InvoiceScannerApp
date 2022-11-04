@@ -2,6 +2,7 @@ import cv2
 from numpy import ndarray
 
 from entities.position import Position
+from entities.table_position import TablePosition
 
 
 class TableExtractor:
@@ -11,7 +12,7 @@ class TableExtractor:
     def __init__(self, image: ndarray):
         self.image = image
 
-    def extract_table(self) -> tuple[ndarray, Position]:
+    def extract_table(self) -> TablePosition:
         contours = self._get_contours()
         return self._find_table(contours, 2000)
 
@@ -30,7 +31,7 @@ class TableExtractor:
 
         return contours
 
-    def _find_table(self, contours: tuple[ndarray], biggest_area: int) -> tuple[ndarray, Position]:
+    def _find_table(self, contours: tuple[ndarray], biggest_area: int) -> TablePosition:
         table = []
         x, y, width, height = 0, 0, 0, 0
         for cnt in contours:
@@ -43,4 +44,4 @@ class TableExtractor:
                 except IndexError:
                     table = self.image[y:y + height, x:x + width]
         cv2.imwrite(self.__EXTRACTED_TABLE_OUTPUT_PATH, table)
-        return table, Position(x, y, x + width, y + height)
+        return TablePosition(table, Position(x, y, x + width, y + height))

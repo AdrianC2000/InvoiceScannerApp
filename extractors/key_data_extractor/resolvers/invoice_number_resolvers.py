@@ -11,8 +11,9 @@ def has_numbers(word: str) -> bool:
 
 class InvoiceNumberResolvers:
 
-    def __init__(self, matching_block: MatchingBlock):
+    def __init__(self, matching_block: MatchingBlock, is_preliminary: bool):
         self.__matching_block = matching_block
+        self.__is_preliminary = is_preliminary
 
     def get_invoice_number(self) -> SearchResponse:
         key_word = self.__matching_block.confidence_calculation.value
@@ -20,18 +21,22 @@ class InvoiceNumberResolvers:
         row_with_invoice_number_key_text = rows[0].text
         _, number_index, confidence_calculation = find_best_data_fit(row_with_invoice_number_key_text, number)
         try:
-            alleged_invoice_number = row_with_invoice_number_key_text.split(' ')[number_index + 1]
+            if self.__is_preliminary:
+                alleged_invoice_number_index = number_index + 1
+            else:
+                alleged_invoice_number_index = number_index
+            alleged_invoice_number = row_with_invoice_number_key_text.split(' ')[alleged_invoice_number_index]
             if has_numbers(alleged_invoice_number):
                 return SearchResponse(key_word, alleged_invoice_number,
-                                      ValueFindingStatus.FOUND)
+                                      ValueFindingStatus.FOUND, rows[0].position)
             else:
                 try:
                     row_below_invoice_number_key_text = rows[1].text
                     for word in row_below_invoice_number_key_text.split(' '):
                         if has_numbers(word):
-                            return SearchResponse(key_word, word, ValueFindingStatus.FOUND)
-                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT)
+                            return SearchResponse(key_word, word, ValueFindingStatus.FOUND, rows[0].position)
+                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)
                 except IndexError:
-                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT)
+                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, rows[0].position)
         except IndexError:
-            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT)
+            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)

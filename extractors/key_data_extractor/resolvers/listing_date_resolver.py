@@ -25,17 +25,24 @@ def check_date(alleged_date: str):
 
 class ListingDateResolvers:
 
-    def __init__(self, matching_block: MatchingBlock):
+    def __init__(self, matching_block: MatchingBlock, is_preliminary: bool):
         self.__matching_block = matching_block
+        self.__is_preliminary = is_preliminary
 
     def get_listing_date(self) -> SearchResponse:
         key_word = self.__matching_block.confidence_calculation.value
         rows = self.__matching_block.block.rows
         row_with_listing_date_key = rows[0]
+
+        if self.__is_preliminary:
+            alleged_listing_date_index = self.__matching_block.last_word_index + 1
+        else:
+            alleged_listing_date_index = self.__matching_block.last_word_index
+
         try:
-            alleged_listing_date = row_with_listing_date_key.text.split(' ')[self.__matching_block.last_word_index + 1]
+            alleged_listing_date = row_with_listing_date_key.text.split(' ')[alleged_listing_date_index]
             if check_date(alleged_listing_date):
-                return SearchResponse(key_word, alleged_listing_date, ValueFindingStatus.FOUND)
+                return SearchResponse(key_word, alleged_listing_date, ValueFindingStatus.FOUND, rows[0].position)
         except IndexError:
             pass
         try:
@@ -43,8 +50,8 @@ class ListingDateResolvers:
             row_below_text = row_below_currency_key.text
             for word in row_below_text.split(' '):
                 if check_date(word):
-                    return SearchResponse(key_word, word, ValueFindingStatus.FOUND)
-            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT)
+                    return SearchResponse(key_word, word, ValueFindingStatus.FOUND, rows[0].position)
+            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)
         except IndexError:
-            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT)
+            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, rows[0].position)
 
