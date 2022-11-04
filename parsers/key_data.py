@@ -5,7 +5,7 @@ class KeyData:
         self.__buyer = row.get("buyer")
         self.__invoice_number = row.get("invoice_number")
         self.__currency = row.get("currency")
-        self.__listing_data = row.get("listing_data")
+        self.__listing_date = row.get("listing_date")
 
     @property
     def seller(self) -> str:
@@ -24,5 +24,5 @@ class KeyData:
         return self.__currency
 
     @property
-    def listing_data(self) -> str:
-        return self.__listing_data
+    def listing_date(self) -> str:
+        return self.__listing_date

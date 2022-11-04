@@ -48,8 +48,8 @@ class CellsCreator:
             coordinates = text_position.position
             column_index, confidence_column = self.check_column_belonging(coordinates)
             row_index, confidence_row = self.check_row_belonging(coordinates)
-            print(f"WORD: {word_text} | COLUMN: {column_index} with confidence {confidence_column}% | ROW: {row_index} "
-                  f"with confidence {confidence_row}%")
+            # print(f"WORD: {word_text} | COLUMN: {column_index} with confidence {confidence_column}% | ROW: {row_index} "
+            #       f"with confidence {confidence_row}%")
 
             cells_content[row_index][column_index].append(text_position)
 
