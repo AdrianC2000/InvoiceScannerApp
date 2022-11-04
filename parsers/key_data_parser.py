@@ -1,11 +1,10 @@
 import json
 
-from classifiers.entities.matching_header import MatchingHeader
-from extractors.data_extractor.entities.search_response import SearchResponse
+from entities.search_response import SearchResponse
 from extractors.value_finding_status import ValueFindingStatus
 from parsers.json_encoder import JsonEncoder
-from parsers.key_data import KeyData
-from parsers.table_item import TableItem
+from entities.key_data import KeyData
+from entities.table_item import TableItem
 
 
 def save_to_file(table_items: list[TableItem]):

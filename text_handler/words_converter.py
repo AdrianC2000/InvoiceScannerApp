@@ -1,6 +1,6 @@
 import pandas as pd
 from text_handler.cells_creator import check_percentage_inclusion
-from text_handler.entities.text_position import TextPosition
+from entities.text_position import TextPosition
 
 SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
 SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']

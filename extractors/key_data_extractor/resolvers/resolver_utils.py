@@ -1,9 +1,9 @@
 from regex import regex
 
 from classifiers.block_classifier.block_classifier import find_best_data_fit
-from classifiers.entities.matching_block import MatchingBlock
+from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, prepare_row
-from text_handler.entities.text_position import TextPosition
+from entities.text_position import TextPosition
 
 
 def remove_redundant_data(matching_block: MatchingBlock):

@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from numpy import ndarray
 from skimage.transform import rotate
 from skimage.color import rgb2gray
 from deskew import determine_skew
@@ -9,7 +10,7 @@ class InvoiceStraightener:
 
     __STRAIGHTENED_INVOICE_OUTPUT_PATH = "resources/entire_flow/1.Rotated invoice.png"
 
-    def __init__(self, invoice_image):
+    def __init__(self, invoice_image: ndarray):
         self.__invoice_image = invoice_image
 
     # TODO
@@ -25,7 +26,7 @@ class InvoiceStraightener:
     #     # image_file.save("resources/test_outputs/Black and white invoice.png")
     #     # cv2.imwrite("resources/test_outputs/Black and white invoice.png", blackAndWhiteImage)
 
-    def straighten_image(self):
+    def straighten_image(self) -> ndarray:
         grayscale = rgb2gray(self.__invoice_image)
         angle = determine_skew(grayscale)
         rotated = rotate(self.__invoice_image, angle, resize=True) * 255

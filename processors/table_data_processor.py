@@ -4,15 +4,15 @@ from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
 from extractors.table_extractor.table_extractor import TableExtractor
-from invoice_processor.table_remover import TableRemover
-from parsers.table_item import TableItem
+from invoice_processing_utils.table_remover import TableRemover
+from entities.table_item import TableItem
 from parsers.table_parser import TableParser
 from text_handler.cells_creator import CellsCreator
 from text_handler.text_reader import TextReader
 from text_handler.words_converter import WordsConverter
 
 
-class TableProcessor:
+class TableDataProcessor:
 
     def __init__(self, invoice: ndarray):
         self.__invoice = invoice

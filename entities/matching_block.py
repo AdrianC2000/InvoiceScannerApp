@@ -1,5 +1,5 @@
-from classifiers.entities.confidence_calculation import ConfidenceCalculation
-from text_handler.entities.block_position import BlockPosition
+from entities.confidence_calculation import ConfidenceCalculation
+from entities.block_position import BlockPosition
 
 
 class MatchingBlock:

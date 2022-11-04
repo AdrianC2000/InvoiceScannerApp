@@ -1,5 +1,5 @@
-from parsers.key_data import KeyData
-from parsers.table_item import TableItem
+from entities.key_data import KeyData
+from entities.table_item import TableItem
 
 
 class InvoiceInfo:

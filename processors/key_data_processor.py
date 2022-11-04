@@ -1,13 +1,13 @@
 from numpy import ndarray
 
 from classifiers.block_classifier.block_classifier import BlockClassifier
-from extractors.data_extractor.blocks_extractor import BlocksExtractor
-from extractors.data_extractor.key_values_extractor import KeyValuesExtractor
-from parsers.key_data import KeyData
+from extractors.key_data_extractor.blocks_extractor import BlocksExtractor
+from extractors.key_data_extractor.key_values_extractor import KeyValuesExtractor
+from entities.key_data import KeyData
 from parsers.key_data_parser import KeyDataParser
 
 
-class DataProcessor:
+class KeyDataProcessor:
 
     def __init__(self, invoice: ndarray):
         self.__invoice = invoice

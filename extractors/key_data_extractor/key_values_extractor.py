@@ -1,12 +1,12 @@
-from classifiers.entities.matching_block import MatchingBlock
-from extractors.data_extractor.entities.search_response import SearchResponse
-from extractors.data_extractor.resolvers.currency_resolver import CurrencyResolvers
-from extractors.data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
-from extractors.data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
-from extractors.data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers
-from extractors.data_extractor.resolvers.resolver_utils import remove_redundant_data, rows_to_string, remove_key_word
+from entities.matching_block import MatchingBlock
+from entities.search_response import SearchResponse
+from extractors.key_data_extractor.resolvers.currency_resolver import CurrencyResolvers
+from extractors.key_data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
+from extractors.key_data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
+from extractors.key_data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers
+from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data
 from extractors.value_finding_status import ValueFindingStatus
-from text_handler.entities.block_position import BlockPosition
+from entities.block_position import BlockPosition
 
 
 def person_info_resolver(block: MatchingBlock) -> SearchResponse:

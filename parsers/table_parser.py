@@ -1,8 +1,8 @@
 import json
 
-from classifiers.entities.matching_header import MatchingHeader
+from entities.matching_header import MatchingHeader
 from parsers.json_encoder import JsonEncoder
-from parsers.table_item import TableItem
+from entities.table_item import TableItem
 
 
 def save_to_file(table_items: list[TableItem]):

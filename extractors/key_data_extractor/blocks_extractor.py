@@ -1,7 +1,7 @@
 from google.cloud.vision_v1 import TextAnnotation
 
-from text_handler.entities.block_position import BlockPosition
-from text_handler.entities.text_position import TextPosition
+from entities.block_position import BlockPosition
+from entities.text_position import TextPosition
 from text_handler.text_reader import create_position, process_line, save_table_with_bounding_boxes, get_response
 
 

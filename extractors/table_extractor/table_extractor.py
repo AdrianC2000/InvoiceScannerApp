@@ -1,7 +1,7 @@
 import cv2
 from numpy import ndarray
 
-from text_handler.entities.position import Position
+from entities.position import Position
 
 
 class TableExtractor:

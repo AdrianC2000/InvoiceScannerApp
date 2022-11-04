@@ -2,8 +2,8 @@ import io
 from random import randrange
 import cv2
 from google.cloud import vision
-from text_handler.entities.position import Position
-from text_handler.entities.text_position import TextPosition
+from entities.position import Position
+from entities.text_position import TextPosition
 
 COLORS_LIST = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255)]
 

@@ -1,6 +1,6 @@
-from classifiers.entities.matching_block import MatchingBlock
-from extractors.data_extractor.entities.search_response import SearchResponse
-from extractors.data_extractor.resolvers.resolver_utils import check_regex_for_single_word
+from entities.matching_block import MatchingBlock
+from entities.search_response import SearchResponse
+from extractors.key_data_extractor.resolvers.resolver_utils import check_regex_for_single_word
 from extractors.value_finding_status import ValueFindingStatus
 
 

@@ -1,9 +1,9 @@
 import json
 
-from classifiers.entities.confidence_calculation import ConfidenceCalculation
-from classifiers.entities.matching_block import MatchingBlock
+from entities.confidence_calculation import ConfidenceCalculation
+from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
-from text_handler.entities.block_position import BlockPosition
+from entities.block_position import BlockPosition
 
 
 def load_data():

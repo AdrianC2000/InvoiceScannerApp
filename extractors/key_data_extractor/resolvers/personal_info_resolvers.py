@@ -1,7 +1,7 @@
-from classifiers.entities.matching_block import MatchingBlock
-from extractors.data_extractor.constants_key_words import address, nip
-from extractors.data_extractor.entities.search_response import SearchResponse
-from extractors.data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
+from entities.matching_block import MatchingBlock
+from extractors.key_data_extractor.constants_key_words import address, nip
+from entities.search_response import SearchResponse
+from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
     get_row_index_by_regex_with_keyword, get_row_index_by_regex, rows_to_string, remove_key_word
 from extractors.value_finding_status import ValueFindingStatus
 

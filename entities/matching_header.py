@@ -1,4 +1,4 @@
-from classifiers.entities.confidence_calculation import ConfidenceCalculation
+from entities.confidence_calculation import ConfidenceCalculation
 
 
 class MatchingHeader:

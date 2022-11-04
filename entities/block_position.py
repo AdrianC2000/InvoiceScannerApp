@@ -1,5 +1,5 @@
-from text_handler.entities.position import Position
-from text_handler.entities.text_position import TextPosition
+from entities.position import Position
+from entities.text_position import TextPosition
 
 
 class BlockPosition:

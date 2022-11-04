@@ -1,4 +1,4 @@
-from text_handler.entities.position import Position
+from entities.position import Position
 
 
 class TextPosition:

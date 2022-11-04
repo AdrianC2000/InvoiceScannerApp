@@ -1,5 +1,5 @@
-from text_handler.entities.position import Position
-from text_handler.entities.text_position import TextPosition
+from entities.position import Position
+from entities.text_position import TextPosition
 
 
 def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
