@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 from numpy import ndarray
 
@@ -16,4 +18,5 @@ class TableRemover:
         second_crop_start_height, second_crop_end_height = self.__position.ending_y, height
         first_part = self.__invoice[first_crop_start_height:first_crop_end_height, 0:width]
         second_part = self.__invoice[second_crop_start_height:second_crop_end_height, 0:width]
+        logging.info('Table removed from the invoice.')
         return np.vstack([first_part, second_part])

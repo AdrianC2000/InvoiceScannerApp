@@ -1,3 +1,4 @@
+import logging
 import math
 import cv2
 import numpy as np
@@ -50,6 +51,7 @@ class ImageRotator:
         angle = calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
         rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                     fillcolor=255)
+        logging.info(f'Table rotated by {angle} degrees.')
         rotated_table.save("resources/entire_flow/4.Table rotated by small angle.png")
 
         return np.asarray(rotated_table)

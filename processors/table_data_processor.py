@@ -21,8 +21,7 @@ class TableDataProcessor:
         table_position = TableExtractor(self.__invoice).extract_table()
 
         rotated_table, cells_in_columns = ColumnsSeperator(table_position.table).separate_cells_in_columns()
-        text_with_position = TextReader("resources/entire_flow/4.Table rotated by small angle.png") \
-            .read_words()
+        text_with_position = TextReader(rotated_table).read_words()
 
         cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()
         cells_with_phrases = WordsConverter(cells_with_words).merge_words_into_phrases()

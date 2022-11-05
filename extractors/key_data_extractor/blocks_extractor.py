@@ -1,4 +1,5 @@
 from google.cloud.vision_v1 import TextAnnotation
+from numpy import ndarray
 
 from entities.block_position import BlockPosition
 from entities.text_position import TextPosition
@@ -7,11 +8,11 @@ from text_handler.text_reader import create_position, process_line, save_table_w
 
 class BlocksExtractor:
 
-    def __init__(self, image_path: str):
-        self.__image_path = image_path
+    def __init__(self, invoice: ndarray):
+        self.__invoice = invoice
 
     def read_blocks(self) -> list[BlockPosition]:
-        response = get_response(self.__image_path)
+        response = get_response(self.__invoice)
 
         blocks_with_positions, blocks_with_lines, lines = [], [], []
         breaks = TextAnnotation.DetectedBreak.BreakType
@@ -39,5 +40,5 @@ class BlocksExtractor:
                                                                   symbol)
                 blocks_with_lines.append(BlockPosition(create_position(block.bounding_box), single_block_with_lines))
                 blocks_with_positions.append(TextPosition(single_block, create_position(block.bounding_box)))
-        save_table_with_bounding_boxes(self.__image_path, blocks_with_positions, True)
+        save_table_with_bounding_boxes(self.__invoice, blocks_with_positions, True)
         return blocks_with_lines

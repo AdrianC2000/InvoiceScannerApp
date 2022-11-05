@@ -1,3 +1,5 @@
+import logging
+
 import cv2
 from numpy import ndarray
 
@@ -44,4 +46,5 @@ class TableExtractor:
                 except IndexError:
                     table = self.image[y:y + height, x:x + width]
         cv2.imwrite(self.__EXTRACTED_TABLE_OUTPUT_PATH, table)
+        logging.info(f'Table extracted -> position {x, y, x + width, y + height}')
         return TablePosition(table, Position(x, y, x + width, y + height))

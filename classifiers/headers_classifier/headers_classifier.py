@@ -1,9 +1,11 @@
 import json
+import logging
 
 from entities.matching_header import MatchingHeader
 from entities.confidence_calculation import ConfidenceCalculation
 from Levenshtein import ratio
 
+from parsers.json_encoder import JsonEncoder
 from text_handler.words_converter import SIGNS_WITHOUT_SPACE_BEFORE, SIGNS_WITHOUT_SPACE_AFTER
 
 SPACE_CHECK_SIGNS = [":", ";", ",", "."]
@@ -84,4 +86,8 @@ class HeadersClassifier:
             if percentage_calculation.confidence > 0.9:
                 del column_patterns[percentage_calculation.value]
             matching_headers.append(MatchingHeader(single_header, percentage_calculation))
+        logging.info('Headers classification: ')
+        for matching_header in matching_headers:
+            logging.info(f'{matching_header.phrase} -> {matching_header.confidence_calculation.value} = '
+                         f'{matching_header.confidence_calculation.confidence}')
         return matching_headers

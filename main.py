@@ -1,7 +1,6 @@
 import json
 
 from skimage import io
-
 from parsers.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
 

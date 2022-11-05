@@ -13,7 +13,7 @@ class KeyDataProcessor:
         self.__invoice = invoice
 
     def extract_key_data(self) -> KeyData:
-        blocks_with_rows = BlocksExtractor("resources/entire_flow/11.Invoice without table.png").read_blocks()
+        blocks_with_rows = BlocksExtractor(self.__invoice).read_blocks()
         blocks_with_key_words = BlockClassifier(blocks_with_rows).extract_blocks_with_key_words()
 
         key_values_extractor = KeyValuesExtractor(blocks_with_key_words, blocks_with_rows)

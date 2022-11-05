@@ -1,3 +1,5 @@
+import logging
+
 from entities.position import Position
 from entities.text_position import TextPosition
 
@@ -44,15 +46,13 @@ class CellsCreator:
             cells_content.append(cell)
 
         for text_position in self.__texts_with_positions:
-            word_text = text_position.text
             coordinates = text_position.position
             column_index, confidence_column = self.check_column_belonging(coordinates)
             row_index, confidence_row = self.check_row_belonging(coordinates)
-            # print(f"WORD: {word_text} | COLUMN: {column_index} with confidence {confidence_column}% | ROW: {row_index} "
-            #       f"with confidence {confidence_row}%")
 
             cells_content[row_index][column_index].append(text_position)
 
+        logging.info(f'Columns number: {columns_number}, Rows number: {rows_number}')
         return cells_content
 
     def check_column_belonging(self, coordinates: Position) -> tuple[int, float]:

@@ -1,26 +1,28 @@
-import io
 from random import randrange
 import cv2
 from google.cloud import vision
+from numpy import ndarray
+
 from entities.position import Position
 from entities.text_position import TextPosition
+import logging
 
 COLORS_LIST = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255)]
 
 
-def get_response(image_path):
+def get_response(invoice: ndarray):
     client = vision.ImageAnnotatorClient()
-    with io.open(image_path, "rb") as image_file:
-        content = image_file.read()
-    image = vision.Image(content=content)
+    _, encoded_invoice = cv2.imencode('.png', invoice)
+    image = vision.Image(content=encoded_invoice.tobytes())
     response = client.document_text_detection(image=image, image_context={"language_hints": ["pl"]})
+    logging.info(f'Successfully received response from google vision api -> text annotations detected = '
+                 f'{len(response.text_annotations)}')
     return response
 
 
-def save_table_with_bounding_boxes(table_image_path: str, texts_with_positions: list[TextPosition], flag: bool):
-    image = cv2.imread(table_image_path, 1)
+def save_table_with_bounding_boxes(invoice: ndarray, texts_with_positions: list[TextPosition], flag: bool):
     color = COLORS_LIST[randrange(len(COLORS_LIST))]
-    table_image_copy = cv2.cvtColor(image.copy(), cv2.COLOR_RGB2BGR)
+    table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
     for text_position in texts_with_positions:
         cv2.rectangle(table_image_copy, (text_position.position.starting_x, text_position.position.starting_y),
                       (text_position.position.ending_x, text_position.position.ending_y), color, 1)
@@ -66,17 +68,17 @@ def process_line(line, lines, single_block, single_block_with_lines, starting_po
 
 class TextReader:
 
-    def __init__(self, image_path: str):
-        self.__image_path = image_path
+    def __init__(self, invoice: ndarray):
+        self.__invoice = invoice
 
     def read_words(self) -> list[TextPosition]:
-        response = get_response(self.__image_path)
+        response = get_response(self.__invoice)
         texts_with_positions = []
 
         for text in response.text_annotations[1::]:
             text_value = text.description
             texts_with_positions.append(TextPosition(text_value, create_position(text.bounding_poly)))
 
-        save_table_with_bounding_boxes(self.__image_path, texts_with_positions, False)
+        save_table_with_bounding_boxes(self.__invoice, texts_with_positions, False)
         texts_with_positions.sort()
         return texts_with_positions

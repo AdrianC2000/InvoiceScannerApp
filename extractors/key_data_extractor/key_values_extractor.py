@@ -1,3 +1,5 @@
+import logging
+
 from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from entities.search_response import SearchResponse
@@ -79,6 +81,9 @@ class KeyValuesExtractor:
             block = remove_redundant_data(block)
             response = self.methods[keyword](block, True)
             all_data.append(response)
+        logging.info("Preliminary search:")
+        for response in all_data:
+            logging.info(f'{response.key_word} -> {response.status} => {response.value}')
         return all_data
 
     def final_extract_key_values(self, preliminary_search_response: list[SearchResponse]) -> list[SearchResponse]:
@@ -97,6 +102,9 @@ class KeyValuesExtractor:
                     response = self.search_below(response, self.all_blocks, response.key_word)
             searching_responses.append(response)
         found_responses.extend(searching_responses)
+        logging.info("Deep search:")
+        for response in searching_responses:
+            logging.info(f'{response.key_word} -> {response.status.name} => {response.value}')
         return found_responses
 
     def search_right(self, response: SearchResponse, all_blocks: list[BlockPosition], key_word: str) -> SearchResponse:

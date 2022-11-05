@@ -1,3 +1,5 @@
+import logging
+
 import cv2
 import numpy as np
 from columns_seperator.contours_definer import ContoursDefiner
