@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask
+from flask_cors import CORS
 
 from api.routes import invoice_blueprint
 
@@ -8,6 +9,8 @@ UPLOAD_FOLDER = 'resources/upload'
 ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.register_blueprint(invoice_blueprint)
 
@@ -16,5 +19,5 @@ logging.basicConfig(filename='resources/app.log', filemode='a', format=LOG_FORMA
 logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="localhost")
     logging.info('App started!')
