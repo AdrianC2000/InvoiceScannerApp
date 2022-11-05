@@ -1,0 +1,139 @@
+html, body {
+  height: 100%;
+  font-family: 'Raleway', sans-serif;
+  background-color: #effaff;
+}
+
+html {
+  display: table;
+  margin: auto;
+}
+
+body {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+p {
+  font-size: 25px
+}
+
+.drop-file-preview__item__info > p {
+  font-size: 10px
+}
+
+h2 {
+  font-size: 40px
+}
+
+.App {
+  text-align: center;
+  border-style: solid;
+  border-color: green;
+  height: 100vw;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.Header {
+  /*border-style: dotted;*/
+  /*border-color: red;*/
+  height: 10%;
+  align-items: center;
+}
+
+.Data-container {
+  /*border-style: dotted;*/
+  /*border-color: blue;*/
+  height:90%;
+}
+
+.container-fluid {
+  background-color: #f5fcff;
+  height: 90vh;
+  width: 90vw;
+  vertical-align: middle;
+}
+
+.data_column {
+  /*border-style: dotted;*/
+  /*border-color: green;*/
+  height:100%;
+}
+
+.button_column {
+  border-style: dotted;
+  border-color: darkgoldenrod;
+}
+
+.inner_column {
+  margin: auto;
+  height:100%;
+}
+
+.big_inner_column {
+  border-style: solid;
+  border-color: #c5d3da;
+  margin: auto;
+  height:100%;
+}
+
+#uploadInvoice {
+  height: 10%;
+}
+
+#dropBox {
+  height: 20%;
+}
+
+#filesList {
+  height: 65%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.list-group {
+  width: 100%;
+}
+
+#dragAndDropLabel {
+  font-size: 10px;
+}
+
+#dragAndDrop {
+  width: 100%;
+  height: 100%;
+}
+
+label {
+  width: 100%;
+  min-height: 100%;
+  height: auto !important;
+}
+
+#buttonDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scrollableTextBox {
+  width: 100%;
+  height: 95%;
+}
+
+.delete-button {
+  float: right;
+}
