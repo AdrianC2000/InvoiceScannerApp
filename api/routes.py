@@ -21,11 +21,15 @@ def check_health():
 
 @invoice_blueprint.route("/invoice", methods=["POST"])
 def process_invoice():
-    file = request.files['image']
-    img = Image.open(file.stream)
-    logging.info(f'File received -> size {img.size}')
-    rgb_im = img.convert('RGB')
-    rgb_im.save("resources/upload/image.jpg")
-    invoice_info = InvoiceInfoProcessor(numpy.array(rgb_im)).extract_info()
-    return Response(json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False),
+    files = request.files.getlist('image')
+    all_invoices_info = list()
+    for file in files:
+        file_name = file.filename
+        img = Image.open(file.stream)
+        logging.info(f'File received -> size {img.size}')
+        rgb_im = img.convert('RGB')
+        rgb_im.save("resources/upload/image.jpg")
+        invoice_info = InvoiceInfoProcessor(numpy.array(rgb_im)).extract_info()
+        all_invoices_info.append({file_name: invoice_info})
+    return Response(json.dumps(all_invoices_info, indent=4, cls=JsonEncoder, ensure_ascii=False),
                     status=201, mimetype='application/json')
