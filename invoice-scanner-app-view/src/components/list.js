@@ -1,5 +1,6 @@
 import React from 'react';
-import { removeItemFromTheList } from './drag_and_drop';
+import { getFilesList, removeItemFromTheList } from './drag_and_drop';
+import { EnableObject } from './common';
 
 function List() {
   return (
@@ -15,15 +16,17 @@ export function addFileToList(file) {
     li.className = "list-group-item";
     li.appendChild(document.createTextNode(file.name));
 
-    const btn = document.createElement("Button");
-    btn.id = file.path;
-    btn.className = "delete-button"
-    btn.innerHTML = 'Delete';
-    li.append(btn)
+    const deleteButton = document.createElement("i")
+    deleteButton.className = "fa fa-trash fa-lg delete-button hvr-fade"
+    deleteButton.id = file.path;
+    li.append(deleteButton)
 
-    btn.addEventListener("click", function (e) {
+    deleteButton.addEventListener("click", function (e) {
       this.parentNode.parentNode.removeChild(this.parentNode);
       removeItemFromTheList(this.id)
+      if (getFilesList().length === 0) {
+        EnableObject("getDataButton", false)
+      }
     });
 
     ul.appendChild(li);
