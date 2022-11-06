@@ -1,6 +1,7 @@
 import React from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import { addFileToList } from './list';
+import { EnableObject } from './common';
 
 let fileTypes = ['JPEG', 'PNG', 'GIF'];
 
@@ -14,6 +15,9 @@ export default function DragAndDrop() {
       } else {
         filesList.push(new_file);
         addFileToList(new_file);
+      }
+      if (filesList.length > 0) {
+        EnableObject("getDataButton", true)
       }
     }
   };

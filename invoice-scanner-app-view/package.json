@@ -43,8 +43,8 @@
     "react-drag-drop-files": "^2.3.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
-    "react-window": "^1.8.8",
-    "yarn": "^1.22.19"
+    "react-spinning-wheel": "^2.1.0",
+    "react-window": "^1.8.8"
   },
   "scripts": {
     "start-react": "react-scripts start",
@@ -52,8 +52,8 @@
     "test-react": "react-scripts test --env=jsdom",
     "eject-react": "react-scripts eject",
     "build-electron": "electron-builder",
-    "build": "yarn build-react && yarn build-electron -wml",
-    "start": "concurrently \"cross-env BROWSER=none yarn start-react\" \"wait-on http://localhost:3000 && electron .\""
+    "build": "npm build-react && npm build-electron -wml",
+    "start": "concurrently \"cross-env BROWSER=none npm run start-react\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": "react-app"

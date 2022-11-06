@@ -4,6 +4,7 @@ import List from './components/list';
 import DragAndDrop from './components/drag_and_drop';
 import GetDataButton from './components/get_data_button';
 import TextArea from './components/text_area';
+import Spinner from './components/spinner';
 
 function App() {
   return (
@@ -26,9 +27,14 @@ function App() {
               </div>
             </div>
           </div>
-          <div className="col-md-2 data_column">
-            <div className="col-md-11 center-block inner_column" id="buttonDiv">
-              <GetDataButton />
+          <div className="col-md-2 data_column d-flex align-items-center justify-content-center">
+            <div className="col-md-11 center-block inner_column">
+              <div className={"row no-gutters color"} id="buttonDiv">
+                <GetDataButton />
+              </div>
+              <div id={"spinnerDiv"} className={"hidden"}>
+                <Spinner />
+              </div>
             </div>
           </div>
           <div className="col-md-5 data_column">
