@@ -34,9 +34,9 @@ class InvoiceNumberResolvers:
                     row_below_invoice_number_key_text = rows[1].text
                     for word in row_below_invoice_number_key_text.split(' '):
                         if has_numbers(word):
-                            return SearchResponse(key_word, word, ValueFindingStatus.FOUND, rows[0].position)
-                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)
+                            return SearchResponse(key_word, word, ValueFindingStatus.FOUND, rows[1].position)
+                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[1].position)
                 except IndexError:
-                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, rows[0].position)
+                    return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, rows[1].position)
         except IndexError:
             return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)

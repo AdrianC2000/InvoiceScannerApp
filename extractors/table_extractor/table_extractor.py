@@ -1,5 +1,6 @@
 import logging
 
+import config
 import cv2
 from numpy import ndarray
 
@@ -9,7 +10,7 @@ from entities.table_position import TablePosition
 
 class TableExtractor:
 
-    __EXTRACTED_TABLE_OUTPUT_PATH = "resources/entire_flow/2.Extracted table.png"
+    __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX = "2.Extracted table.png"
 
     def __init__(self, image: ndarray):
         self.image = image
@@ -45,6 +46,6 @@ class TableExtractor:
                     table = self.image[y - 2:y + height + 2, x - 2:x + width + 2]
                 except IndexError:
                     table = self.image[y:y + height, x:x + width]
-        cv2.imwrite(self.__EXTRACTED_TABLE_OUTPUT_PATH, table)
+        cv2.imwrite(config.Config.directory_to_save + self.__EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, table)
         logging.info(f'Table extracted -> position {x, y, x + width, y + height}')
         return TablePosition(table, Position(x, y, x + width, y + height))

@@ -14,9 +14,9 @@ class KeyDataProcessor:
 
     def extract_key_data(self) -> KeyData:
         blocks_with_rows = BlocksExtractor(self.__invoice).read_blocks()
-        blocks_with_key_words = BlockClassifier(blocks_with_rows).extract_blocks_with_key_words()
+        blocks_with_key_words = BlockClassifier(blocks_with_rows, self.__invoice).extract_blocks_with_key_words()
 
-        key_values_extractor = KeyValuesExtractor(blocks_with_key_words, blocks_with_rows)
+        key_values_extractor = KeyValuesExtractor(self.__invoice, blocks_with_key_words, blocks_with_rows)
         preliminary_extracted_keys_values = key_values_extractor.preliminary_extract_key_values()
         final_keys_extraction = key_values_extractor.final_extract_key_values(preliminary_extracted_keys_values)
         return KeyDataParser(final_keys_extraction).parse_key_data()

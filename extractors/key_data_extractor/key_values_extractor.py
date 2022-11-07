@@ -1,7 +1,13 @@
 import logging
+from random import randrange
+
+import config
+import cv2
+from numpy import ndarray
 
 from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
+from entities.position import Position
 from entities.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.currency_resolver import CurrencyResolvers
 from extractors.key_data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
@@ -11,6 +17,10 @@ from extractors.key_data_extractor.resolvers.resolver_utils import remove_redund
 from extractors.value_finding_status import ValueFindingStatus
 from entities.block_position import BlockPosition
 from text_handler.cells_creator import check_percentage_inclusion
+from text_handler.text_reader import COLORS_LIST
+
+PRELIMINARY_SEARCH_OUTPUT_PATH_PREFIX = "13.Preliminary search.png"
+FINAL_SEARCH_OUTPUT_PATH_PREFIX = "14.Final search.png"
 
 
 def person_info_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
@@ -61,9 +71,20 @@ def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_en
     return block_below
 
 
+def save_table_with_bounding_boxes(invoice: ndarray, positions: list[Position], prefix: str):
+    color = COLORS_LIST[randrange(len(COLORS_LIST))]
+    table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
+    for position in positions:
+        cv2.rectangle(table_image_copy, (position.starting_x, position.starting_y),
+                      (position.ending_x, position.ending_y), color, 1)
+    cv2.imwrite(config.Config.directory_to_save + prefix, table_image_copy)
+
+
 class KeyValuesExtractor:
 
-    def __init__(self, matching_blocks_with_keywords: list[MatchingBlock], all_blocks: list[BlockPosition]):
+    def __init__(self, invoice: ndarray, matching_blocks_with_keywords: list[MatchingBlock],
+                 all_blocks: list[BlockPosition]):
+        self.invoice = invoice
         self.matching_blocks_with_keywords = matching_blocks_with_keywords
         self.all_blocks = all_blocks
         self.methods = {
@@ -76,14 +97,18 @@ class KeyValuesExtractor:
 
     def preliminary_extract_key_values(self) -> list[SearchResponse]:
         all_data = list()
+        positions = list()
         for block in self.matching_blocks_with_keywords:
             keyword = block.confidence_calculation.value
             block = remove_redundant_data(block)
             response = self.methods[keyword](block, True)
             all_data.append(response)
+            if response.status == ValueFindingStatus.FOUND:
+                positions.append(response.row_position)
         logging.info("Preliminary search:")
         for response in all_data:
             logging.info(f'{response.key_word} -> {response.status} => {response.value}')
+        save_table_with_bounding_boxes(self.invoice, positions, PRELIMINARY_SEARCH_OUTPUT_PATH_PREFIX)
         return all_data
 
     def final_extract_key_values(self, preliminary_search_response: list[SearchResponse]) -> list[SearchResponse]:
@@ -91,6 +116,7 @@ class KeyValuesExtractor:
                                if response.status != ValueFindingStatus.FOUND]
         found_responses = [response for response in preliminary_search_response if response not in not_found_responses]
         searching_responses = list()
+        positions = list()
         for response in not_found_responses:
             if response.status == ValueFindingStatus.VALUE_ON_THE_RIGHT:
                 response = self.search_right(response, self.all_blocks, response.key_word)
@@ -101,10 +127,13 @@ class KeyValuesExtractor:
                 if response.status == ValueFindingStatus.VALUE_BELOW:
                     response = self.search_below(response, self.all_blocks, response.key_word)
             searching_responses.append(response)
+            if response.status == ValueFindingStatus.FOUND:
+                positions.append(response.row_position)
         found_responses.extend(searching_responses)
         logging.info("Deep search:")
         for response in searching_responses:
             logging.info(f'{response.key_word} -> {response.status.name} => {response.value}')
+        save_table_with_bounding_boxes(self.invoice, positions, FINAL_SEARCH_OUTPUT_PATH_PREFIX)
         return found_responses
 
     def search_right(self, response: SearchResponse, all_blocks: list[BlockPosition], key_word: str) -> SearchResponse:

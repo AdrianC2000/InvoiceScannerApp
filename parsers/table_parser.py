@@ -1,13 +1,17 @@
 import json
 
+import config
+
 from entities.matching_header import MatchingHeader
 from parsers.json_encoder import JsonEncoder
 from entities.table_item import TableItem
 
+__FINAL_TABLE_OUTPUT_PATH_PREFIX = "9.Final table.json"
+
 
 def save_to_file(table_items: list[TableItem]):
     table_json = json.dumps(table_items, indent=4, cls=JsonEncoder, ensure_ascii=False)
-    f = open("resources/entire_flow/10.Final table.json", mode="w", encoding="utf-8")
+    f = open(config.Config.directory_to_save + __FINAL_TABLE_OUTPUT_PATH_PREFIX, mode="w", encoding="utf-8")
     f.write(table_json)
     f.close()
 

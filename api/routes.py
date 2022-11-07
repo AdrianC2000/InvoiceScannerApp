@@ -1,6 +1,7 @@
 import base64
 import json
 import logging
+import os
 
 import cv2
 import numpy
@@ -23,13 +24,17 @@ def check_health():
 def process_invoice():
     files = request.files.getlist('image')
     all_invoices_info = list()
+    cwd = os.getcwd()
     for file in files:
+        directory = cwd + '/resources/entire_flow/' + file.filename + "/"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         file_name = file.filename
         img = Image.open(file.stream)
         logging.info(f'File received -> size {img.size}')
         rgb_im = img.convert('RGB')
         rgb_im.save("resources/upload/image.jpg")
-        invoice_info = InvoiceInfoProcessor(numpy.array(rgb_im)).extract_info()
+        invoice_info = InvoiceInfoProcessor(numpy.array(rgb_im), directory).extract_info()
         all_invoices_info.append({file_name: invoice_info})
     return Response(json.dumps(all_invoices_info, indent=4, cls=JsonEncoder, ensure_ascii=False),
                     status=201, mimetype='application/json')

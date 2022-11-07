@@ -1,5 +1,7 @@
 import logging
 import math
+
+import config
 import cv2
 import numpy as np
 from PIL import Image
@@ -37,6 +39,8 @@ def find_first_horizontal_line(horizontal_lines):
 
 class ImageRotator:
 
+    __STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX = "3.Table rotated by small angle.png"
+
     def __init__(self, contours_definer, table_image_bin, original_table):
         self.contours_definer = contours_definer
         self.table_image_bin = table_image_bin
@@ -52,7 +56,7 @@ class ImageRotator:
         rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                     fillcolor=255)
         logging.info(f'Table rotated by {angle} degrees.')
-        rotated_table.save("resources/entire_flow/4.Table rotated by small angle.png")
+        rotated_table.save(config.Config.directory_to_save + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)
 
         return np.asarray(rotated_table)
 

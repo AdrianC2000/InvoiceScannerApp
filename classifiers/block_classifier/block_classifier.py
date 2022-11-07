@@ -1,14 +1,32 @@
 import json
+from random import randrange
+
+import config
+import cv2
+from numpy import ndarray
 
 from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
 from entities.block_position import BlockPosition
+from text_handler.text_reader import COLORS_LIST
+
+__BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
 
 
 def load_data():
     f = open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8")
     return json.load(f)
+
+
+def save_table_with_bounding_boxes(invoice: ndarray, unique_keys_blocks: list[MatchingBlock]):
+    color = COLORS_LIST[randrange(len(COLORS_LIST))]
+    table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
+    for matching_block in unique_keys_blocks:
+        block = matching_block.block
+        cv2.rectangle(table_image_copy, (block.position.starting_x, block.position.starting_y),
+                      (block.position.ending_x, block.position.ending_y), color, 1)
+    cv2.imwrite(config.Config.directory_to_save + __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX, table_image_copy)
 
 
 def find_best_data_fit(row: str, column_patterns: json) -> tuple[int, int, ConfidenceCalculation]:
@@ -36,7 +54,8 @@ def find_best_data_fit(row: str, column_patterns: json) -> tuple[int, int, Confi
                 best_fit = column_pattern_name
                 if (summarized_compatibility / len(row.split(' '))) > 0.9:
                     break
-    return best_row_index, best_last_word_index, ConfidenceCalculation(best_fit, (actual_biggest_compatibility / len(row.split(' '))))
+    return best_row_index, best_last_word_index, ConfidenceCalculation(best_fit, (
+            actual_biggest_compatibility / len(row.split(' '))))
 
 
 def remove_duplicates(filtered_matching_blocks: list[MatchingBlock]) -> list[MatchingBlock]:
@@ -57,8 +76,9 @@ def remove_duplicates(filtered_matching_blocks: list[MatchingBlock]) -> list[Mat
 
 class BlockClassifier:
 
-    def __init__(self, block_positions: list[BlockPosition]):
+    def __init__(self, block_positions: list[BlockPosition], invoice_without_table: ndarray):
         self.block_positions = block_positions
+        self.invoice_without_table = invoice_without_table
 
     def extract_blocks_with_key_words(self) -> list[MatchingBlock]:
         confidence_calculation, index, best_row_index, best_last_word_index = "", 0, -1, -1
@@ -66,11 +86,14 @@ class BlockClassifier:
         data_patterns = load_data()
         for block in self.block_positions:
             for index, row in enumerate(block.rows):
-                best_row_index, best_last_word_index, confidence_calculation = find_best_data_fit(row.text, data_patterns)
+                best_row_index, best_last_word_index, confidence_calculation = find_best_data_fit(row.text,
+                                                                                                  data_patterns)
                 if confidence_calculation.confidence > 0.9:
                     del data_patterns[confidence_calculation.value]
                     break
-            matching_blocks.append(MatchingBlock(block, confidence_calculation, index, best_row_index, best_last_word_index))
+            matching_blocks.append(
+                MatchingBlock(block, confidence_calculation, index, best_row_index, best_last_word_index))
         filtered_matching_blocks = [block for block in matching_blocks if block.confidence_calculation.confidence > 0.5]
         unique_keys_blocks = remove_duplicates(filtered_matching_blocks)
+        save_table_with_bounding_boxes(self.invoice_without_table, unique_keys_blocks)
         return unique_keys_blocks

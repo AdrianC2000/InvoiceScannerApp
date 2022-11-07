@@ -1,5 +1,6 @@
 import logging
 
+import config
 import cv2
 import numpy as np
 from columns_seperator.contours_definer import ContoursDefiner
@@ -24,6 +25,10 @@ def get_cells_in_columns(bounding_boxes):
 
 class ColumnsSeperator:
 
+    __ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX = "4.Original contours.png"
+    __FIXED_CONTOURS_OUTPUT_PATH_PREFIX = "5.Fixed contours.png"
+    __TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX = "6.Table with bounding boxes.png"
+
     def __init__(self, table_image):
         self.table_image = table_image
 
@@ -38,11 +43,11 @@ class ColumnsSeperator:
 
         # Get original table contours
         original_contours_image, original_table_contours = contours_definer_on_rotated.get_table_contours()
-        cv2.imwrite("resources/entire_flow/5.Original contours.png", original_contours_image)
+        cv2.imwrite(config.Config.directory_to_save + self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX, original_contours_image)
 
         # Get fixed table contours
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
-        cv2.imwrite("resources/entire_flow/6.Fixed contours.png", fixed_table_contours_image)
+        cv2.imwrite(config.Config.directory_to_save + self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX, fixed_table_contours_image)
 
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -59,7 +64,7 @@ class ColumnsSeperator:
             for cell in columns:
                 cv2.rectangle(table_image_copy, (cell[0], cell[1]), (cell[0] + cell[2], cell[1] + cell[3]),
                               color, 1)
-        cv2.imwrite("resources/entire_flow/7.Table with bounding boxes.png", table_image_copy)
+        cv2.imwrite(config.Config.directory_to_save + self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
 
     def image_to_grayscale(self):
         # thresholding the image to a binary image

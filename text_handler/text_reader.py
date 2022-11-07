@@ -1,4 +1,6 @@
 from random import randrange
+
+import config
 import cv2
 from google.cloud import vision
 from numpy import ndarray
@@ -7,7 +9,9 @@ from entities.position import Position
 from entities.text_position import TextPosition
 import logging
 
-COLORS_LIST = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255)]
+COLORS_LIST = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
+__EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX = "7.Extracted texts.png"
+__EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX = "11.Blocks and text extracted.png"
 
 
 def get_response(invoice: ndarray):
@@ -27,15 +31,15 @@ def save_table_with_bounding_boxes(invoice: ndarray, texts_with_positions: list[
         cv2.rectangle(table_image_copy, (text_position.position.starting_x, text_position.position.starting_y),
                       (text_position.position.ending_x, text_position.position.ending_y), color, 1)
     if flag:
-        cv2.imwrite("resources/entire_flow/12.Blocks and text extracted.png", table_image_copy)
+        cv2.imwrite(config.Config.directory_to_save + __EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX, table_image_copy)
     else:
-        cv2.imwrite("resources/entire_flow/8.Extracted texts.png", table_image_copy)
+        cv2.imwrite(config.Config.directory_to_save + __EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX, table_image_copy)
 
 
 def create_position(positioned_object) -> Position:
     start_x = positioned_object.vertices[0].x
     start_y = positioned_object.vertices[0].y
-    end_x = positioned_object.vertices[1].x
+    end_x = positioned_object.vertices[2].x
     end_y = positioned_object.vertices[2].y
     return Position(start_x, start_y, end_x, end_y)
 
@@ -44,7 +48,7 @@ def get_line_position(starting_position: Position, ending_position: Position):
     start_x = starting_position.starting_x
     start_y = starting_position.starting_y
     end_x = ending_position.ending_x
-    end_y = ending_position.ending_x
+    end_y = ending_position.ending_y
     return Position(start_x, start_y, end_x, end_y)
 
 

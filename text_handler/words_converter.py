@@ -1,9 +1,11 @@
+import config
 import pandas as pd
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition
 
 SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
 SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
+__EXTRACTED_TABLE_OUTPUT_PATH_PREFIX = "8.Extracted table.xlsx"
 
 
 def get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition) -> int:
@@ -37,7 +39,7 @@ def append_text_to_final_phrase(rows_in_cell: list[TextPosition]) -> str:
 
 def write_to_xls(cells_with_phrases: list[list[str]]):
     df = pd.DataFrame(cells_with_phrases)
-    writer = pd.ExcelWriter("resources/entire_flow/9.Extracted table.xlsx", engine='xlsxwriter',
+    writer = pd.ExcelWriter(config.Config.directory_to_save + __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, engine='xlsxwriter',
                             engine_kwargs={'options': {'strings_to_numbers': True}})
     df.to_excel(writer, sheet_name='Extracted table', index=False)
     writer.save()

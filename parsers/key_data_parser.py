@@ -1,17 +1,6 @@
-import json
-
 from entities.search_response import SearchResponse
 from extractors.value_finding_status import ValueFindingStatus
-from parsers.json_encoder import JsonEncoder
 from entities.key_data import KeyData
-from entities.table_item import TableItem
-
-
-def save_to_file(table_items: list[TableItem]):
-    table_json = json.dumps(table_items, indent=4, cls=JsonEncoder, ensure_ascii=False)
-    f = open("resources/entire_flow/10.Final table.json", mode="w", encoding="utf-8")
-    f.write(table_json)
-    f.close()
 
 
 class KeyDataParser:
