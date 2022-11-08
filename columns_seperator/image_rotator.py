@@ -53,12 +53,14 @@ class ImageRotator:
         first_horizontal_line = find_first_horizontal_line(horizontal_lines)
         horizontal_line_first_point, horizontal_line_last_point = get_horizontal_line_points(first_horizontal_line)
         angle = calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
-        rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
+        if abs(angle) < 10:
+            rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                     fillcolor=255)
-        logging.info(f'Table rotated by {angle} degrees.')
-        rotated_table.save(config.Config.directory_to_save + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)
-
-        return np.asarray(rotated_table)
+            logging.info(f'Table rotated by {angle} degrees.')
+            rotated_table.save(config.Config.directory_to_save + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)
+            return np.asarray(rotated_table)
+        else:
+            return np.asarray(self.original_table)
 
     def remove_noise(self):
         # TODO -> TO BE USED

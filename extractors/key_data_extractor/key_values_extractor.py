@@ -41,7 +41,7 @@ def listing_date_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchR
 
 def get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y):
     block_on_the_right = None
-    closest_position = 1000
+    closest_position = 10000
     for block in all_blocks:
         block_starting_y = block.position.starting_y
         block_ending_y = block.position.ending_y

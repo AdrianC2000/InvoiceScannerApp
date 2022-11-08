@@ -24,3 +24,12 @@ number = {
     }
   ]
 }
+
+invoice_vat = {
+  "invoice_vat": [
+    {
+      "patterns": ["faktura", "vat"],
+      "enough_fit": 2
+    }
+  ]
+}

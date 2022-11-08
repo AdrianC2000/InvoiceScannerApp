@@ -1,5 +1,6 @@
 from entities.matching_block import MatchingBlock
 from entities.search_response import SearchResponse
+from extractors.key_data_extractor.resolvers.invoice_number_resolvers import has_numbers
 from extractors.key_data_extractor.resolvers.resolver_utils import check_regex_for_single_word
 from extractors.value_finding_status import ValueFindingStatus
 
@@ -36,6 +37,8 @@ class CurrencyResolvers:
 
             alleged_value = row_with_currency_key.text.split(' ')[alleged_value_index]
             alleged_currency = row_with_currency_key.text.split(' ')[alleged_currency_index]
+            if has_numbers(alleged_currency):
+                alleged_currency = row_with_currency_key.text.split(' ')[alleged_currency_index + 1]
             if check_float_value(alleged_value) and check_currency(alleged_currency):
                 return SearchResponse(key_word, alleged_currency, ValueFindingStatus.FOUND, rows[0].position)
         except IndexError:

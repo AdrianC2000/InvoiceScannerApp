@@ -27,8 +27,8 @@ class TableParser:
         for row in self.__rows:
             row_dict = self.parse_row(row)
             table_items.append(TableItem(row_dict))
-        save_to_file(table_items)
-        return table_items
+        save_to_file(table_items[1:len(table_items)])
+        return table_items[1:len(table_items)]
 
     def parse_row(self, row: list[str]) -> dict[str, str]:
         row_dict = {}
