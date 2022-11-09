@@ -5,13 +5,19 @@ import DragAndDrop from './components/drag_and_drop';
 import GetDataButton from './components/get_data_button';
 import TextArea from './components/text_area';
 import Spinner from './components/spinner';
+import Modal123 from './components/modal.js';
 
 function App() {
   return (
     <body>
-      <div className="container-fluid">
-        <div className="row justify-content-center no-gutters Header">
-          <h2><b>Invoice Scanner App</b></h2>
+      <div className="container-fluid" id={"root"}>
+        <div className="row d-flex justify-content-end Header">
+          <div className="col-4 d-flex justify-content-center">
+            <h2><b>Invoice Scanner App</b></h2>
+          </div>
+          <div className="col-4 d-flex justify-content-end">
+            <Modal123 />
+          </div>
         </div>
         <div className="row no-gutters Data-container">
           <div className="col-md-5 data_column">

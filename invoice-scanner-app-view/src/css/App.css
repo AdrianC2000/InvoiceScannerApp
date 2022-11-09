@@ -139,9 +139,6 @@ label {
   height: 95%;
 }
 
-.list-group-item {
-}
-
 .delete-button {
   cursor: pointer;
   float: right;
@@ -158,8 +155,12 @@ label {
   -webkit-transition-property: color, background-color;
   transition-property: color, background-color;
 }
-.hvr-fade:hover, .hvr-fade:focus, .hvr-fade:active {
+.delete-button:hover, .delete-button:focus, .delete-button:active {
   color: red;
+}
+
+.settings-button:hover, .settings-button:focus, .settings-button:active {
+  color: grey;
 }
 
 #spinnerDiv {
@@ -179,4 +180,8 @@ label {
 .visible {
   display: block;
   visibility: visible;
+}
+
+.settings-button {
+  cursor: pointer;
 }

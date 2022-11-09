@@ -33,7 +33,6 @@ def process_invoice():
         img = Image.open(file.stream)
         logging.info(f'File received -> size {img.size}')
         rgb_im = img.convert('RGB')
-        rgb_im.save("resources/upload/image.jpg")
         invoice_info = InvoiceInfoProcessor(numpy.array(rgb_im), directory).extract_info()
         all_invoices_info.append({file_name: invoice_info})
     return Response(json.dumps(all_invoices_info, indent=4, cls=JsonEncoder, ensure_ascii=False),
