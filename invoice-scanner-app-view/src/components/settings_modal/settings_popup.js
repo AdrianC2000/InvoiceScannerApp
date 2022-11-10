@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import $ from 'jquery';
+import React from 'react';
 import 'jquery-ui-bundle';
 import 'jquery-ui-bundle/jquery-ui.css';
 import '../../css/Button.css';
