@@ -87,11 +87,6 @@ h2 {
   height:100%;
 }
 
-.dupa {
-  border-style: dotted;
-  border-color: green;
-}
-
 .button_column {
   border-style: dotted;
   border-color: darkgoldenrod;
@@ -141,17 +136,15 @@ h2 {
   height: 100%;
 }
 
+.lkjDVC {
+  max-width: 100% !important;;
+}
+
 label {
   width: 100%;
   min-height: 100%;
   height: auto !important;
 }
-
-/*#buttonDiv {*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*  justify-content: center;*/
-/*}*/
 
 .scrollableTextBox {
   width: 100%;
