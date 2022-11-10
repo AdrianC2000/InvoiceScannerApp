@@ -33,8 +33,6 @@ export async function getData() {
 }
 
 function getInvoiceData(files) {
-  console.log("Button clicked!")
-
   const url = 'http://localhost:5000/invoice'
 
   const fd = new FormData();

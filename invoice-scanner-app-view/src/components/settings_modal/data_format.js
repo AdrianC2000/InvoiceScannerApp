@@ -1,7 +1,7 @@
 import React from 'react';
 import JsonFieldListElement from './json_field_list_element';
 
-function JsonFieldList() {
+function DataFormat() {
   return (
     <ul className="list-group">
       <JsonFieldListElement field={"ordinal_number"} value={"ordinal_number"}/>
@@ -24,4 +24,15 @@ function JsonFieldList() {
   );
 }
 
-export default JsonFieldList;
+export default DataFormat;
+
+export function SetDataConfiguration(dataConfiguration) {
+    for (const key in dataConfiguration) {
+        if (key === "remove_nulls") {
+            document.getElementById(key).checked = dataConfiguration[key];
+        } else {
+            document.getElementById(key).value = dataConfiguration[key]["value"];
+            document.getElementById("checkBox" + key).checked = dataConfiguration[key]["included"];
+        }
+    }
+}

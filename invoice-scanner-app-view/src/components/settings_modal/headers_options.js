@@ -12,7 +12,7 @@ function HeadersOptions() {
         </div>
         <div className="col-1 d-flex justify-content-end">
           <i className="fa fa-plus settings-button hvr-fade" aria-hidden="true"
-             onClick={AddElement}></i>
+             onClick={AddEmptyElement}></i>
         </div>
       </div>
       <div className="row justify-content-center overflow-auto sub-data-container">
@@ -24,7 +24,11 @@ function HeadersOptions() {
 
 export default HeadersOptions;
 
-function AddElement() {
+function AddEmptyElement() {
+  AddElement("", "")
+}
+
+function AddElement(key, value) {
   const ul = document.getElementById('headers-list');
   const li = document.createElement('li');
   li.id = ul.getElementsByTagName("li").length
@@ -42,6 +46,7 @@ function AddElement() {
   const inputKeyColumn = document.createElement("input")
   inputKeyColumn.className = "form-control";
   inputKeyColumn.placeholder = "Key";
+  inputKeyColumn.value = key;
 
   keyColumn.appendChild(inputKeyColumn);
 
@@ -51,6 +56,7 @@ function AddElement() {
   const inputValueColumn = document.createElement("input")
   inputValueColumn.className = "form-control";
   inputValueColumn.placeholder = "Value";
+  inputValueColumn.value = value;
 
   valueColumn.appendChild(inputValueColumn);
 
@@ -72,4 +78,10 @@ function AddElement() {
   outerDiv.append(row)
   li.append(outerDiv)
   ul.append(li);
+}
+
+export function SetHeadersConfiguration(headersConfiguration) {
+  for (const key in headersConfiguration) {
+    AddElement(key, headersConfiguration[key])
+  }
 }

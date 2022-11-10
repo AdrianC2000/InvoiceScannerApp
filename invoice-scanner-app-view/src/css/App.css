@@ -87,6 +87,11 @@ h2 {
   height:100%;
 }
 
+.dupa {
+  border-style: dotted;
+  border-color: green;
+}
+
 .button_column {
   border-style: dotted;
   border-color: darkgoldenrod;
@@ -235,7 +240,7 @@ label {
   height:5vh;
 }
 
-#separately, #remove_nulls, #flexCheckChecked {
+input[type='checkbox'] {
   transform: scale(1.8);
 }
 

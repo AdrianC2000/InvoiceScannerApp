@@ -1,16 +1,14 @@
-import base64
 import json
 import logging
 import os
 
-import cv2
 import numpy
-import numpy as np
 from PIL import Image
-from flask import Blueprint, Response, request, jsonify
+from flask import Blueprint, Response, request
 
 from parsers.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
+from settings import settings
 
 invoice_blueprint = Blueprint("invoice", __name__)
 
@@ -37,3 +35,13 @@ def process_invoice():
         all_invoices_info.append({file_name: invoice_info})
     return Response(json.dumps(all_invoices_info, indent=4, cls=JsonEncoder, ensure_ascii=False),
                     status=201, mimetype='application/json')
+
+
+@invoice_blueprint.route("/settings", methods=["GET"])
+def get_settings():
+    return Response(settings.get_configuration(), status=200, mimetype='application/json')
+
+
+@invoice_blueprint.route("/settings", methods=["POST"])
+def set_settings():
+    return Response(settings.set_configuration(request.get_json()), status=200, mimetype='application/json')

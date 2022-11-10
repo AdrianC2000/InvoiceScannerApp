@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 function JsonFieldListElement({field, value}) {
-  console.log(field)
-  console.log(value)
   const [message, setMessage] = useState(value);
 
   const handleChange = event => {
@@ -16,10 +14,10 @@ function JsonFieldListElement({field, value}) {
             <input type="text" className="form-control" placeholder="Key" value={field} disabled/>
           </div>
           <div className="col-7">
-            <input type="text" className="form-control" placeholder="Value" defaultValue={message} onChange={handleChange}/>
+            <input id={message} type="text" className="form-control" placeholder="Value" defaultValue={message} onChange={handleChange}/>
           </div>
           <div className="form-check no-gutters" id="delete-header-button">
-            <input className="form-check-input shouldIncludeCheckBox" type="checkbox" value="" id="flexCheckChecked"/>
+            <input className="form-check-input shouldIncludeCheckBox" type="checkbox" value="" id={"checkBox" + message}/>
           </div>
         </div>
       </div>

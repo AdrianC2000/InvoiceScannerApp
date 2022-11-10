@@ -17,7 +17,7 @@ function UrlOptions() {
         <div className="col-md-auto">
           <div className="form-check">
             <input id="separately" className="form-check-input" type="checkbox" value=""/>
-            <label className="form-check-label" htmlFor="flexCheckChecked">
+            <label className="form-check-label" htmlFor="separately">
               Send invoices separately
             </label>
           </div>
@@ -33,3 +33,8 @@ function UrlOptions() {
 }
 
 export default UrlOptions;
+
+export function SetUrlConfiguration(urlConfiguration) {
+  document.getElementById("url").value = urlConfiguration["url"];
+  document.getElementById("separately").checked = urlConfiguration["separately"];
+}

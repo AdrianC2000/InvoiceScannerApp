@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import $ from 'jquery';
+import 'jquery-ui-bundle';
+import 'jquery-ui-bundle/jquery-ui.css';
 import '../../css/Button.css';
 import EndpointConfiguration from './endpoint_configuration';
-import JsonFieldList from './json_field_list';
+import DataFormat from './data_format';
 
 function SettingsPopup() {
   return (
@@ -11,7 +14,7 @@ function SettingsPopup() {
           <div className="row justify-content-center no-gutters Header" id="uploadInvoice">
             <p><b>Endpoint configuration</b></p>
           </div>
-          <div className="row justify-content-center no-gutters Data-container">
+          <div className="row justify-content-center no-gutters Data-container invisible" id={"endpointConfigurationDiv"}>
             <EndpointConfiguration />
           </div>
         </div>
@@ -30,14 +33,14 @@ function SettingsPopup() {
                  aria-hidden="true"></i>
             </div>
           </div>
-          <div className="row form-check">
+          <div className="row form-check invisible" id={"removeNullsDiv"}>
             <input className="form-check-input" type="checkbox" value="" id="remove_nulls"/>
             <label className="form-check-label" htmlFor="removeNullsCheck">
               Remove nulls
             </label>
           </div>
-          <div className="row justify-content-center overflow-auto sub-data-container">
-            <JsonFieldList />
+          <div className="row justify-content-center overflow-auto sub-data-container invisible" id={"dataFormatDiv"}>
+            <DataFormat />
           </div>
         </div>
       </div>
