@@ -37,6 +37,8 @@
     "cross-env": "^6.0.3",
     "electron-is-dev": "^1.1.0",
     "jquery": "^3.6.1",
+    "jquery-ui-bundle": "^1.12.1-migrate",
+    "jqueryui": "^1.11.1",
     "react": "^18.1.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.1.0",

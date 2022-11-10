@@ -28,8 +28,8 @@ h2 {
 
 .App {
   text-align: center;
-  border-style: solid;
-  border-color: green;
+  /*border-style: solid;*/
+  /*border-color: green;*/
   height: 100vw;
 }
 
@@ -58,6 +58,20 @@ h2 {
   /*border-style: dotted;*/
   /*border-color: blue;*/
   height:90%;
+}
+
+.sub-header {
+  /*border-style: dotted;*/
+  /*border-color: green;*/
+  align-items: center;
+  height: 20%;
+  margin-top: 10px;
+}
+
+.sub-data-container {
+  /*border-style: dotted;*/
+  /*border-color: pink;*/
+  height:80%;
 }
 
 .container-fluid {
@@ -146,6 +160,13 @@ label {
   top:5px;
 }
 
+.delete-header-button {
+  cursor: pointer;
+  float: right;
+  position:relative;
+  top:10px;
+}
+
 .hvr-fade {
   -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
@@ -155,7 +176,8 @@ label {
   -webkit-transition-property: color, background-color;
   transition-property: color, background-color;
 }
-.delete-button:hover, .delete-button:focus, .delete-button:active {
+.delete-button:hover, .delete-button:focus, .delete-button:active,
+.delete-header-button:hover, .delete-header-button:focus, .delete-header-button:active{
   color: red;
 }
 
@@ -184,4 +206,54 @@ label {
 
 .settings-button {
   cursor: pointer;
+}
+
+.endpoint-configuration {
+  width: 100%;
+  height: 90%;
+  padding: 0;
+}
+
+.url-options {
+  border-style: solid;
+  border-color: #c5d3da;
+  height: 30%
+}
+
+.spacing {
+  height: 5%
+}
+
+.headers {
+  border-style: solid;
+  border-color: #c5d3da;
+  height: 60%;
+}
+
+.is_seperated {
+  width:5vw;
+  height:5vh;
+}
+
+#separately, #remove_nulls, #flexCheckChecked {
+  transform: scale(1.8);
+}
+
+.col-md-auto {
+  display:flex;
+  align-items:center;
+}
+
+.input-group {
+  width: auto;
+}
+
+.shouldIncludeCheckBox {
+  display:flex;
+  align-items:center;
+}
+
+.form-check {
+  margin-top: 8px;
+  margin-left: 15px;
 }

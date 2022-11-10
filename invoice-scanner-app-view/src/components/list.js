@@ -2,9 +2,9 @@ import React from 'react';
 import { getFilesList, removeItemFromTheList } from './drag_and_drop';
 import { EnableObject } from './common';
 
-function List() {
+function List({id}) {
   return (
-    <ul className="list-group" id={'invoices-list'}></ul>
+    <ul className="list-group" id={id}></ul>
   );
 }
 

@@ -5,18 +5,20 @@ import DragAndDrop from './components/drag_and_drop';
 import GetDataButton from './components/get_data_button';
 import TextArea from './components/text_area';
 import Spinner from './components/spinner';
-import Modal123 from './components/modal.js';
+import SettingsModal from './components/settings_modal/modal.js';
 
 function App() {
   return (
     <body>
       <div className="container-fluid" id={"root"}>
         <div className="row d-flex justify-content-end Header">
-          <div className="col-4 d-flex justify-content-center">
+          <div className="col-1">
+          </div>
+          <div className="col-10 d-flex justify-content-center">
             <h2><b>Invoice Scanner App</b></h2>
           </div>
-          <div className="col-4 d-flex justify-content-end">
-            <Modal123 />
+          <div className="col-1 d-flex justify-content-end">
+            <SettingsModal />
           </div>
         </div>
         <div className="row no-gutters Data-container">
@@ -29,7 +31,7 @@ function App() {
                 <DragAndDrop />
               </div>
               <div className="row justify-content-center no-gutters overflow-auto" id="filesList">
-                <List />
+                <List id={'invoices-list'} />
               </div>
             </div>
           </div>
