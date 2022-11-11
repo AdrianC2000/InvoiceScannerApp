@@ -137,7 +137,8 @@ h2 {
 }
 
 .lkjDVC {
-  max-width: 100% !important;;
+  max-width: 100% !important;
+  min-width: 10% !important;
 }
 
 label {

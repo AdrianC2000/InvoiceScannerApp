@@ -9,7 +9,7 @@ function TextArea() {
 
 export default TextArea;
 
-export function fillAreaWithResponse(response) {
+export function FillAreaWithResponse(response) {
   const textarea = document.getElementById('response-text-field');
   textarea.value = JSON.stringify(response, null, 4);
 }

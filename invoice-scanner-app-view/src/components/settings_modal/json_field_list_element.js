@@ -11,10 +11,10 @@ function JsonFieldListElement({field, value}) {
       <div className="container">
         <div className="row no-gutters">
           <div className="col-4">
-            <input type="text" className="form-control" placeholder="Key" value={field} disabled/>
+            <input type="text" className="form-control keyInput" placeholder="Key" value={field} disabled/>
           </div>
           <div className="col-7">
-            <input id={message} type="text" className="form-control" placeholder="Value" defaultValue={message} onChange={handleChange}/>
+            <input id={message} type="text" className="form-control valueInput" placeholder="Value" defaultValue={message} onChange={handleChange}/>
           </div>
           <div className="form-check no-gutters" id="delete-header-button">
             <input className="form-check-input shouldIncludeCheckBox" type="checkbox" value="" id={"checkBox" + message}/>

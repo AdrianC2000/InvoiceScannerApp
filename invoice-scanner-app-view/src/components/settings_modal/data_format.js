@@ -3,8 +3,9 @@ import JsonFieldListElement from './json_field_list_element';
 
 function DataFormat() {
   return (
-    <ul className="list-group">
-      <JsonFieldListElement field={"ordinal_number"} value={"ordinal_number"}/>
+    <ul className="list-group" id={"keysList"}>
+        <JsonFieldListElement field={"parsed_table"} value={"parsed_table"}/>
+        <JsonFieldListElement field={"ordinal_number"} value={"ordinal_number"}/>
       <JsonFieldListElement field={"name"} value={"name"}/>
       <JsonFieldListElement field={"pkwiu"} value={"pkwiu"}/>
       <JsonFieldListElement field={"quantity"} value={"quantity"}/>
@@ -35,4 +36,24 @@ export function SetDataConfiguration(dataConfiguration) {
             document.getElementById("checkBox" + key).checked = dataConfiguration[key]["included"];
         }
     }
+}
+
+export function GetDataConfiguration() {
+    const data_configuration = {};
+    data_configuration['remove_nulls'] = document.getElementById('remove_nulls').checked
+
+    const ul = document.getElementById('keysList');
+    const items = ul.getElementsByTagName('li');
+
+    for (let i = 0; i < items.length; ++i) {
+        const li = items[i];
+        const key = li.querySelector('.keyInput').value;
+        const value = li.querySelector('.valueInput').value;
+        const shouldInclude = li.querySelector('.shouldIncludeCheckBox').checked;
+        const key_configuration = {};
+        key_configuration["value"] = value;
+        key_configuration["included"] = shouldInclude;
+        data_configuration[key] = key_configuration
+    }
+    return data_configuration;
 }

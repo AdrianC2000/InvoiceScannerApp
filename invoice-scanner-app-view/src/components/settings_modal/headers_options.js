@@ -44,7 +44,7 @@ function AddElement(key, value) {
   keyColumn.className = "col-5"
 
   const inputKeyColumn = document.createElement("input")
-  inputKeyColumn.className = "form-control";
+  inputKeyColumn.className = "form-control keyInput";
   inputKeyColumn.placeholder = "Key";
   inputKeyColumn.value = key;
 
@@ -54,7 +54,7 @@ function AddElement(key, value) {
   valueColumn.className = "col-5"
 
   const inputValueColumn = document.createElement("input")
-  inputValueColumn.className = "form-control";
+  inputValueColumn.className = "form-control valueInput";
   inputValueColumn.placeholder = "Value";
   inputValueColumn.value = value;
 
@@ -84,4 +84,18 @@ export function SetHeadersConfiguration(headersConfiguration) {
   for (const key in headersConfiguration) {
     AddElement(key, headersConfiguration[key])
   }
+}
+
+export function GetHeadersConfiguration() {
+  const ul = document.getElementById('headers-list');
+  const items = ul.getElementsByTagName('li');
+  const headers_configuration = {};
+
+  for (let i = 0; i < items.length; ++i) {
+    const li = items[i];
+    const key = li.querySelector('.keyInput').value;
+    const value = li.querySelector('.valueInput').value;
+    headers_configuration[key] = value
+  }
+  return headers_configuration;
 }

@@ -25,7 +25,7 @@ function UrlOptions() {
         <div className="col-md-auto">
           <i className="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
              title="If you leave this box unchecked, request body will include all invoices at once.
-             Otherwise, every invoice will be sent separately, which result in multiple requests." aria-hidden="true" id={"urlInfo"}></i>
+             Otherwise, every invoice will be sent separately, which results in multiple requests." aria-hidden="true" id={"urlInfo"}></i>
         </div>
       </div>
     </div>
@@ -37,4 +37,13 @@ export default UrlOptions;
 export function SetUrlConfiguration(urlConfiguration) {
   document.getElementById("url").value = urlConfiguration["url"];
   document.getElementById("separately").checked = urlConfiguration["separately"];
+}
+
+export function GetUrlConfiguration() {
+  const url = document.getElementById("url").value
+  const separately = document.getElementById("separately").checked
+  const url_configuration = {};
+  url_configuration.url = url;
+  url_configuration.separately  = separately;
+  return url_configuration;
 }

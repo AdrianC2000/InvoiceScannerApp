@@ -1,8 +1,9 @@
 import React from 'react';
 import '../css/Button.css';
 import { getFilesList } from './drag_and_drop';
-import { fillAreaWithResponse } from './text_area';
+import { FillAreaWithResponse } from './text_area';
 import { SwitchClasses } from './common';
+import { GetUpdatedJson } from './settings_modal/modal';
 
 function GetDataButton() {
   return (
@@ -12,24 +13,27 @@ function GetDataButton() {
 
 export default GetDataButton;
 
+let originalResponse = ""
+export { originalResponse };
+
 export async function getData() {
-  SwitchClasses('spinnerDiv', 'hidden', 'visible')
-  const filesList = getFilesList()
-  let json_data = ""
+  SwitchClasses('spinnerDiv', 'hidden', 'visible');
+  const filesList = getFilesList();
+  let json_data = "";
   try {
     const response = await getInvoiceData(filesList);
     if (response.ok) {
-      json_data = await response.json()
+      json_data = await response.json();
     } else {
-      json_data =  "Error: " + response.status + " " + response.body
+      json_data =  "Error: " + response.status + " " + response.body;
     }
   } catch (e) {
     json_data =  "Service unavailable.";
   }
-
-  fillAreaWithResponse(json_data)
-  SwitchClasses('spinnerDiv', 'visible', 'hidden')
-
+  originalResponse = JSON.stringify(JSON.stringify(json_data));
+  let updated_json = await GetUpdatedJson(originalResponse)
+  FillAreaWithResponse(updated_json);
+  SwitchClasses('spinnerDiv', 'visible', 'hidden');
 }
 
 function getInvoiceData(files) {
