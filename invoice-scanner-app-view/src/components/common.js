@@ -10,8 +10,10 @@ export function EnableObject(objectId, enabled) {
   const object = document.getElementById(objectId)
   object.enabled = enabled
   object.disabled = !enabled
-  if (enabled) {
+  if (enabled && objectId === "getDataButton") {
     object.onclick = getData;
+  } else {
+     // TODO
   }
 }
 
