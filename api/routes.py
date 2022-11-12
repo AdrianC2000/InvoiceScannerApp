@@ -3,6 +3,7 @@ import logging
 import os
 
 import numpy
+import requests
 from PIL import Image
 from flask import Blueprint, Response, request
 
@@ -55,3 +56,15 @@ def set_settings():
 @invoice_blueprint.route("/customize_json", methods=["POST"])
 def get_customize_json():
     return Response(customize_json(request.get_json()), status=201, mimetype='application/json')
+
+
+@invoice_blueprint.route("/send_request", methods=["POST"])
+def send_request():
+    body = json.dumps(request.get_json(), ensure_ascii=False).encode('utf8').decode()
+    logging.info(f"Send request received -> body: {body}")
+    url = settings.get_configuration()['url_configuration']['url']
+    headers = settings.get_configuration()['headers_configuration']
+    body = json.loads(body)
+    res = requests.post(url, json=body, headers=headers)
+    logging.info(f"Request from {url} ->" + res.text)
+    return Response(dump_to_json(res.text), status=201, mimetype='application/json')

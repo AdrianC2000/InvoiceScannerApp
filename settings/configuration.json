@@ -10,12 +10,12 @@
     "data_configuration": {
         "remove_nulls": false,
         "parsed_table": {
-            "value": "services",
+            "value": "servicesasd",
             "included": true
         },
         "ordinal_number": {
             "value": "ordinal_number_1234ab",
-            "included": true
+            "included": false
         },
         "name": {
             "value": "name",
