@@ -6,6 +6,7 @@ import GetDataButton from './components/get_data_button';
 import TextArea from './components/text_area';
 import Spinner from './components/spinner';
 import SettingsModal from './components/settings_modal/modal.js';
+import SendingModal from './components/sending_modal/sending_modal';
 
 function App() {
   return (
@@ -55,9 +56,7 @@ function App() {
                 <div className="row json-field-container">
                   <TextArea/>
                 </div>
-                <div className="row send-data-container flex-grow-1">
-                  <button type="button" id={"sendData"} className="btn btn-outline-secondary btn-lg btn-block actionButton" disabled>Send data</button>
-                </div>
+                <SendingModal/>
               </div>
             </div>
           </div>

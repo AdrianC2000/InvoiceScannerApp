@@ -7,7 +7,7 @@ import { GetUpdatedJson } from './settings_modal/modal';
 
 function GetDataButton() {
   return (
-    <button className="button-4" id={"getDataButton"} disabled onClick={getData}>Get data</button>
+    <button className="button-4" id={"getDataButton"} disabled onClick={GetData}>Get data</button>
   );
 }
 
@@ -16,7 +16,7 @@ export default GetDataButton;
 let originalResponse = ""
 export { originalResponse };
 
-export async function getData() {
+export async function GetData() {
   SwitchClasses('spinnerDiv', 'hidden', 'visible');
   const filesList = getFilesList();
   let json_data = "";

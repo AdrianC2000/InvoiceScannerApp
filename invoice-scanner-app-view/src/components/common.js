@@ -1,4 +1,4 @@
-import { getData } from './get_data_button';
+import { GetData } from './get_data_button';
 
 export function SwitchClasses(objectId, classToDelete, classToAdd) {
   const object = document.getElementById(objectId)
@@ -11,9 +11,9 @@ export function EnableObject(objectId, enabled) {
   object.enabled = enabled
   object.disabled = !enabled
   if (enabled && objectId === "getDataButton") {
-    object.onclick = getData;
+    object.onclick = GetData;
   } else {
-     // TODO
+    // object.onclick = setModalOpen()
   }
 }
 

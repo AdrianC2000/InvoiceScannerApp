@@ -10,6 +10,9 @@ function TextArea() {
 
 export default TextArea;
 
+let actualResponse = ""
+export { actualResponse };
+
 export function FillAreaWithResponse(response) {
   const textarea = document.getElementById('response-text-field');
   textarea.value = JSON.stringify(response, null, 4);
@@ -18,6 +21,7 @@ export function FillAreaWithResponse(response) {
 
 function CheckContent() {
   const textarea = document.getElementById('response-text-field');
+  actualResponse = textarea.value;
   if (textarea.value !== "") {
     EnableObject('sendData', true)
   } else {

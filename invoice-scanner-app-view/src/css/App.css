@@ -105,7 +105,7 @@ h2 {
 
 .actionButton:disabled {
   background-color: #FAFBFC !important;
-  border-color: rgba(27, 31, 35, 0.15) !important;
+  border-color: grey !important;
   color: grey !important;
   cursor: default !important;
 }

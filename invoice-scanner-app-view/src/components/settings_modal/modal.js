@@ -103,7 +103,7 @@ export async function InitModalValues() {
   SetModalLoaded();
 }
 
-function GetSettings() {
+export function GetSettings() {
   const url = 'http://localhost:5000/settings';
   return fetch(url, {
     method: 'get',
@@ -152,6 +152,7 @@ async function SaveSettings() {
 }
 
 function SetSettings(settings) {
+  console.log(settings)
   const url = 'http://localhost:5000/settings';
   return fetch(url, {
     headers: {
