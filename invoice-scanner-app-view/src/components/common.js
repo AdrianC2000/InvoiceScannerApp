@@ -12,8 +12,6 @@ export function EnableObject(objectId, enabled) {
   object.disabled = !enabled
   if (enabled && objectId === "getDataButton") {
     object.onclick = GetData;
-  } else {
-    // object.onclick = setModalOpen()
   }
 }
 

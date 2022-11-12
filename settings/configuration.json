@@ -1,7 +1,7 @@
 {
     "url_configuration": {
         "url": "https://api.infakt.pl/v3/invoices.json",
-        "separately": true
+        "separately": false
     },
     "headers_configuration": {
         "Content-Type": "application/json",

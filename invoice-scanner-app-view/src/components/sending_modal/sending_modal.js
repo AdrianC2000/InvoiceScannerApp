@@ -6,6 +6,7 @@ import Spinner from '../spinner';
 import SendingPopup from './sending_popup';
 import { actualResponse } from '../text_area';
 import { SwitchClasses } from '../common';
+import { GetSettings } from '../settings_modal/modal';
 
 const customStyles = {
   content: {
@@ -76,15 +77,24 @@ $(document)
   });
 
 async function SendRequest(body) {
+  let config = await GetSettings()
+  let configJson = await config.json()
+  let separately = configJson['url_configuration']['separately']
   let invoicesData = JSON.parse(body);
   console.log(invoicesData);
   let allResponses = {}
-  for (let i = 0; i < invoicesData.length; i++){
-    let singleInvoiceData = invoicesData[i];
-    let key = Object.keys(singleInvoiceData)[0];
-    let endpointResponse = await SendData(JSON.stringify(singleInvoiceData));
+  if (separately) {
+    for (let i = 0; i < invoicesData.length; i++) {
+      let singleInvoiceData = invoicesData[i];
+      let key = Object.keys(singleInvoiceData)[0];
+      let endpointResponse = await SendData(JSON.stringify(singleInvoiceData));
+      let responseJson = await endpointResponse.json();
+      allResponses[key] = JSON.parse(responseJson)
+    }
+  } else {
+    let endpointResponse = await SendData(JSON.stringify(invoicesData));
     let responseJson = await endpointResponse.json();
-    allResponses[key] = JSON.parse(responseJson)
+    allResponses = JSON.parse(responseJson)
   }
   const responseTextfield = document.getElementById('response-host-text-field');
   responseTextfield.value = JSON.stringify(allResponses, null, 4);
