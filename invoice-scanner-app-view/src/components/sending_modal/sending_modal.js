@@ -1,12 +1,12 @@
-import React from 'react';
-import Modal from 'react-modal';
-import $ from 'jquery';
-import '../../css/App.css';
-import Spinner from '../spinner';
-import SendingPopup from './sending_popup';
-import { actualResponse } from '../text_area';
-import { SwitchClasses } from '../common';
-import { GetSettings } from '../settings_modal/settings_modal';
+import React from 'react'
+import Modal from 'react-modal'
+import $ from 'jquery'
+import '../../css/App.css'
+import Spinner from '../spinner'
+import SendingPopup from './sending_popup'
+import { actualResponse } from '../text_area'
+import { SwitchClasses } from '../common'
+import { GetSettings } from '../settings_modal/settings_modal'
 
 const customStyles = {
   content: {
@@ -19,19 +19,19 @@ const customStyles = {
   },
 };
 
-Modal.setAppElement('#root');
+Modal.setAppElement('#root')
 
 function SendingModal() {
 
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = React.useState(false)
 
   function openModal() {
-    SendRequest(actualResponse);
-    setIsOpen(true);
+    SendRequest(actualResponse)
+    setIsOpen(true)
   }
 
   async function closeModal() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
 
   return (
@@ -71,38 +71,41 @@ export default SendingModal;
 
 $(document)
   .ready(function () {
-    const object = document.getElementById('sendData');
-    object.enabled = false;
-    object.disabled = true;
+    const object = document.getElementById('sendData')
+    object.enabled = false
+    object.disabled = true
   });
 
 async function SendRequest(body) {
   let config = await GetSettings()
   let configJson = await config.json()
   let separately = configJson['url_configuration']['separately']
-  let invoicesData = JSON.parse(body);
+  let invoicesData = JSON.parse(body)
   console.log(invoicesData);
   let allResponses = {}
   if (separately) {
+    let newKey = configJson['url_configuration']['invoice_key']
     for (let i = 0; i < invoicesData.length; i++) {
-      let singleInvoiceData = invoicesData[i];
-      let key = Object.keys(singleInvoiceData)[0];
-      let endpointResponse = await SendData(JSON.stringify(singleInvoiceData));
-      let responseJson = await endpointResponse.json();
+      let singleInvoiceData = invoicesData[i]
+      let key = Object.keys(singleInvoiceData)[0]
+      let invoiceDataToSend = {}
+      invoiceDataToSend[newKey] = singleInvoiceData[key]
+      let endpointResponse = await SendData(JSON.stringify(invoiceDataToSend))
+      let responseJson = await endpointResponse.json()
       allResponses[key] = JSON.parse(responseJson)
     }
   } else {
-    let endpointResponse = await SendData(JSON.stringify(invoicesData));
-    let responseJson = await endpointResponse.json();
+    let endpointResponse = await SendData(JSON.stringify(invoicesData))
+    let responseJson = await endpointResponse.json()
     allResponses = JSON.parse(responseJson)
   }
-  const responseTextfield = document.getElementById('response-host-text-field');
-  responseTextfield.value = JSON.stringify(allResponses, null, 4);
-  SwitchClasses('sendingSpinner', 'visible', 'hidden');
+  const responseTextfield = document.getElementById('response-host-text-field')
+  responseTextfield.value = JSON.stringify(allResponses, null, 4)
+  SwitchClasses('sendingSpinner', 'visible', 'hidden')
 }
 
 function SendData(body) {
-  const url = 'http://localhost:5000/send_request';
+  const url = 'http://localhost:5000/send_request'
   return fetch(url, {
     headers: {
       'Content-Type': 'application/json'
