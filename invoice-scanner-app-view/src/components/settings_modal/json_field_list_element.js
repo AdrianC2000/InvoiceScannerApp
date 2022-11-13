@@ -16,8 +16,8 @@ function JsonFieldListElement({field, value}) {
           <div className="col-7">
             <input id={message} type="text" className="form-control valueInput" placeholder="Value" defaultValue={message} onChange={handleChange}/>
           </div>
-          <div className="form-check no-gutters" id="delete-header-button">
-            <input className="form-check-input shouldIncludeCheckBox" type="checkbox" value="" id={"checkBox" + message}/>
+          <div className="form-check" id="delete-header-button">
+            <input className="form-check-input shouldIncludeCheckBox cursor-on-hover" type="checkbox" value="" id={"checkBox" + message}/>
           </div>
         </div>
       </div>

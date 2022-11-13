@@ -6,7 +6,7 @@ import Spinner from '../spinner';
 import SendingPopup from './sending_popup';
 import { actualResponse } from '../text_area';
 import { SwitchClasses } from '../common';
-import { GetSettings } from '../settings_modal/modal';
+import { GetSettings } from '../settings_modal/settings_modal';
 
 const customStyles = {
   content: {

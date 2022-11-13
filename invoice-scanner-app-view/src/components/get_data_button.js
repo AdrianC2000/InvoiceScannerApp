@@ -3,7 +3,7 @@ import '../css/Button.css';
 import { getFilesList } from './drag_and_drop';
 import { FillAreaWithResponse } from './text_area';
 import { SwitchClasses } from './common';
-import { GetUpdatedJson } from './settings_modal/modal';
+import { GetUpdatedJson } from './settings_modal/settings_modal';
 
 function GetDataButton() {
   return (

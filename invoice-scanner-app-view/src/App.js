@@ -5,7 +5,7 @@ import DragAndDrop from './components/drag_and_drop';
 import GetDataButton from './components/get_data_button';
 import TextArea from './components/text_area';
 import Spinner from './components/spinner';
-import SettingsModal from './components/settings_modal/modal.js';
+import SettingsModal from './components/settings_modal/settings_modal.js';
 import SendingModal from './components/sending_modal/sending_modal';
 
 function App() {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { EnableObject } from '../common';
 
 function UrlOptions() {
   return (
@@ -17,16 +18,19 @@ function UrlOptions() {
         <div className="col-md-auto">
           <div className="form-check">
             <input id="separately" className="form-check-input" type="checkbox" value=""/>
-            <label className="form-check-label" htmlFor="separately">
+            <label className="form-check-label cursor-on-hover" htmlFor="separately" data-toggle="tooltip" data-placement="top"
+                   title="Check this box if you want to send each invoice separately. This results in sending multiple requests, one per invoice." aria-hidden="true">
               Send invoices separately
             </label>
           </div>
         </div>
-        <div className="col-md-auto">
-          <i className="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
-             title="If you leave this box unchecked, request body will include all invoices at once.
-             Otherwise, every invoice will be sent separately, which results in multiple requests." aria-hidden="true" id={"urlInfo"}></i>
-        </div>
+      </div>
+      <div className="row input-group" id={"send-separately-key-div"}>
+        <span className="input-group-text cursor-on-hover" id="key-label" data-toggle="tooltip" data-placement="top"
+              title="Leave it empty if you want to send each invoice with the file name as its key. Otherwise, type in a key that will be used to mark the invoice data.
+              This change will not be seen in the json data preview (json keys has to be unique), but will be processed during request sending process." aria-hidden="true">Key</span>
+        <input id="invoice_key" type="text" className="form-control" aria-label="Sizing example input"
+               aria-describedby="inputGroup-sizing-default"/>
       </div>
     </div>
   );
@@ -37,13 +41,42 @@ export default UrlOptions;
 export function SetUrlConfiguration(urlConfiguration) {
   document.getElementById("url").value = urlConfiguration["url"];
   document.getElementById("separately").checked = urlConfiguration["separately"];
+  document.getElementById("invoice_key").value = urlConfiguration["invoice_key"];
+
+  let keyFieldId = "key-label";
+  let invoiceKeyId = "invoice_key";
+
+  if (document.getElementById("separately").checked) {
+    EnableObject(keyFieldId, true);
+    EnableObject(invoiceKeyId, true);
+  } else {
+    EnableObject(keyFieldId, false);
+    EnableObject(invoiceKeyId, false);
+    document.getElementById("invoice_key").value = ""
+  }
+
+  const separatelySendCheckBox = document.getElementById('separately');
+
+  separatelySendCheckBox.addEventListener('change', (event) => {
+    if (event.currentTarget.checked) {
+      EnableObject(keyFieldId, true);
+      EnableObject(invoiceKeyId, true);
+    } else {
+      EnableObject(keyFieldId, false);
+      EnableObject(invoiceKeyId, false);
+      document.getElementById("invoice_key").value = ""
+    }
+  })
+
 }
 
 export function GetUrlConfiguration() {
   const url = document.getElementById("url").value
   const separately = document.getElementById("separately").checked
+  const invoice_key = document.getElementById("invoice_key").value
   const url_configuration = {};
   url_configuration.url = url;
   url_configuration.separately  = separately;
+  url_configuration.invoice_key  = invoice_key;
   return url_configuration;
 }

@@ -88,6 +88,7 @@ export async function InitModalValues() {
     $('[data-toggle="tooltip"]')
       .tooltip(); // Enabling tooltip in the whole modal
   });
+
   let jsonData = '';
   try {
     const response = await GetSettings();
@@ -111,7 +112,6 @@ export function GetSettings() {
 }
 
 function FillFieldsWithResponse(settings) {
-  console.log('Settings: ' + settings);
   let urlConfiguration = settings['url_configuration'];
   SetUrlConfiguration(urlConfiguration);
   let headersConfiguration = settings['headers_configuration'];

@@ -28,15 +28,33 @@ function SettingsPopup() {
             </div>
             <div className="col-1 d-flex justify-content-end">
               <i className="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
-                 title="Leave the box unchecked if you don't want the key to be included in the final json"
+                 title="Check box next to the attribute if you want it to be included in the final json."
                  aria-hidden="true"></i>
             </div>
           </div>
           <div className="row form-check invisible" id={"removeNullsDiv"}>
-            <input className="form-check-input" type="checkbox" value="" id="remove_nulls"/>
-            <label className="form-check-label" htmlFor="removeNullsCheck">
-              Remove nulls
-            </label>
+            <div className={"row"}>
+              <div className={"col-4"}>
+                <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="remove_nulls"/>
+                <label className="form-check-label cursor-on-hover" htmlFor="remove_nulls">
+                  Remove nulls
+                </label>
+              </div>
+              <div className={"col-4"}>
+                <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="convert_to_cents"/>
+                <label className="form-check-label cursor-on-hover" htmlFor="convert_to_cents" data-toggle="tooltip" data-placement="top"
+                       title="Check this box if you want to change every amount value into smaller unit, e.g. dollars into cents.">
+                  Convert to cents
+                </label>
+              </div>
+              <div className={"col-4"}>
+                <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="remove_percentage"/>
+                <label className="form-check-label cursor-on-hover" htmlFor="remove_percentage" data-toggle="tooltip" data-placement="top"
+                       title='Check this box if you want to remove the "%" sign from the VAT attribute.' >
+                  Remove <q>%</q> sign
+                </label>
+              </div>
+            </div>
           </div>
           <div className="row justify-content-center overflow-auto sub-data-container invisible" id={"dataFormatDiv"}>
             <DataFormat />

@@ -3,7 +3,7 @@ import { FileUploader } from 'react-drag-drop-files';
 import { addFileToList } from './list';
 import { EnableObject } from './common';
 
-let fileTypes = ['JPEG', 'PNG', 'GIF'];
+let fileTypes = ['JPG', 'PNG', 'PDF'];
 
 let filesList = [];
 

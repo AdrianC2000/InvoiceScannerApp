@@ -293,3 +293,7 @@ input[type='checkbox'] {
   margin-top: 8px;
   margin-left: 15px;
 }
+
+.cursor-on-hover {
+  cursor: pointer;
+}
