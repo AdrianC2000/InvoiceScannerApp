@@ -1,20 +1,23 @@
 {
     "url_configuration": {
         "url": "https://api.infakt.pl/v3/invoices.json",
-        "separately": false
+        "separately": true,
+        "invoice_key": "invoice"
     },
     "headers_configuration": {
         "Content-Type": "application/json",
         "X-inFakt-ApiKey": "49139f268c535563e40faf7f1eb52e0d9b8f8e0b"
     },
     "data_configuration": {
-        "remove_nulls": false,
+        "remove_nulls": true,
+        "convert_to_cents": true,
+        "remove_percentage": true,
         "parsed_table": {
-            "value": "servicesasd",
+            "value": "services",
             "included": true
         },
         "ordinal_number": {
-            "value": "ordinal_number_1234ab",
+            "value": "ordinal_number",
             "included": false
         },
         "name": {
@@ -23,14 +26,14 @@
         },
         "pkwiu": {
             "value": "pkwiua",
-            "included": true
+            "included": false
         },
         "quantity": {
             "value": "quantity",
             "included": true
         },
         "unit_of_measure": {
-            "value": "unit_of_measure",
+            "value": "unit",
             "included": true
         },
         "gross_price": {
@@ -43,30 +46,30 @@
         },
         "net_value": {
             "value": "net_value",
-            "included": true
+            "included": false
         },
         "vat": {
-            "value": "vat",
+            "value": "tax_symbol",
             "included": true
         },
         "vat_value": {
             "value": "vat_value",
-            "included": true
+            "included": false
         },
         "gross_value": {
             "value": "gross_value",
-            "included": true
+            "included": false
         },
         "seller": {
             "value": "seller",
-            "included": true
+            "included": false
         },
         "buyer": {
-            "value": "buyer",
+            "value": "client_company_name",
             "included": true
         },
         "invoice_number": {
-            "value": "invoice_number",
+            "value": "number",
             "included": true
         },
         "currency": {

@@ -2,6 +2,9 @@ import json
 
 from parsers.json_encoder import JsonEncoder
 
+NUMERICAL_KEYS = ["gross_price", "net_price", "net_value", "vat_value", "gross_value"]
+VAT = ["vat"]
+
 
 def get_configuration() -> json:
     f = open('settings/configuration.json', mode="r", encoding="utf-8")
@@ -21,7 +24,14 @@ def customize_json(invoices_info: str) -> str:
         if key == 'remove_nulls':
             if value:
                 invoices_info = remove_null_and_empty_elements(invoices_info)
-        else:
+        elif key == 'convert_to_cents':
+            if value:
+                invoices_info = remove_value_for_key(invoices_info, ".", NUMERICAL_KEYS)
+                invoices_info = remove_value_for_key(invoices_info, ",", NUMERICAL_KEYS)
+        elif key == 'remove_percentage':
+            if value:
+                invoices_info = remove_value_for_key(invoices_info, "%", VAT)
+        elif key != 'remove_percentage':
             old_key = key
             new_key = value['value']
             included = value['included']
@@ -35,6 +45,26 @@ def remove_null_and_empty_elements(d):
         return x is None or x == {} or x == []
     return remove_elements(d, empty, remove_null_and_empty_elements)
 
+
+def remove_value_for_key(obj, value_to_remove, keys):
+    if isinstance(obj, (str, int, float)):
+        return obj
+    if isinstance(obj, dict):
+        new = obj.__class__()
+        for k, v in obj.items():
+            if k in keys:
+                new[k] = v.replace(value_to_remove, "").strip()
+            else:
+                new[k] = remove_value_for_key(v, value_to_remove, keys)
+    elif isinstance(obj, (list, set, tuple)):
+        new = obj.__class__(remove_value_for_key(v, value_to_remove, keys) for v in obj)
+    else:
+        return obj
+    return new
+
+
+def remove_percentage(obj):
+    return 5
 
 def remove_empty_elements(d):
     def empty(x):
