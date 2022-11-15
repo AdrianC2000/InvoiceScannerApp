@@ -16,11 +16,15 @@ function DataFormat() {
       <JsonFieldListElement field={'vat'} value={'vat'}/>
       <JsonFieldListElement field={'vat_value'} value={'vat_value'}/>
       <JsonFieldListElement field={'gross_value'} value={'gross_value'}/>
-      <JsonFieldListElement field={'seller'} value={'seller'}/>
-      <JsonFieldListElement field={'buyer'} value={'buyer'}/>
       <JsonFieldListElement field={'invoice_number'} value={'invoice_number'}/>
       <JsonFieldListElement field={'currency'} value={'currency'}/>
       <JsonFieldListElement field={'listing_date'} value={'listing_date'}/>
+      <JsonFieldListElement field={'seller_name'} value={'seller_name'}/>
+      <JsonFieldListElement field={'seller_address'} value={'seller_address'}/>
+      <JsonFieldListElement field={'seller_nip'} value={'seller_nip'}/>
+      <JsonFieldListElement field={'buyer_name'} value={'buyer_name'}/>
+      <JsonFieldListElement field={'buyer_address'} value={'buyer_address'}/>
+      <JsonFieldListElement field={'buyer_nip'} value={'buyer_nip'}/>
     </ul>
   );
 }
@@ -29,7 +33,7 @@ export default DataFormat;
 
 export function SetDataConfiguration(dataConfiguration) {
   for (const key in dataConfiguration) {
-    if (key === 'remove_nulls' || key === 'convert_to_cents' || key === 'remove_percentage') {
+    if ((['remove_nulls', 'convert_to_cents', 'remove_percentage', 'convert_currency'].includes(key))) {
       document.getElementById(key).checked = dataConfiguration[key];
     } else {
       document.getElementById(key).value = dataConfiguration[key]['value'];
@@ -43,6 +47,7 @@ export function GetDataConfiguration() {
   data_configuration['remove_nulls'] = document.getElementById('remove_nulls').checked;
   data_configuration['convert_to_cents'] = document.getElementById('convert_to_cents').checked;
   data_configuration['remove_percentage'] = document.getElementById('remove_percentage').checked;
+  data_configuration['convert_currency'] = document.getElementById('convert_currency').checked;
 
   const ul = document.getElementById('keysList');
   const items = ul.getElementsByTagName('li');

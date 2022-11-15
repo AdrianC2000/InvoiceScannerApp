@@ -34,24 +34,33 @@ function SettingsPopup() {
           </div>
           <div className="row form-check invisible" id={"removeNullsDiv"}>
             <div className={"row"}>
-              <div className={"col-4"}>
+              <div className={"col-6"}>
                 <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="remove_nulls"/>
                 <label className="form-check-label cursor-on-hover" htmlFor="remove_nulls">
                   Remove nulls
                 </label>
               </div>
-              <div className={"col-4"}>
+              <div className={"col-6"}>
                 <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="convert_to_cents"/>
                 <label className="form-check-label cursor-on-hover" htmlFor="convert_to_cents" data-toggle="tooltip" data-placement="top"
                        title="Check this box if you want to change every amount value into smaller unit, e.g. dollars into cents.">
                   Convert to cents
                 </label>
               </div>
-              <div className={"col-4"}>
+            </div>
+            <div className={"row"}>
+              <div className={"col-6"}>
                 <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="remove_percentage"/>
                 <label className="form-check-label cursor-on-hover" htmlFor="remove_percentage" data-toggle="tooltip" data-placement="top"
                        title='Check this box if you want to remove the "%" sign from the VAT attribute.' >
                   Remove <q>%</q> sign
+                </label>
+              </div>
+              <div className={"col-6"}>
+                <input className="form-check-input cursor-on-hover" type="checkbox" value="" id="convert_currency"/>
+                <label className="form-check-label cursor-on-hover" htmlFor="convert_currency" data-toggle="tooltip" data-placement="top"
+                       title="Check this box if you want to change the currency for the one defined in ISO 4217, e.g. zł -> PLN. If conversion fails the value will not be changed.">
+                  Convert currency
                 </label>
               </div>
             </div>
