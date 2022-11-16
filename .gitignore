@@ -5,3 +5,6 @@ extractors/table_extractor/models/*
 extractors/table_extractor/output_examples/*
 extractors/table_extractor/to_be_tested/*
 columns_seperator/output_examples/*
+tests/invoices_output_set/*
+tests/invoices_testing_set/*
+tests/outputs/*

@@ -4,11 +4,19 @@ from parsers.json_encoder import JsonEncoder
 
 NUMERICAL_KEYS = ["gross_price", "net_price", "net_value", "vat_value", "gross_value"]
 VAT = ["vat"]
+CURRENCY = ["currency"]
+CURRENCIES = {
+    "zł": "PLN",
+    "zl": "PLN",
+    "$": "USD",
+    "€": "EUR",
+    "£": "GBP"
+}
 
 
 def get_configuration() -> json:
-    f = open('settings/configuration.json', mode="r", encoding="utf-8")
-    return json.load(f)
+    with open('settings/configuration.json', mode="r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def set_configuration(settings_json: json):
@@ -26,11 +34,18 @@ def customize_json(invoices_info: str) -> str:
                 invoices_info = remove_null_and_empty_elements(invoices_info)
         elif key == 'convert_to_cents':
             if value:
-                invoices_info = remove_value_for_key(invoices_info, ".", NUMERICAL_KEYS)
-                invoices_info = remove_value_for_key(invoices_info, ",", NUMERICAL_KEYS)
+                invoices_info = change_value_for_key(invoices_info, ".", "", NUMERICAL_KEYS)
+                invoices_info = change_value_for_key(invoices_info, ",", "", NUMERICAL_KEYS)
         elif key == 'remove_percentage':
             if value:
-                invoices_info = remove_value_for_key(invoices_info, "%", VAT)
+                invoices_info = change_value_for_key(invoices_info, "%", "", VAT)
+        elif key == 'convert_currency':
+            if value:
+                for k in CURRENCIES.keys():
+                    temp = invoices_info
+                    invoices_info = change_value_for_key(invoices_info, k, CURRENCIES[k], CURRENCY)
+                    if temp != invoices_info:
+                        break
         elif key != 'remove_percentage':
             old_key = key
             new_key = value['value']
@@ -43,32 +58,34 @@ def customize_json(invoices_info: str) -> str:
 def remove_null_and_empty_elements(d):
     def empty(x):
         return x is None or x == {} or x == []
+
     return remove_elements(d, empty, remove_null_and_empty_elements)
 
 
-def remove_value_for_key(obj, value_to_remove, keys):
+def change_value_for_key(obj, value_to_remove, replacing_value, keys):
     if isinstance(obj, (str, int, float)):
         return obj
     if isinstance(obj, dict):
         new = obj.__class__()
         for k, v in obj.items():
             if k in keys:
-                new[k] = v.replace(value_to_remove, "").strip()
+                if v is not None:
+                    new[k] = v.replace(value_to_remove, replacing_value).replace(" ", "")
+                else:
+                    new[k] = v
             else:
-                new[k] = remove_value_for_key(v, value_to_remove, keys)
+                new[k] = change_value_for_key(v, value_to_remove, replacing_value, keys)
     elif isinstance(obj, (list, set, tuple)):
-        new = obj.__class__(remove_value_for_key(v, value_to_remove, keys) for v in obj)
+        new = obj.__class__(change_value_for_key(v, value_to_remove, replacing_value, keys) for v in obj)
     else:
         return obj
     return new
 
 
-def remove_percentage(obj):
-    return 5
-
 def remove_empty_elements(d):
     def empty(x):
         return x == {} or x == []
+
     return remove_elements(d, empty, remove_empty_elements)
 
 

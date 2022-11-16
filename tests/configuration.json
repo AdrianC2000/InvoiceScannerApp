@@ -9,24 +9,24 @@
         "X-inFakt-ApiKey": "49139f268c535563e40faf7f1eb52e0d9b8f8e0b"
     },
     "data_configuration": {
-        "remove_nulls": true,
-        "convert_to_cents": true,
-        "remove_percentage": true,
-        "convert_currency": true,
+        "remove_nulls": false,
+        "convert_to_cents": false,
+        "remove_percentage": false,
+        "convert_currency": false,
         "parsed_table": {
-            "value": "services",
+            "value": "parsed_table",
             "included": true
         },
         "ordinal_number": {
             "value": "ordinal_number",
-            "included": false
+            "included": true
         },
         "name": {
             "value": "name",
             "included": true
         },
         "pkwiu": {
-            "value": "pkwiua",
+            "value": "pkwiu",
             "included": false
         },
         "quantity": {
@@ -34,7 +34,7 @@
             "included": true
         },
         "unit_of_measure": {
-            "value": "unit",
+            "value": "unit_of_measure",
             "included": true
         },
         "gross_price": {
@@ -50,7 +50,7 @@
             "included": true
         },
         "vat": {
-            "value": "tax_symbol",
+            "value": "vat",
             "included": true
         },
         "vat_value": {
@@ -62,7 +62,7 @@
             "included": true
         },
         "invoice_number": {
-            "value": "number",
+            "value": "invoice_number",
             "included": true
         },
         "currency": {

@@ -5,6 +5,7 @@ from numpy import ndarray
 from skimage.transform import rotate
 from skimage.color import rgb2gray
 from deskew import determine_skew
+import os
 
 
 class InvoiceStraightener:

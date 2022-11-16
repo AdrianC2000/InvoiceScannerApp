@@ -12,8 +12,8 @@ SPACE_CHECK_SIGNS = [":", ";", ",", "."]
 
 
 def load_data():
-    f = open('classifiers/headers_classifier/table_headers_database.json', mode="r", encoding="utf-8")
-    return json.load(f)
+    with open('classifiers/headers_classifier/table_headers_database.json', mode="r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def find_best_fit(header: str, column_patterns: json) -> ConfidenceCalculation:

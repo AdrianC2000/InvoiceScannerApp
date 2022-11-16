@@ -5,6 +5,10 @@ import config
 import cv2
 import numpy as np
 from PIL import Image
+from pathlib import Path
+
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 def calculate_angle(first_point, second_point):
@@ -57,6 +61,7 @@ class ImageRotator:
             rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                     fillcolor=255)
             logging.info(f'Table rotated by {angle} degrees.')
+            Path(config.Config.directory_to_save).mkdir(parents=True, exist_ok=True)
             rotated_table.save(config.Config.directory_to_save + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)
             return np.asarray(rotated_table)
         else:

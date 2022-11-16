@@ -1,4 +1,3 @@
-import json
 import unittest
 
 from settings.settings import customize_json, change_keys

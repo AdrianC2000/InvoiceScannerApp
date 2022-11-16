@@ -1,4 +1,4 @@
-import logging
+from random import randrange
 
 import config
 import cv2
@@ -24,7 +24,6 @@ def get_cells_in_columns(bounding_boxes):
 
 
 class ColumnsSeperator:
-
     __ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX = "4.Original contours.png"
     __FIXED_CONTOURS_OUTPUT_PATH_PREFIX = "5.Fixed contours.png"
     __TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX = "6.Table with bounding boxes.png"
@@ -43,11 +42,13 @@ class ColumnsSeperator:
 
         # Get original table contours
         original_contours_image, original_table_contours = contours_definer_on_rotated.get_table_contours()
-        cv2.imwrite(config.Config.directory_to_save + self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX, original_contours_image)
+        cv2.imwrite(config.Config.directory_to_save + self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX,
+                    original_contours_image)
 
         # Get fixed table contours
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
-        cv2.imwrite(config.Config.directory_to_save + self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX, fixed_table_contours_image)
+        cv2.imwrite(config.Config.directory_to_save + self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX,
+                    fixed_table_contours_image)
 
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -59,12 +60,18 @@ class ColumnsSeperator:
 
     def save_table_with_bounding_boxes(self, cells_in_columns):
         table_image_copy = cv2.cvtColor(self.table_image.copy(), cv2.COLOR_RGB2BGR)
+        index = 0
         for columns in cells_in_columns:
-            color = list(np.random.random(size=3) * 256)
+            color = config.Config.COLORS_LIST[index]
             for cell in columns:
                 cv2.rectangle(table_image_copy, (cell[0], cell[1]), (cell[0] + cell[2], cell[1] + cell[3]),
                               color, 1)
-        cv2.imwrite(config.Config.directory_to_save + self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
+            if index < len(config.Config.COLORS_LIST) - 1:
+                index += 1
+            else:
+                index = 0
+        cv2.imwrite(config.Config.directory_to_save + self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX,
+                    table_image_copy)
 
     def image_to_grayscale(self):
         # thresholding the image to a binary image

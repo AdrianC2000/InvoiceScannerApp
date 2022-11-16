@@ -59,10 +59,10 @@ def remove_key_word(info: str, matching_block: MatchingBlock) -> str:
     return info.replace(key_word, '').strip()
 
 
-def calculate_data_position(matching_block: MatchingBlock, index: int) -> Position:
-    longest_x = max(row.position.ending_x for row in matching_block.block.rows)
-    first_row_position = matching_block.block.rows[0].position
-    last_row_position = matching_block.block.rows[index].position
+def calculate_data_position(rows: list[TextPosition]) -> Position:
+    longest_x = max(row.position.ending_x for row in rows)
+    first_row_position = rows[0].position
+    last_row_position = rows[len(rows) - 1].position
     starting_x = first_row_position.starting_x
     starting_y = first_row_position.starting_y
     ending_y = last_row_position.ending_y

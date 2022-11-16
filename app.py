@@ -6,7 +6,7 @@ from flask_cors import CORS
 from api.routes import invoice_blueprint
 
 UPLOAD_FOLDER = 'resources/upload'
-ALLOWED_EXTENSIONS = set(['pdf', 'png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
 CORS(app)
