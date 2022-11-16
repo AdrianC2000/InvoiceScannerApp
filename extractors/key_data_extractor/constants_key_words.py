@@ -10,7 +10,7 @@ nip = {
 address = {
   "address": [
     {
-      "patterns": ["ul", "al", "os"],
+      "patterns": ["ul", "ui", "u1", "al", "ai", "a1", "os", "0s"],
       "enough_fit": 1
     }
   ]

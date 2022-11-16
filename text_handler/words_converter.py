@@ -2,6 +2,8 @@ import config
 import pandas as pd
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
 SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
