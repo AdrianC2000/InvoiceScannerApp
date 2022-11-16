@@ -18,10 +18,10 @@ def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict):
         row = prepare_row(row.text)
         for word in row.split(' '):
             word = prepare_word(word)
-            _, _, confidence_calculation = find_best_data_fit(word, pattern)
+            _, best_word_index, confidence_calculation = find_best_data_fit(word, pattern)
             if confidence_calculation.confidence > 0.8:
-                return index
-    return -1
+                return index, best_word_index
+    return -1, -1
 
 
 def get_row_index_by_regex_with_keyword(regex_pattern: str, row_index: int, rows: list[TextPosition]):
@@ -67,3 +67,85 @@ def calculate_data_position(rows: list[TextPosition]) -> Position:
     starting_y = first_row_position.starting_y
     ending_y = last_row_position.ending_y
     return Position(starting_x, starting_y, longest_x, ending_y)
+
+
+def get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y):
+    block_on_the_right = None
+    closest_position = 10000
+    threshold = 200
+    extended_row_starting_y = row_starting_y - threshold
+    extended_row_ending_y = row_ending_y + threshold
+    try:
+        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key_row_position,
+                                                    extended_row_ending_y, extended_row_starting_y)
+    except IndexError:
+        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key_row_position,
+                                                    row_ending_y,
+                                                    row_starting_y)
+    return block_on_the_right
+
+
+def get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key_row_position, row_ending_y,
+                           row_starting_y):
+    for block in all_blocks:
+        block_starting_y = block.position.starting_y
+        block_ending_y = block.position.ending_y
+        percentage = check_percentage_inclusion(row_starting_y, row_ending_y, block_starting_y,
+                                                block_ending_y)
+        if percentage != 0:
+            row_ending_x = key_row_position.ending_x
+            block_starting_x = block.position.starting_x
+            if ((block_starting_x - row_ending_x) < closest_position) and (row_ending_x < block_starting_x):
+                block_on_the_right = block
+    return block_on_the_right
+
+
+def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x):
+    block_below = None
+    closest_position = 1000
+    threshold = 200
+    extended_row_starting_x = row_starting_x - threshold
+    extended_row_ending_x = row_ending_x + threshold
+    try:
+        block_below = get_block_below(all_blocks, block_below, closest_position, key_row_position,
+                                      extended_row_ending_x, extended_row_starting_x)
+    except IndexError:
+        block_below = get_block_below(all_blocks, block_below, closest_position, key_row_position,
+                                      extended_row_ending_x, extended_row_starting_x)
+    return block_below
+
+
+def get_block_below(all_blocks, block_below, closest_position, key_row_position, row_ending_x, row_starting_x):
+    for block in all_blocks:
+        block_starting_x = block.position.starting_x
+        block_ending_x = block.position.ending_x
+        percentage = check_percentage_inclusion(row_starting_x, row_ending_x, block_starting_x,
+                                                block_ending_x)
+        if percentage != 0:
+            row_ending_y = key_row_position.ending_y
+            block_starting_y = block.position.starting_y
+            if ((block_starting_y - row_ending_y) < closest_position) and (row_ending_y < block_starting_y):
+                block_below = block
+                closest_position = block_starting_y - row_ending_y
+    return block_below
+
+
+def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
+                               outer_object_ending: int) -> float:
+    if (outer_object_starting <= inner_object_starting) and (outer_object_ending >= inner_object_ending):
+        return 100
+    elif inner_object_starting < outer_object_starting < inner_object_ending:
+        common_start = inner_object_starting
+        common_end = inner_object_ending
+        common_length = common_end - common_start
+        word_length = inner_object_ending - inner_object_starting
+        percentage = common_length / word_length * 100
+        return percentage
+    elif inner_object_starting < outer_object_ending < inner_object_ending:
+        common_start = inner_object_starting
+        common_end = outer_object_ending
+        common_length = common_end - common_start
+        word_length = inner_object_ending - inner_object_starting
+        percentage = common_length / word_length * 100
+        return percentage
+    return 0

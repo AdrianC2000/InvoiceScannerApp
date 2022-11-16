@@ -34,7 +34,7 @@ def save_table_with_bounding_boxes(invoice: ndarray, color, positions: list[Posi
     table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
     for position in positions:
         cv2.rectangle(table_image_copy, (position.starting_x, position.starting_y),
-                      (position.ending_x, position.ending_y), color, 1)
+                      (position.ending_x, position.ending_y), color, 2)
     cv2.imwrite(config.Config.directory_to_save + prefix, table_image_copy)
 
 

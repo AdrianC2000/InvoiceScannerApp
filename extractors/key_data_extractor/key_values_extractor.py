@@ -8,7 +8,8 @@ from entities.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.currency_resolver import CurrencyResolvers
 from extractors.key_data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
 from extractors.key_data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
-from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data
+from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data, get_closest_block_below, \
+    get_closest_block_on_the_right
 from extractors.value_finding_status import ValueFindingStatus
 from entities.block_position import BlockPosition
 from text_handler.cells_creator import check_percentage_inclusion
@@ -24,38 +25,6 @@ def currency_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchRespo
 
 def listing_date_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
     return ListingDateResolvers(block, is_preliminary).get_listing_date()
-
-
-def get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y):
-    block_on_the_right = None
-    closest_position = 10000
-    for block in all_blocks:
-        block_starting_y = block.position.starting_y
-        block_ending_y = block.position.ending_y
-        percentage = check_percentage_inclusion(row_starting_y, row_ending_y, block_starting_y,
-                                                block_ending_y)
-        if percentage != 0:
-            row_ending_x = key_row_position.ending_x
-            block_starting_x = block.position.starting_x
-            if ((block_starting_x - row_ending_x) < closest_position) and (row_ending_x < block_starting_x):
-                block_on_the_right = block
-    return block_on_the_right
-
-
-def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x):
-    block_below = None
-    closest_position = 1000
-    for block in all_blocks:
-        block_starting_x = block.position.starting_x
-        block_ending_x = block.position.ending_x
-        percentage = check_percentage_inclusion(row_starting_x, row_ending_x, block_starting_x,
-                                                block_ending_x)
-        if percentage != 0:
-            row_ending_y = key_row_position.ending_y
-            block_starting_y = block.position.starting_y
-            if ((block_starting_y - row_ending_y) < closest_position) and (row_ending_y < block_starting_y):
-                block_below = block
-    return block_below
 
 
 class KeyValuesExtractor:
@@ -89,7 +58,6 @@ class KeyValuesExtractor:
                                if response.status != ValueFindingStatus.FOUND]
         found_responses = [response for response in preliminary_search_response if response not in not_found_responses]
         searching_responses = list()
-        positions = list()
         for response in not_found_responses:
             if response.status == ValueFindingStatus.VALUE_ON_THE_RIGHT:
                 response = self.search_right(response, self.all_blocks, response.key_word)
@@ -100,8 +68,6 @@ class KeyValuesExtractor:
                 if response.status == ValueFindingStatus.VALUE_BELOW:
                     response = self.search_below(response, self.all_blocks, response.key_word)
             searching_responses.append(response)
-            if response.status == ValueFindingStatus.FOUND:
-                positions.append(response.row_position)
         found_responses.extend(searching_responses)
         logging.info("Deep search:")
         for response in searching_responses:
