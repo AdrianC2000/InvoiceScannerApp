@@ -9,18 +9,17 @@ from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
 from entities.block_position import BlockPosition
-from text_handler.text_reader import COLORS_LIST
 
 __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
 
 
 def load_data():
-    f = open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8")
-    return json.load(f)
+    with open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def save_table_with_bounding_boxes(invoice: ndarray, unique_keys_blocks: list[MatchingBlock]):
-    color = COLORS_LIST[randrange(len(COLORS_LIST))]
+    color = config.Config.COLORS_LIST[randrange(len(config.Config.COLORS_LIST))]
     table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
     for matching_block in unique_keys_blocks:
         block = matching_block.block
