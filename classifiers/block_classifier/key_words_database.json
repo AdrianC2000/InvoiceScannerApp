@@ -13,6 +13,10 @@
   ],
   "invoice_number": [
     {
+      "patterns": ["numer", "faktury"],
+      "enough_fit": 2
+    },
+    {
       "patterns": ["faktura", "vat", "nr", "numer"],
       "enough_fit": 2
     }
@@ -23,10 +27,6 @@
       "enough_fit": 1
     },
     {
-      "patterns": ["razem"],
-      "enough_fit": 1
-    },
-    {
       "patterns": ["do", "zapłaty"],
       "enough_fit": 2
     }
@@ -34,6 +34,10 @@
   "listing_date": [
     {
       "patterns": ["data", "wystawienia"],
+      "enough_fit": 2
+    },
+    {
+      "patterns": ["data", "dokumentu"],
       "enough_fit": 2
     }
   ]

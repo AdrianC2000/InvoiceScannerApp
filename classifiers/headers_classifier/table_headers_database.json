@@ -1,7 +1,7 @@
 {
   "ordinal_number": ["lp"],
-  "name": ["nazwa", "towaru", "usługi", "usługa", "rozliczenie", "z", "tytułu"],
-  "pkwiu": ["PKWiU"],
+  "name": ["nazwa", "towaru", "usługi", "usługa", "rozliczenie", "z", "tytułu", "opis"],
+  "pkwiu": ["pkwiu"],
   "quantity": ["ilość", "zużycie"],
   "unit_of_measure": ["jm"],
   "gross_price": ["cena", "jednostkowa", "jedn", "brutto", "zł"],

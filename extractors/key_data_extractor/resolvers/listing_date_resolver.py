@@ -53,5 +53,5 @@ class ListingDateResolvers:
                     return SearchResponse(key_word, word, ValueFindingStatus.FOUND, row_below_currency_key.position)
             return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, row_below_currency_key.position)
         except IndexError:
-            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, row_below_currency_key.position)
+            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, row_with_listing_date_key.position)
 

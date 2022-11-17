@@ -71,22 +71,22 @@ def calculate_data_position(rows: list[TextPosition]) -> Position:
 
 def get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y):
     block_on_the_right = None
-    closest_position = 10000
-    threshold = 200
+    threshold = 50
     extended_row_starting_y = row_starting_y - threshold
     extended_row_ending_y = row_ending_y + threshold
     try:
-        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key_row_position,
+        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
                                                     extended_row_ending_y, extended_row_starting_y)
     except IndexError:
-        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key_row_position,
+        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
                                                     row_ending_y,
                                                     row_starting_y)
     return block_on_the_right
 
 
-def get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key_row_position, row_ending_y,
+def get_block_on_the_right(all_blocks, block_on_the_right, key_row_position, row_ending_y,
                            row_starting_y):
+    closest_distance = 10000
     for block in all_blocks:
         block_starting_y = block.position.starting_y
         block_ending_y = block.position.ending_y
@@ -95,7 +95,8 @@ def get_block_on_the_right(all_blocks, block_on_the_right, closest_position, key
         if percentage != 0:
             row_ending_x = key_row_position.ending_x
             block_starting_x = block.position.starting_x
-            if ((block_starting_x - row_ending_x) < closest_position) and (row_ending_x < block_starting_x):
+            if ((block_starting_x - row_ending_x) < closest_distance) and (row_ending_x < block_starting_x):
+                closest_distance = block_starting_x - row_ending_x
                 block_on_the_right = block
     return block_on_the_right
 

@@ -27,51 +27,51 @@ class InvoicesParsingTests(unittest.TestCase):
             test_config = json.load(f)
         settings.set_configuration(json.dumps(test_config))
 
-    def test_every_invoice(self):
-        invoices_set = "tests/invoices_testing_set/"
-        outputs_set = "tests/invoices_output_set/"
-        cwd = os.getcwd()
-
-        for file in os.listdir(os.fsencode(invoices_set)):
-            filename = os.fsdecode(file)
-            test_output_dir = cwd + '/tests/outputs/' + filename + "/"
-            invoice_path = invoices_set + filename
-            invoice_image = io.imread(invoice_path)[:, :, :3]
-            invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
-
-            output_file = outputs_set + filename.split('.')[0] + ".json"
-            f = open(output_file, mode="r", encoding="utf-8")
-            output_json = json.load(f)
-
-            expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-            actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-
-            with self.subTest(expected_output=expected_output):
-                self.assertEqual(expected_output, actual_output, "Invoice info incorrect")
-
-    # def test_single_invoice(self):
+    # def test_every_invoice(self):
     #     invoices_set = "tests/invoices_testing_set/"
     #     outputs_set = "tests/invoices_output_set/"
     #     cwd = os.getcwd()
     #
-    #     filename = "test_invoice_2.png"
-    #     test_output_dir = cwd + '/tests/outputs/' + filename + "/"
+    #     for file in os.listdir(os.fsencode(invoices_set)):
+    #         filename = os.fsdecode(file)
+    #         test_output_dir = cwd + '/tests/outputs/' + filename + "/"
+    #         invoice_path = invoices_set + filename
+    #         invoice_image = io.imread(invoice_path)[:, :, :3]
+    #         invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
     #
-    #     if not os.path.exists(test_output_dir):
-    #         os.makedirs(test_output_dir)
+    #         output_file = outputs_set + filename.split('.')[0] + ".json"
+    #         f = open(output_file, mode="r", encoding="utf-8")
+    #         output_json = json.load(f)
     #
-    #     invoice_path = invoices_set + filename
-    #     invoice_image = io.imread(invoice_path)[:, :, :3]
-    #     invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
+    #         expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
+    #         actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
     #
-    #     output_file = outputs_set + filename.split('.')[0] + ".json"
-    #     f = open(output_file, mode="r", encoding="utf-8")
-    #     output_json = json.load(f)
-    #
-    #     expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-    #     actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-    #
-    #     self.assertEqual(expected_output, actual_output, "Invoice info incorrect")
+    #         with self.subTest(expected_output=expected_output):
+    #             self.assertEqual(expected_output, actual_output, "Invoice info incorrect")
+
+    def test_single_invoice(self):
+        invoices_set = "tests/invoices_testing_set/"
+        outputs_set = "tests/invoices_output_set/"
+        cwd = os.getcwd()
+
+        filename = "test_invoice_10.png"
+        test_output_dir = cwd + '/tests/outputs/' + filename + "/"
+
+        if not os.path.exists(test_output_dir):
+            os.makedirs(test_output_dir)
+
+        invoice_path = invoices_set + filename
+        invoice_image = io.imread(invoice_path)[:, :, :3]
+        invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
+
+        output_file = outputs_set + filename.split('.')[0] + ".json"
+        f = open(output_file, mode="r", encoding="utf-8")
+        output_json = json.load(f)
+
+        expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
+        actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
+
+        self.assertEqual(expected_output, actual_output, "Invoice info incorrect")
 
     @classmethod
     def tearDownClass(cls):

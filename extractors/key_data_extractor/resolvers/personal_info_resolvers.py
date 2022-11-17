@@ -1,3 +1,5 @@
+import re
+
 from entities.matching_block import MatchingBlock
 from entities.position import Position
 from extractors.key_data_extractor.constants_key_words import address, nip
@@ -32,8 +34,8 @@ def create_common_not_found_response(key_prefix: str, value_finding_status: Valu
 
 
 def create_partially_not_found_response(key_prefix, address_row_index: int, zip_code_row_index: int,
-                                        nip_row_index: int, nip_word_index: int, matching_block: MatchingBlock) \
-        -> list[SearchResponse]:
+                                        nip_row_index: int, nip_word_index: int, matching_block: MatchingBlock,
+                                        is_preliminary: bool) -> list[SearchResponse]:
     address_rows = []
     address_status = ""
     key_word_position = matching_block.block.rows[0].position
@@ -59,9 +61,11 @@ def create_partially_not_found_response(key_prefix, address_row_index: int, zip_
     elif address_row_index != -1 or zip_code_row_index != -1:
         nip_response = SearchResponse(key_prefix + "_nip", "", ValueFindingStatus.VALUE_BELOW, key_word_position)
 
-    minimum = min(nip_row_index, address_row_index, zip_code_row_index)
-    name_rows = matching_block.block.rows[1:minimum]
-
+    minimum = min(address_row_index, zip_code_row_index)
+    if is_preliminary:
+        name_rows = matching_block.block.rows[1:minimum]
+    else:
+        name_rows = matching_block.block.rows[0:minimum]
     return [get_search_response(name_rows, key_prefix + "_name", ValueFindingStatus.FOUND),
             get_search_response(address_rows, key_prefix + "_address", address_status),
             nip_response]
@@ -72,6 +76,10 @@ def get_common_value(address_row_index, zip_code_row_index):
         return -1
     else:
         return max(zip_code_row_index, address_row_index)
+
+
+def has_numbers(inputString):
+    return bool(re.search(r'\d', inputString))
 
 
 class PersonInfoResolvers:
@@ -102,10 +110,14 @@ class PersonInfoResolvers:
                                                             self.__matching_block.block.rows[0].position)
             else:
                 return create_partially_not_found_response(self.__person_type, address_row_index, zip_code_row_index,
-                                                           nip_row_index, nip_word_index, self.__matching_block)
+                                                           nip_row_index, nip_word_index, self.__matching_block,
+                                                           self.__is_preliminary)
         else:
             # Everything found
-            minimum = min(nip_row_index, address_row_index, zip_code_row_index)
+            if nip_row_index != -1:
+                minimum = min(nip_row_index, address_row_index, zip_code_row_index)
+            else:
+                minimum = min(address_row_index, zip_code_row_index)
             if self.__is_preliminary:
                 name_rows = self.__matching_block.block.rows[1:minimum]
             else:
@@ -125,6 +137,14 @@ class PersonInfoResolvers:
 
     def __get_address_row_index(self):
         row_index, _ = get_row_index_by_pattern(self.__matching_block, address)
+        try:
+            if row_index == -1:
+                if has_numbers(self.__matching_block.block.rows[1].text):
+                    return 1
+                if has_numbers(self.__matching_block.block.rows[2].text):
+                    return 2
+        except IndexError:
+            return row_index
         return row_index
 
     def __get_zip_code_row_index(self):

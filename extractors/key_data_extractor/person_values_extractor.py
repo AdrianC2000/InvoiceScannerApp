@@ -42,20 +42,39 @@ class PersonValuesExtractor:
         not_found_responses = [response for response in preliminary_search_response
                                if response.status != ValueFindingStatus.FOUND]
         found_responses = [response for response in preliminary_search_response if response not in not_found_responses]
+        found_keys = [response.key_word for response in found_responses if response.status == ValueFindingStatus.FOUND]
         not_found_seller = [response for response in not_found_responses if response.key_word.startswith("seller")]
         not_found_buyer = [response for response in not_found_responses if response.key_word.startswith("buyer")]
         searching_responses = list()
 
         if len(not_found_seller) != 0:
-            seller_responses = self.search_below(not_found_seller[0].row_position, self.all_blocks, "seller")
-            if any(response.status != ValueFindingStatus.FOUND for response in seller_responses):
-                seller_responses = self.search_right(not_found_seller[0].row_position, self.all_blocks, "seller")
-            searching_responses.extend(seller_responses)
+            below_seller_responses = self.search_below(not_found_seller[0].row_position, self.all_blocks, "seller")
+            new_seller_responses = [response for response in below_seller_responses if
+                                    response.key_word not in found_keys]
+            found_keys.extend([response.key_word for response in below_seller_responses if
+                               response.status == ValueFindingStatus.FOUND])
+            if any(response.status != ValueFindingStatus.FOUND for response in below_seller_responses):
+                right_seller_responses = self.search_right(not_found_seller[0].row_position, self.all_blocks, "seller")
+                missing_responses_keywords = [response.key_word for response in new_seller_responses if
+                                              response.status != ValueFindingStatus.FOUND]
+                right_new_responses = [response for response in right_seller_responses if
+                                       response.key_word in missing_responses_keywords and response.status == ValueFindingStatus.FOUND]
+                new_seller_responses.extend(right_new_responses)
+            searching_responses.extend(new_seller_responses)
         if len(not_found_buyer) != 0:
-            buyer_responses = self.search_below(not_found_buyer[0].row_position, self.all_blocks, "buyer")
-            if any(response.status != ValueFindingStatus.FOUND for response in buyer_responses):
-                buyer_responses = self.search_right(not_found_buyer[0].row_position, self.all_blocks, "buyer")
-            searching_responses.extend(buyer_responses)
+            below_buyer_responses = self.search_below(not_found_buyer[0].row_position, self.all_blocks, "buyer")
+            new_buyer_responses = [response for response in below_buyer_responses if
+                                   response.key_word not in found_keys]
+            found_keys.extend([response.key_word for response in below_buyer_responses if
+                               response.status == ValueFindingStatus.FOUND])
+            if any(response.status != ValueFindingStatus.FOUND for response in below_buyer_responses):
+                right_buyer_responses = self.search_right(not_found_buyer[0].row_position, self.all_blocks, "buyer")
+                missing_responses_keywords = [response.key_word for response in new_buyer_responses if
+                                              response.status != ValueFindingStatus.FOUND]
+                right_new_responses = [response for response in right_buyer_responses if
+                                       response.key_word in missing_responses_keywords and response.status == ValueFindingStatus.FOUND]
+                new_buyer_responses.extend(right_new_responses)
+            searching_responses.extend(new_buyer_responses)
         found_responses.extend(searching_responses)
 
         return found_responses
