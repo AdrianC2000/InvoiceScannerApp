@@ -49,6 +49,7 @@ class ColumnsSeperator:
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
         cv2.imwrite(config.Config.directory_to_save + self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX,
                     fixed_table_contours_image)
+        self.table_image = self.table_image[0: fixed_table_contours_image.shape[0], :]
 
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)

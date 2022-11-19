@@ -30,7 +30,7 @@ class TableDataProcessor:
         cells_with_phrases = WordsConverter(cells_with_words).merge_words_into_phrases()
         columns_ordered = HeadersClassifier(cells_with_phrases[0]).find_corresponding_columns()
 
-        invoice_table_removed = TableRemover(self.__invoice, table_position.position).remove_table()
+        invoice_table_removed = TableRemover(self.__invoice, table_position.position, rotated_table).remove_table()
         cv2.imwrite(config.Config.directory_to_save + self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
 
         parsed_rows = TableParser(columns_ordered, cells_with_phrases).parse_rows()

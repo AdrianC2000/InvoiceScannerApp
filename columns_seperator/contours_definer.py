@@ -1,31 +1,50 @@
 from statistics import mean
 import cv2
 import numpy as np
+from numpy import e
 
 
-def separate_lines(horizontal_lines):
+def separate_lines(horizontal_lines, is_vertical):
     next_zero_break = False
     single_horizontal_line = {}
     all_horizontal_lines = []
     index = 0
+    last_element_indexes = []
+    last_elements = []
     for i in horizontal_lines:
         if not np.all(i == 0):
             single_horizontal_line[index] = i
+            last_elements.append(np.max(np.argwhere(i == 255).squeeze()))
             next_zero_break = True
         if np.all(i == 0) and next_zero_break:
             next_zero_break = False
+            last_element_indexes.append(max(last_elements))
+            last_elements = []
             all_horizontal_lines.append(single_horizontal_line)
             single_horizontal_line = {}
         index += 1
-    return all_horizontal_lines
+    height = 0
+    if is_vertical:
+        smallest_parts = [x for x in last_element_indexes if x <= mean(last_element_indexes)]
+        height = max(smallest_parts)
+        new_all_horizontal_lines = []
+        for lines in all_horizontal_lines:
+            new_lines = {}
+            for index, line in lines.items():
+                new_lines[index] = line[0: height]
+                new_all_horizontal_lines.append(new_lines)
+            all_horizontal_lines = new_all_horizontal_lines
+    return all_horizontal_lines, height
 
 
-def find_middle_lines(horizontal_lines_separated, horizontal_lines):
-    hei, wid = horizontal_lines.shape
-    empty_image = np.zeros(shape=(hei, wid))
+def find_middle_lines(horizontal_lines_separated, height, width):
+    empty_image = np.zeros(shape=(height, width))
 
     for i in horizontal_lines_separated:
-        empty_image[int(mean(i.keys()))] = np.full((1, wid), 255)
+        try:
+            empty_image[int(mean(i.keys()))] = np.full((1, width), 255)
+        except IndexError:
+            pass
 
     return empty_image
 
@@ -64,7 +83,8 @@ class ContoursDefiner:
 
     def get_table_contours(self):
         table_contours_image = cv2.bitwise_or(self.vertical_lines, self.horizontal_lines)
-        thresh, table_contours_image = cv2.threshold(table_contours_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        thresh, table_contours_image = cv2.threshold(table_contours_image, 128, 255,
+                                                     cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         # Detect contours for following box detection
         contours, hierarchy = cv2.findContours(table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         return table_contours_image, contours
@@ -74,11 +94,12 @@ class ContoursDefiner:
         return zip(*sorted(zip(contours, bounding_boxes), key=lambda b: b[1][0], reverse=False))
 
     def fix_contours(self):
-        horizontal_lines_separated = separate_lines(self.horizontal_lines)
-        horizontal_single_lines = find_middle_lines(horizontal_lines_separated, self.horizontal_lines)
+        horizontal_lines_separated, _ = separate_lines(self.horizontal_lines, False)
+        vertical_lines_separated, height = separate_lines(self.vertical_lines.transpose(), True)
+        _, width = self.horizontal_lines.shape
 
-        vertical_lines_separated = separate_lines(self.vertical_lines.transpose())
-        vertical_single_lines = find_middle_lines(vertical_lines_separated, self.vertical_lines.transpose())\
+        horizontal_single_lines = find_middle_lines(horizontal_lines_separated, height, width)
+        vertical_single_lines = find_middle_lines(vertical_lines_separated, width, height) \
             .transpose()
 
         return cv2.bitwise_or(horizontal_single_lines, vertical_single_lines)
