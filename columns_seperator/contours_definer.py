@@ -25,8 +25,7 @@ def separate_lines(horizontal_lines, is_vertical):
         index += 1
     height = 0
     if is_vertical:
-        smallest_parts = [x for x in last_element_indexes if x <= mean(last_element_indexes)]
-        height = max(smallest_parts) + 5
+        height = min(last_element_indexes) + 3
         new_all_horizontal_lines = []
         for lines in all_horizontal_lines:
             new_lines = {}

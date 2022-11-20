@@ -6,16 +6,34 @@ from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from entities.position import Position
 from entities.search_response import SearchResponse
+from entities.text_position import TextPosition
 from extractors.key_data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers, \
     create_common_not_found_response
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data, \
-    get_closest_block_on_the_right, get_closest_block_below
+    get_closest_block_on_the_right, get_closest_block_below, calculate_data_position
 from extractors.value_finding_status import ValueFindingStatus
 from entities.block_position import BlockPosition
 
 
 def person_info_resolver(block: MatchingBlock, keyword: str, is_preliminary: bool) -> list[SearchResponse]:
     return PersonInfoResolvers(block, keyword, is_preliminary).get_person_info()
+
+
+def append_partially_found_values(not_found_responses: list[SearchResponse], new_responses: list[SearchResponse]) -> \
+        list[SearchResponse]:
+    new_responses_merged = []
+
+    for new_response in new_responses:
+        old_response_for_key = [old_response for old_response in not_found_responses if
+                                old_response.key_word == new_response.key_word]
+        if old_response_for_key[0].value != "":
+            new_response.value = old_response_for_key[0].value + " " + new_response.value
+            old_row_position = old_response_for_key[0].row_position
+            new_row_position = new_response.row_position
+            row_list = [TextPosition("", old_row_position), TextPosition("", new_row_position)]
+            new_response.row_position = calculate_data_position(row_list)
+        new_responses_merged.append(new_response)
+    return new_responses
 
 
 class PersonValuesExtractor:
@@ -51,8 +69,9 @@ class PersonValuesExtractor:
             below_seller_responses = self.search_below(not_found_seller[0].row_position, self.all_blocks, "seller")
             new_seller_responses = [response for response in below_seller_responses if
                                     response.key_word not in found_keys]
+            new_seller_responses = append_partially_found_values(not_found_seller, new_seller_responses)
             found_keys.extend([response.key_word for response in below_seller_responses if
-                               response.status == ValueFindingStatus.FOUND])
+                               response.status == ValueFindingStatus.FOUND and response.value != ""])
             if any(response.status != ValueFindingStatus.FOUND for response in below_seller_responses):
                 right_seller_responses = self.search_right(not_found_seller[0].row_position, self.all_blocks, "seller")
                 missing_responses_keywords = [response.key_word for response in new_seller_responses if
@@ -65,8 +84,9 @@ class PersonValuesExtractor:
             below_buyer_responses = self.search_below(not_found_buyer[0].row_position, self.all_blocks, "buyer")
             new_buyer_responses = [response for response in below_buyer_responses if
                                    response.key_word not in found_keys]
+            new_buyer_responses = append_partially_found_values(not_found_buyer, new_buyer_responses)
             found_keys.extend([response.key_word for response in below_buyer_responses if
-                               response.status == ValueFindingStatus.FOUND])
+                               response.status == ValueFindingStatus.FOUND and response.value != ""])
             if any(response.status != ValueFindingStatus.FOUND for response in below_buyer_responses):
                 right_buyer_responses = self.search_right(not_found_buyer[0].row_position, self.all_blocks, "buyer")
                 missing_responses_keywords = [response.key_word for response in new_buyer_responses if

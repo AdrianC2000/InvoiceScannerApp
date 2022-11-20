@@ -93,6 +93,6 @@ class KeyDataProcessor:
                             preliminary_extracted_person_values: list[SearchResponse]):
         preliminary_search_responses = preliminary_extracted_keys_values + preliminary_extracted_person_values
         found_responses = [response for response in preliminary_search_responses if
-                           response.status == ValueFindingStatus.FOUND]
+                           response.status == ValueFindingStatus.FOUND or response.value != ""]
         positions = [response.row_position for response in found_responses]
         save_table_with_bounding_boxes(self.__invoice, color, positions, path)

@@ -42,6 +42,10 @@ class InvoiceNumberResolvers:
                                                       ValueFindingStatus.FOUND, rows[0].position)
                         except IndexError:
                             pass
+                    row_with_invoice_number_key_text = rows[0].text
+                    for word in row_with_invoice_number_key_text.split(' '):
+                        if has_numbers(word):
+                            return SearchResponse(key_word, word, ValueFindingStatus.FOUND, rows[0].position)
                     row_below_invoice_number_key_text = rows[1].text
                     for word in row_below_invoice_number_key_text.split(' '):
                         if has_numbers(word):

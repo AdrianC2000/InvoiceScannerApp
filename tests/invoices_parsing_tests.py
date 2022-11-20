@@ -1,3 +1,4 @@
+from pdf2image import convert_from_path
 from skimage import io
 import json
 import os
@@ -15,12 +16,14 @@ import warnings
 
 class InvoicesParsingTests(unittest.TestCase):
     __previous_configuration = None
+    __POPPLER_PATH = r"C:\Users\adria\poppler-0.68.0\bin"
 
     @classmethod
     def setUpClass(cls):
         warnings.simplefilter('ignore', category=DeprecationWarning)
         warnings.simplefilter('ignore', category=FutureWarning)
         warnings.simplefilter('ignore', category=ResourceWarning)
+        cls.maxDiff = None
 
         cls.__previous_configuration = settings.get_configuration()
         with open('settings/configuration.json', mode="r", encoding="utf-8") as f:
@@ -34,6 +37,7 @@ class InvoicesParsingTests(unittest.TestCase):
 
         for file in os.listdir(os.fsencode(invoices_set)):
             filename = os.fsdecode(file)
+            print(filename)
             test_output_dir = cwd + '/tests/outputs/' + filename + "/"
             invoice_path = invoices_set + filename
             invoice_image = io.imread(invoice_path)[:, :, :3]
@@ -54,14 +58,19 @@ class InvoicesParsingTests(unittest.TestCase):
     #     outputs_set = "tests/invoices_output_set/"
     #     cwd = os.getcwd()
     #
-    #     filename = "test_invoice_1.png"
+    #     filename = "test_invoice_11.png"
     #     test_output_dir = cwd + '/tests/outputs/' + filename + "/"
     #
     #     if not os.path.exists(test_output_dir):
     #         os.makedirs(test_output_dir)
     #
     #     invoice_path = invoices_set + filename
-    #     invoice_image = io.imread(invoice_path)[:, :, :3]
+    #
+    #     if filename.endswith("pdf"):
+    #         pages = convert_from_path(invoice_path, poppler_path=self.__POPPLER_PATH)
+    #         invoice_image = pages[0]
+    #     else:
+    #         invoice_image = io.imread(invoice_path)[:, :, :3]
     #     invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
     #
     #     output_file = outputs_set + filename.split('.')[0] + ".json"

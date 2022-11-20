@@ -1,1 +1,101 @@
-{"url_configuration": {"url": "https://api.infakt.pl/v3/invoices.json", "separately": true, "invoice_key": "invoice"}, "headers_configuration": {"Content-Type": "application/json", "X-inFakt-ApiKey": "49139f268c535563e40faf7f1eb52e0d9b8f8e0b"}, "data_configuration": {"remove_nulls": false, "convert_to_cents": true, "remove_percentage": true, "convert_currency": true, "parsed_table": {"value": "services", "included": true}, "ordinal_number": {"value": "ordinal_number", "included": false}, "name": {"value": "name", "included": true}, "pkwiu": {"value": "pkwiua", "included": false}, "quantity": {"value": "quantity", "included": true}, "unit_of_measure": {"value": "unit", "included": true}, "gross_price": {"value": "gross_price", "included": false}, "net_price": {"value": "unit_net_price", "included": false}, "net_value": {"value": "net_price", "included": true}, "vat": {"value": "tax_symbol", "included": true}, "vat_value": {"value": "vat_value", "included": false}, "gross_value": {"value": "gross_value", "included": false}, "invoice_number": {"value": "number", "included": true}, "currency": {"value": "currency", "included": true}, "listing_date": {"value": "invoice_date", "included": true}, "seller_name": {"value": "seller_name", "included": false}, "seller_address": {"value": "seller_address", "included": false}, "seller_nip": {"value": "seller_nip", "included": false}, "buyer_name": {"value": "client_company_name", "included": true}, "buyer_address": {"value": "client_street", "included": true}, "buyer_nip": {"value": "client_tax_code", "included": false}}}
+{
+    "url_configuration": {
+        "url": "https://api.infakt.pl/v3/invoices.json",
+        "separately": true,
+        "invoice_key": "invoice"
+    },
+    "headers_configuration": {
+        "Content-Type": "application/json",
+        "X-inFakt-ApiKey": "49139f268c535563e40faf7f1eb52e0d9b8f8e0b"
+    },
+    "data_configuration": {
+        "remove_nulls": false,
+        "convert_to_cents": true,
+        "remove_percentage": true,
+        "convert_currency": true,
+        "parsed_table": {
+            "value": "services",
+            "included": true
+        },
+        "ordinal_number": {
+            "value": "ordinal_number",
+            "included": false
+        },
+        "name": {
+            "value": "name",
+            "included": true
+        },
+        "pkwiu": {
+            "value": "pkwiua",
+            "included": false
+        },
+        "quantity": {
+            "value": "quantity",
+            "included": true
+        },
+        "unit_of_measure": {
+            "value": "unit",
+            "included": true
+        },
+        "gross_price": {
+            "value": "gross_price",
+            "included": false
+        },
+        "net_price": {
+            "value": "unit_net_price",
+            "included": false
+        },
+        "net_value": {
+            "value": "net_price",
+            "included": true
+        },
+        "vat": {
+            "value": "tax_symbol",
+            "included": true
+        },
+        "vat_value": {
+            "value": "vat_value",
+            "included": false
+        },
+        "gross_value": {
+            "value": "gross_value",
+            "included": false
+        },
+        "invoice_number": {
+            "value": "number",
+            "included": true
+        },
+        "currency": {
+            "value": "currency",
+            "included": true
+        },
+        "listing_date": {
+            "value": "invoice_date",
+            "included": true
+        },
+        "seller_name": {
+            "value": "seller_name",
+            "included": false
+        },
+        "seller_address": {
+            "value": "seller_address",
+            "included": false
+        },
+        "seller_nip": {
+            "value": "seller_nip",
+            "included": false
+        },
+        "buyer_name": {
+            "value": "client_company_name",
+            "included": true
+        },
+        "buyer_address": {
+            "value": "client_street",
+            "included": true
+        },
+        "buyer_nip": {
+            "value": "client_tax_code",
+            "included": false
+        }
+    }
+}
