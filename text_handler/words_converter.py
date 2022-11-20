@@ -3,6 +3,7 @@ import pandas as pd
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition
 import warnings
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
@@ -27,6 +28,8 @@ def get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition
     if text_position.position.starting_y >= ending_y:
         # Row does not exist yet, and is lower than any existing
         return len(rows_in_cell)
+    else:
+        return -1
 
 
 def append_text_to_final_phrase(rows_in_cell: list[TextPosition]) -> str:

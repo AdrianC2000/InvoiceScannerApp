@@ -26,7 +26,7 @@ class TableDataProcessor:
         rotated_table, cells_in_columns = ColumnsSeperator(table_position.table).separate_cells_in_columns()
 
         if len(cells_in_columns[1]) == len(cells_in_columns[2]):
-            if len(cells_in_columns[1]) < 4:
+            if len(cells_in_columns) < 4:
                 raise ValueError
         else:
             raise ValueError

@@ -72,14 +72,11 @@ def create_partially_not_found_response(key_prefix, address_row_index: int, zip_
 
 
 def get_common_value(address_row_index, zip_code_row_index):
-    if address_row_index == -1 and zip_code_row_index == -1:
-        return -1
-    else:
-        return max(zip_code_row_index, address_row_index)
+    return max(zip_code_row_index, address_row_index)
 
 
-def has_numbers(inputString):
-    return bool(re.search(r'\d', inputString))
+def has_numbers(input_string):
+    return bool(re.search(r'\d', input_string))
 
 
 class PersonInfoResolvers:
@@ -94,6 +91,12 @@ class PersonInfoResolvers:
         zip_code_row_index = self.__get_zip_code_row_index()
         nip_row_index, nip_word_index = self.__get_nip_row_index()
 
+        if not self.__is_preliminary:
+            abc = 5
+
+        if address_row_index == nip_row_index:
+            address_row_index = -1
+
         address_and_row = get_common_value(address_row_index, zip_code_row_index)
 
         if any(x == -1 for x in [address_and_row, nip_row_index]):
@@ -105,9 +108,13 @@ class PersonInfoResolvers:
                                                             self.__matching_block.block.rows[0].position)
 
                 else:
-                    return create_common_not_found_response(self.__person_type,
-                                                            ValueFindingStatus.VALUE_ON_THE_RIGHT,
-                                                            self.__matching_block.block.rows[0].position)
+                    return [SearchResponse(self.__person_type + "_name", self.__matching_block.block.rows[1].text,
+                                           ValueFindingStatus.FOUND, self.__matching_block.block.rows[1].position),
+                            SearchResponse(self.__person_type + "_address", "", ValueFindingStatus.VALUE_BELOW,
+                                           self.__matching_block.block.rows[1].position),
+                            SearchResponse(self.__person_type + "_nip", "", ValueFindingStatus.VALUE_BELOW,
+                                           self.__matching_block.block.rows[1].position)]
+
             else:
                 return create_partially_not_found_response(self.__person_type, address_row_index, zip_code_row_index,
                                                            nip_row_index, nip_word_index, self.__matching_block,
@@ -115,15 +122,23 @@ class PersonInfoResolvers:
         else:
             # Everything found
             if nip_row_index != -1:
-                minimum = min(nip_row_index, address_row_index, zip_code_row_index)
+                existing_values = [x for x in [nip_row_index, address_row_index, zip_code_row_index] if x != -1]
+                minimum = min(existing_values)
             else:
                 minimum = min(address_row_index, zip_code_row_index)
             if self.__is_preliminary:
                 name_rows = self.__matching_block.block.rows[1:minimum]
             else:
                 name_rows = self.__matching_block.block.rows[0:minimum]
-            address_rows = self.__matching_block.block.rows[
-                           min(address_row_index, zip_code_row_index): max(address_row_index, zip_code_row_index) + 1]
+            if zip_code_row_index == -1 or address_row_index == -1:
+                if zip_code_row_index == -1 and address_row_index != -1:
+                    address_rows = self.__matching_block.block.rows[address_row_index: address_row_index + 1]
+                elif zip_code_row_index != -1 and address_row_index == -1:
+                    address_rows = self.__matching_block.block.rows[zip_code_row_index: zip_code_row_index + 1]
+            else:
+                address_rows = self.__matching_block.block.rows[
+                               min(address_row_index, zip_code_row_index): max(address_row_index,
+                                                                               zip_code_row_index) + 1]
             nip_row = self.__matching_block.block.rows[nip_row_index:nip_row_index + 1]
             return [get_search_response(name_rows, self.__person_type + "_name", ValueFindingStatus.FOUND),
                     get_search_response(address_rows, self.__person_type + "_address", ValueFindingStatus.FOUND),

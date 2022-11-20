@@ -18,6 +18,10 @@ class SearchResponse:
     def value(self) -> str:
         return self.__value
 
+    @value.setter
+    def value(self, value: str):
+        self.__value = value
+
     @property
     def status(self) -> ValueFindingStatus:
         return self.__status
@@ -29,3 +33,7 @@ class SearchResponse:
     @property
     def row_position(self) -> Position:
         return self.__row_position
+
+    @row_position.setter
+    def row_position(self, row_position: Position):
+        self.__row_position = row_position

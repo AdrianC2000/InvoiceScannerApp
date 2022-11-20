@@ -71,22 +71,30 @@ def calculate_data_position(rows: list[TextPosition]) -> Position:
 
 def get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y):
     block_on_the_right = None
-    threshold = 50
-    extended_row_starting_y = row_starting_y - threshold
-    extended_row_ending_y = row_ending_y + threshold
-    try:
-        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
-                                                    extended_row_ending_y, extended_row_starting_y)
-    except IndexError:
-        block_on_the_right = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
-                                                    row_ending_y,
-                                                    row_starting_y)
-    return block_on_the_right
+    thresholds = [0, 50]
+    blocks = []
+    for threshold in thresholds:
+        extended_row_starting_y = row_starting_y - threshold
+        extended_row_ending_y = row_ending_y + threshold
+        try:
+            block_on_the_right, percentage = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
+                                                        extended_row_ending_y, extended_row_starting_y)
+            blocks.append({"block": block_on_the_right, "percentage": percentage})
+        except IndexError:
+            block_on_the_right, percentage = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
+                                                        row_ending_y,
+                                                        row_starting_y)
+            blocks.append({"block": block_on_the_right, "percentage": percentage})
+    if blocks[0]["percentage"] >= blocks[1]["percentage"]:
+        return blocks[0]["block"]
+    else:
+        return blocks[1]["block"]
 
 
 def get_block_on_the_right(all_blocks, block_on_the_right, key_row_position, row_ending_y,
                            row_starting_y):
     closest_distance = 10000
+    biggest_percentage = 0
     for block in all_blocks:
         block_starting_y = block.position.starting_y
         block_ending_y = block.position.ending_y
@@ -98,7 +106,8 @@ def get_block_on_the_right(all_blocks, block_on_the_right, key_row_position, row
             if ((block_starting_x - row_ending_x) < closest_distance) and (row_ending_x < block_starting_x):
                 closest_distance = block_starting_x - row_ending_x
                 block_on_the_right = block
-    return block_on_the_right
+                biggest_percentage = percentage
+    return block_on_the_right, biggest_percentage
 
 
 def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x):
