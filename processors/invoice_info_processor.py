@@ -17,6 +17,10 @@ class InvoiceInfoProcessor:
         config.Config.directory_to_save = self.__directory_to_save
         straightened_invoice = InvoiceStraightener(self.__original_invoice).straighten_image()
 
-        parsed_rows, invoice_without_table = TableDataProcessor(straightened_invoice).extract_table_data()
-        parsed_data = KeyDataProcessor(invoice_without_table).extract_key_data()
-        return InvoiceInfo(parsed_rows, parsed_data)
+        try:
+            parsed_rows, invoice_without_table = TableDataProcessor(straightened_invoice).extract_table_data()
+            parsed_data = KeyDataProcessor(invoice_without_table).extract_key_data()
+            return InvoiceInfo(parsed_rows, parsed_data)
+        except Exception:
+            parsed_data = KeyDataProcessor(self.__original_invoice).extract_key_data()
+            return InvoiceInfo(None, parsed_data)

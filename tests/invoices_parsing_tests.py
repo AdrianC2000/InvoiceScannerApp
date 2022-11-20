@@ -47,14 +47,14 @@ class InvoicesParsingTests(unittest.TestCase):
             actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
 
             with self.subTest(expected_output=expected_output):
-                self.assertEqual(expected_output, actual_output, "Invoice info incorrect")
+                self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect! ")
 
     # def test_single_invoice(self):
     #     invoices_set = "tests/invoices_testing_set/"
     #     outputs_set = "tests/invoices_output_set/"
     #     cwd = os.getcwd()
     #
-    #     filename = "test_invoice_10.png"
+    #     filename = "test_invoice_1.png"
     #     test_output_dir = cwd + '/tests/outputs/' + filename + "/"
     #
     #     if not os.path.exists(test_output_dir):
@@ -71,7 +71,7 @@ class InvoicesParsingTests(unittest.TestCase):
     #     expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
     #     actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
     #
-    #     self.assertEqual(expected_output, actual_output, "Invoice info incorrect")
+    #     self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect! ")
 
     @classmethod
     def tearDownClass(cls):

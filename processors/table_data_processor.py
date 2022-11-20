@@ -24,11 +24,23 @@ class TableDataProcessor:
         table_position = TableExtractor(self.__invoice).extract_table()
 
         rotated_table, cells_in_columns = ColumnsSeperator(table_position.table).separate_cells_in_columns()
+
+        if len(cells_in_columns[1]) == len(cells_in_columns[2]):
+            if len(cells_in_columns[1]) < 4:
+                raise ValueError
+        else:
+            raise ValueError
+
         text_with_position = TextReader(rotated_table).read_words()
 
         cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()
         cells_with_phrases = WordsConverter(cells_with_words).merge_words_into_phrases()
         columns_ordered = HeadersClassifier(cells_with_phrases[0]).find_corresponding_columns()
+
+        all_confidences = [matching_header.confidence_calculation.confidence for matching_header in columns_ordered]
+
+        if sum(all_confidences) / len(all_confidences) < 0.3:
+            raise ValueError
 
         invoice_table_removed = TableRemover(self.__invoice, table_position.position, rotated_table).remove_table()
         cv2.imwrite(config.Config.directory_to_save + self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
