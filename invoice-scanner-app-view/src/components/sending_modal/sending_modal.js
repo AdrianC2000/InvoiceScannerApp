@@ -77,30 +77,45 @@ $(document)
   });
 
 async function SendRequest(body) {
-  let config = await GetSettings()
-  let configJson = await config.json()
-  let separately = configJson['url_configuration']['separately']
-  let invoicesData = JSON.parse(body)
-  console.log(invoicesData);
-  let allResponses = {}
-  if (separately) {
-    let newKey = configJson['url_configuration']['invoice_key']
-    for (let i = 0; i < invoicesData.length; i++) {
-      let singleInvoiceData = invoicesData[i]
-      let key = Object.keys(singleInvoiceData)[0]
-      let invoiceDataToSend = {}
-      invoiceDataToSend[newKey] = singleInvoiceData[key]
-      let endpointResponse = await SendData(JSON.stringify(invoiceDataToSend))
+  try {
+    let config = await GetSettings()
+    let configJson = await config.json()
+    let separately = configJson['url_configuration']['separately']
+    let invoicesData = JSON.parse(body)
+    let allResponses = {}
+    let count_incorrect_invoices = 0
+    if (separately) {
+      let newKey = configJson['url_configuration']['invoice_key']
+      for (let i = 0; i < invoicesData.length; i++) {
+        let singleInvoiceData = invoicesData[i]
+        let firstKey = Object.keys(singleInvoiceData)[0];
+        if (singleInvoiceData[firstKey]["error"] != null) {
+          count_incorrect_invoices += 1
+          continue
+        }
+        let key = Object.keys(singleInvoiceData)[0]
+        let invoiceDataToSend = {}
+        invoiceDataToSend[newKey] = singleInvoiceData[key]
+        let endpointResponse = await SendData(JSON.stringify(invoiceDataToSend))
+        let responseJson = await endpointResponse.json()
+        allResponses[key] = JSON.parse(responseJson)
+      }
+    } else {
+      let endpointResponse = await SendData(JSON.stringify(invoicesData))
       let responseJson = await endpointResponse.json()
-      allResponses[key] = JSON.parse(responseJson)
+      allResponses = JSON.parse(responseJson)
     }
-  } else {
-    let endpointResponse = await SendData(JSON.stringify(invoicesData))
-    let responseJson = await endpointResponse.json()
-    allResponses = JSON.parse(responseJson)
+
+    const responseTextfield = document.getElementById('response-host-text-field')
+    if (count_incorrect_invoices === invoicesData.length) {
+      responseTextfield.value = JSON.stringify("All of your invoices data are incorrect - nothing was sent.", null, 4)
+    } else {
+      responseTextfield.value = JSON.stringify(allResponses, null, 4)
+    }
+  } catch (error) {
+    const responseTextfield = document.getElementById('response-host-text-field')
+    responseTextfield.value = JSON.stringify("Incorrect input.", null, 4)
   }
-  const responseTextfield = document.getElementById('response-host-text-field')
-  responseTextfield.value = JSON.stringify(allResponses, null, 4)
   SwitchClasses('sendingSpinner', 'visible', 'hidden')
 }
 
