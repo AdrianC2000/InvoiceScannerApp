@@ -1,10 +1,22 @@
 from numpy import ndarray
 
 import config
+from entities.key_data import KeyData
 from invoice_processing_utils.invoice_straightener import InvoiceStraightener
 from entities.invoice_info import InvoiceInfo
 from processors.key_data_processor import KeyDataProcessor
 from processors.table_data_processor import TableDataProcessor
+
+
+def check_data(key_data: KeyData):
+    null_values = 0
+    for attr, value in key_data.__dict__.items():
+        if value is None:
+            null_values += 1
+    if null_values >= 4:
+        return False
+    else:
+        return True
 
 
 class InvoiceInfoProcessor:
@@ -20,7 +32,13 @@ class InvoiceInfoProcessor:
         try:
             parsed_rows, invoice_without_table = TableDataProcessor(straightened_invoice).extract_table_data()
             parsed_data = KeyDataProcessor(invoice_without_table).extract_key_data()
-            return InvoiceInfo(parsed_rows, parsed_data)
+            if check_data(parsed_data):
+                return InvoiceInfo(parsed_rows, parsed_data)
+            else:
+                return {"error": "Incorrect invoice - check if given document meets the requirements"}
         except Exception:
             parsed_data = KeyDataProcessor(self.__original_invoice).extract_key_data()
-            return InvoiceInfo(None, parsed_data)
+            if check_data(parsed_data):
+                return InvoiceInfo(None, parsed_data)
+            else:
+                return {"error": "Incorrect invoice - check if given document meets the requirements"}

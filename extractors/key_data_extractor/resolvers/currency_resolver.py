@@ -7,7 +7,10 @@ from extractors.value_finding_status import ValueFindingStatus
 
 def check_float_value(value: str):
     pattern = r'[+-]?([0-9]*[.])?[0-9]+'
-    return check_regex_for_single_word(pattern, value)
+    if has_numbers(value):
+        return check_regex_for_single_word(pattern, value)
+    else:
+        return False
 
 
 def check_currency(value: str):

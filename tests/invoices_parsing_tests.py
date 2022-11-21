@@ -58,7 +58,7 @@ class InvoicesParsingTests(unittest.TestCase):
     #     outputs_set = "tests/invoices_output_set/"
     #     cwd = os.getcwd()
     #
-    #     filename = "test_invoice_11.png"
+    #     filename = "test_invoice_17.jpg"
     #     test_output_dir = cwd + '/tests/outputs/' + filename + "/"
     #
     #     if not os.path.exists(test_output_dir):

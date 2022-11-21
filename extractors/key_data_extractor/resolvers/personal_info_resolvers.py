@@ -1,7 +1,10 @@
 import re
 
+from regex import regex
+
 from entities.matching_block import MatchingBlock
 from entities.position import Position
+from entities.text_position import TextPosition
 from extractors.key_data_extractor.constants_key_words import address, nip
 from entities.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
@@ -42,8 +45,11 @@ def create_partially_not_found_response(key_prefix, address_row_index: int, zip_
 
     if address_row_index != -1:
         if zip_code_row_index != -1:
-            address_rows = matching_block.block.rows[
+            if zip_code_row_index != address_row_index:
+                address_rows = matching_block.block.rows[
                            min(address_row_index, zip_code_row_index): max(address_row_index, zip_code_row_index) + 1]
+            else:
+                address_rows = [matching_block.block.rows[address_row_index]]
             address_status = ValueFindingStatus.FOUND
         else:
             address_rows = matching_block.block.rows[address_row_index: address_row_index + 1]
@@ -61,7 +67,8 @@ def create_partially_not_found_response(key_prefix, address_row_index: int, zip_
     elif address_row_index != -1 or zip_code_row_index != -1:
         nip_response = SearchResponse(key_prefix + "_nip", "", ValueFindingStatus.VALUE_BELOW, key_word_position)
 
-    minimum = min(address_row_index, zip_code_row_index)
+    existing_values = [x for x in [address_row_index, zip_code_row_index] if x != -1]
+    minimum = min(existing_values)
     if is_preliminary:
         name_rows = matching_block.block.rows[1:minimum]
     else:

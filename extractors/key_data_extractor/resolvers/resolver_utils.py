@@ -41,11 +41,20 @@ def get_row_index_by_regex(regex_pattern: str, rows: list[TextPosition]) -> int:
     for row_index, row in enumerate(rows):
         if check_regex_for_single_word(regex_pattern, row.text) is True:
             return row_index
+        else:
+            if check_regex_for_single_zip_code(r'.*[0-9]{2}-[0-9]{0}.*', row.text) is True:
+                return row_index
     return -1
 
 
 def check_regex_for_single_word(regex_pattern: str, word: str) -> bool:
     fuzzy_pattern = f'({regex_pattern}){{e<=3}}'
+    match_actual_row = regex.search(fuzzy_pattern, word, regex.BESTMATCH)
+    return match_actual_row is not None
+
+
+def check_regex_for_single_zip_code(regex_pattern: str, word: str) -> bool:
+    fuzzy_pattern = f'({regex_pattern}){{e<=0}}'
     match_actual_row = regex.search(fuzzy_pattern, word, regex.BESTMATCH)
     return match_actual_row is not None
 
@@ -71,19 +80,19 @@ def calculate_data_position(rows: list[TextPosition]) -> Position:
 
 def get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y):
     block_on_the_right = None
-    thresholds = [0, 50]
+    thresholds = [0, 30]
     blocks = []
     for threshold in thresholds:
         extended_row_starting_y = row_starting_y - threshold
         extended_row_ending_y = row_ending_y + threshold
         try:
             block_on_the_right, percentage = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
-                                                        extended_row_ending_y, extended_row_starting_y)
+                                                                    extended_row_ending_y, extended_row_starting_y)
             blocks.append({"block": block_on_the_right, "percentage": percentage})
         except IndexError:
             block_on_the_right, percentage = get_block_on_the_right(all_blocks, block_on_the_right, key_row_position,
-                                                        row_ending_y,
-                                                        row_starting_y)
+                                                                    row_ending_y,
+                                                                    row_starting_y)
             blocks.append({"block": block_on_the_right, "percentage": percentage})
     if blocks[0]["percentage"] >= blocks[1]["percentage"]:
         return blocks[0]["block"]

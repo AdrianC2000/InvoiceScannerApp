@@ -37,8 +37,14 @@ class ListingDateResolvers:
         if self.__is_preliminary:
             alleged_listing_date_index = self.__matching_block.last_word_index + 1
         else:
+            row_with_listing_date_key = rows[self.__matching_block.row_index]
             alleged_listing_date_index = self.__matching_block.last_word_index
-
+            try:
+                alleged_listing_date = row_with_listing_date_key.text.split(' ')[alleged_listing_date_index]
+                if check_date(alleged_listing_date):
+                    return SearchResponse(key_word, alleged_listing_date, ValueFindingStatus.FOUND, row_with_listing_date_key.position)
+            except IndexError:
+                pass
         try:
             alleged_listing_date = row_with_listing_date_key.text.split(' ')[alleged_listing_date_index]
             if check_date(alleged_listing_date):
@@ -51,7 +57,7 @@ class ListingDateResolvers:
             for word in row_below_text.split(' '):
                 if check_date(word):
                     return SearchResponse(key_word, word, ValueFindingStatus.FOUND, row_below_currency_key.position)
-            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, row_below_currency_key.position)
+            return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)
         except IndexError:
             return SearchResponse(key_word, "", ValueFindingStatus.VALUE_BELOW_OR_ON_THE_RIGHT, row_with_listing_date_key.position)
 
