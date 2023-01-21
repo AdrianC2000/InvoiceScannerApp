@@ -22,7 +22,7 @@ Flask-Cors==3.0.10
 Flask==2.2.2
 flatbuffers==22.12.6
 fonttools==4.38.0
-future==0.18.2
+future==0.18.3
 gast==0.4.0
 gevent==22.10.2
 google-api-core==2.10.2
