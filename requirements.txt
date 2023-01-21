@@ -113,7 +113,7 @@ typing-extensions==4.4.0
 uritemplate==4.1.1
 urllib3==1.26.12
 Werkzeug==2.2.2
-wheel==0.37.1
+wheel==0.38.1
 wrapt==1.14.1
 XlsxWriter==3.0.3
 zipp==3.10.0
