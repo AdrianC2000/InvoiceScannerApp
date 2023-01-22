@@ -11,6 +11,7 @@ from extractors.key_data_extractor.key_values_extractor import KeyValuesExtracto
 from entities.key_data import KeyData
 from extractors.key_data_extractor.person_values_extractor import PersonValuesExtractor
 from extractors.value_finding_status import ValueFindingStatus
+from invoice_processing_utils.common_utils import save_image
 from parsers.key_data_parser import KeyDataParser
 
 PRELIMINARY_SEARCH_OUTPUT_PATH_PREFIX = "13.Preliminary search.png"
@@ -33,7 +34,7 @@ def save_table_with_bounding_boxes(invoice: ndarray, color, positions: list[Posi
     for position in positions:
         cv2.rectangle(table_image_copy, (position.starting_x, position.starting_y),
                       (position.ending_x, position.ending_y), color, 2)
-    cv2.imwrite(config.Config.directory_to_save + prefix, table_image_copy)
+    save_image(prefix, table_image_copy)
 
 
 def get_final_search_objects(preliminary_responses: list[SearchResponse], final_responses: list[SearchResponse]) -> \

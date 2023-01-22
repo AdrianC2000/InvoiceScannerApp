@@ -1,10 +1,10 @@
 import logging
-import config
 import cv2
 
 from numpy import ndarray
 from entities.position import Position
 from entities.table_position import TablePosition
+from invoice_processing_utils.common_utils import save_image
 
 
 class TableExtractor:
@@ -37,7 +37,7 @@ class TableExtractor:
                 biggest_area = area
                 x, y, width, height = cv2.boundingRect(cnt)
                 table = self.assign_table(height, width, x, y)
-        cv2.imwrite(config.Config.directory_to_save + self.__EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, table)
+        save_image(self.__EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, table)
         logging.info(f'Table extracted -> position {x, y, x + width, y + height}')
         return TablePosition(table, Position(x, y, x + width, y + height))
 

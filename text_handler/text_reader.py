@@ -7,6 +7,7 @@ from numpy import ndarray
 from random import randrange
 from entities.position import Position
 from entities.text_position import TextPosition
+from invoice_processing_utils.common_utils import save_image
 
 __EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX = "7.Extracted texts.png"
 __EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX = "11.Blocks and text extracted.png"
@@ -29,9 +30,9 @@ def save_table_with_bounding_boxes(invoice: ndarray, texts_with_positions: list[
         cv2.rectangle(table_image_copy, (text_position.position.starting_x, text_position.position.starting_y),
                       (text_position.position.ending_x, text_position.position.ending_y), color, 1)
     if flag:
-        cv2.imwrite(config.Config.directory_to_save + __EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX, table_image_copy)
+        save_image(__EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX, table_image_copy)
     else:
-        cv2.imwrite(config.Config.directory_to_save + __EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX, table_image_copy)
+        save_image(__EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX, table_image_copy)
 
 
 def create_position(positioned_object) -> Position:
