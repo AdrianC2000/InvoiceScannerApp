@@ -1,9 +1,7 @@
 from entities.matching_block import MatchingBlock
 from entities.search_response import SearchResponse
 from dateutil.parser import parse
-
 from dateutil.parser import parserinfo
-
 from extractors.value_finding_status import ValueFindingStatus
 
 

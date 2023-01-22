@@ -1,10 +1,9 @@
 import json
-from random import randrange
-
 import config
 import cv2
-from numpy import ndarray
 
+from random import randrange
+from numpy import ndarray
 from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns

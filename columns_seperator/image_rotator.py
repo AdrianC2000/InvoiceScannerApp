@@ -1,13 +1,12 @@
 import logging
 import math
-
 import config
 import cv2
 import numpy as np
+import warnings
+
 from PIL import Image
 from pathlib import Path
-
-import warnings
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 

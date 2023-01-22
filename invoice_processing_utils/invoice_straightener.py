@@ -1,6 +1,7 @@
 import config
 import cv2
 import numpy as np
+
 from numpy import ndarray
 from skimage.transform import rotate
 from skimage.color import rgb2gray

@@ -1,7 +1,7 @@
-from numpy import ndarray
 import logging
-
 import config
+
+from numpy import ndarray
 from entities.invoice_info_response import InvoiceInfoResponse
 from entities.key_data import KeyData
 from invoice_processing_utils.invoice_straightener import InvoiceStraightener

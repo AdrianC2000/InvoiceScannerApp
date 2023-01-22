@@ -1,8 +1,9 @@
 import config
+import warnings
 import pandas as pd
+
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition
-import warnings
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 

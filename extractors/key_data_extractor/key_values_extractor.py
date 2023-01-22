@@ -1,7 +1,6 @@
 import logging
 
 from numpy import ndarray
-
 from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from entities.search_response import SearchResponse

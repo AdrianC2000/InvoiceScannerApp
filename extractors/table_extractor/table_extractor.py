@@ -1,9 +1,8 @@
 import logging
-
 import config
 import cv2
-from numpy import ndarray
 
+from numpy import ndarray
 from entities.position import Position
 from entities.table_position import TablePosition
 

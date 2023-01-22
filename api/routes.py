@@ -1,10 +1,9 @@
 import json
 import logging
 import os
-
 import requests
-from flask import Blueprint, Response, request
 
+from flask import Blueprint, Response, request
 from entities.invoice_info_response import InvoiceInfoResponse
 from invoice_processing_utils.format_unifier import FormatUnifier
 from processors.invoice_info_processor import InvoiceInfoProcessor

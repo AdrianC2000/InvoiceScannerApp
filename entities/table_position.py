@@ -1,5 +1,4 @@
 from numpy import ndarray
-
 from entities.position import Position
 
 

@@ -1,13 +1,12 @@
-from random import randrange
-
 import config
 import cv2
+import logging
+
 from google.cloud import vision
 from numpy import ndarray
-
+from random import randrange
 from entities.position import Position
 from entities.text_position import TextPosition
-import logging
 
 __EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX = "7.Extracted texts.png"
 __EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX = "11.Blocks and text extracted.png"

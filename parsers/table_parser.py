@@ -1,5 +1,4 @@
 import json
-
 import config
 
 from entities.matching_header import MatchingHeader

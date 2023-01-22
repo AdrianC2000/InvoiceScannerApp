@@ -1,9 +1,8 @@
 import logging
-
 import numpy
+
 from pdf2image import convert_from_path
 from werkzeug.datastructures import FileStorage
-
 from numpy import ndarray
 from PIL import Image
 

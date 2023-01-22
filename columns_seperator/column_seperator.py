@@ -1,6 +1,7 @@
 import config
 import cv2
 import numpy as np
+
 from columns_seperator.contours_definer import ContoursDefiner
 from columns_seperator.image_rotator import ImageRotator
 

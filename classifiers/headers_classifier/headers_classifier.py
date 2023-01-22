@@ -4,7 +4,6 @@ import logging
 from entities.matching_header import MatchingHeader
 from entities.confidence_calculation import ConfidenceCalculation
 from Levenshtein import ratio
-
 from text_handler.words_converter import SIGNS_WITHOUT_SPACE_BEFORE, SIGNS_WITHOUT_SPACE_AFTER
 
 SPACE_CHECK_SIGNS = [":", ";", ",", "."]

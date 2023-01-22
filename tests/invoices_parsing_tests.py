@@ -1,16 +1,14 @@
-from skimage import io
 import json
 import os
 import unittest
-
 import numpy
+import warnings
 
 from parsers.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
 from settings import settings
 from settings.settings import dump_to_json
-
-import warnings
+from skimage import io
 
 
 class InvoicesParsingTests(unittest.TestCase):
