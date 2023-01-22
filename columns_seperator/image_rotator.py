@@ -42,17 +42,17 @@ def find_first_horizontal_line(horizontal_lines):
 
 
 class ImageRotator:
+    """ Given original table, rotate it based on the tables contours """
+
     __STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX = "3.Table rotated by small angle.png"
 
     def __init__(self, contours_definer, table_image_bin, original_table):
-        self.contours_definer = contours_definer
-        self.table_image_bin = table_image_bin
+        self.original_table_contours_definer = contours_definer
+        self.binary_table = table_image_bin
         self.original_table = original_table
 
     def rotate_image(self):
-        # Given original table, rotate it based on the tables contours
-        # self.remove_noise()
-        horizontal_lines = self.contours_definer.get_horizontal_lines()
+        horizontal_lines = self.original_table_contours_definer.get_horizontal_lines()
         first_horizontal_line = find_first_horizontal_line(horizontal_lines)
         horizontal_line_first_point, horizontal_line_last_point = get_horizontal_line_points(first_horizontal_line)
         angle = calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
@@ -69,7 +69,7 @@ class ImageRotator:
     def remove_noise(self):
         # TODO -> TO BE USED
         # thresh, img_bin = cv2.threshold(self.table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-        noiseless_image_bw = cv2.fastNlMeansDenoising(self.table_image_bin, None, 20, 7, 21)
+        noiseless_image_bw = cv2.fastNlMeansDenoising(self.binary_table, None, 20, 7, 21)
         (thresh, im_bw) = cv2.threshold(noiseless_image_bw, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         cv2.imwrite("resources/test_outputs/entire_flow/table_noise_removed.png", im_bw)
-        self.table_image_bin = im_bw
+        self.binary_table = im_bw

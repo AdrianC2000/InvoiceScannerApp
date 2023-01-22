@@ -1,10 +1,10 @@
 from entities.key_data import KeyData
-from entities.table_item import TableItem
+from entities.table_item import TableProduct
 
 
 class InvoiceInfo:
 
-    def __init__(self, parsed_table: list[TableItem], parsed_data: KeyData):
+    def __init__(self, parsed_table: list[TableProduct], parsed_data: KeyData):
         self.__parsed_table = parsed_table
         self.__seller_name = parsed_data.seller_name
         self.__seller_address = parsed_data.seller_address
@@ -17,7 +17,7 @@ class InvoiceInfo:
         self.__listing_date = parsed_data.listing_date
 
     @property
-    def parsed_table(self) -> list[TableItem]:
+    def parsed_table(self) -> list[TableProduct]:
         return self.__parsed_table
 
     @property

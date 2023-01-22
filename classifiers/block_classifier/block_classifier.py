@@ -8,6 +8,7 @@ from entities.confidence_calculation import ConfidenceCalculation
 from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
 from entities.block_position import BlockPosition
+from invoice_processing_utils.common_utils import save_image
 
 __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
 
@@ -24,7 +25,7 @@ def save_table_with_bounding_boxes(invoice: ndarray, unique_keys_blocks: list[Ma
         block = matching_block.block
         cv2.rectangle(table_image_copy, (block.position.starting_x, block.position.starting_y),
                       (block.position.ending_x, block.position.ending_y), color, 1)
-    cv2.imwrite(config.Config.directory_to_save + __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX, table_image_copy)
+    save_image(__BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX, table_image_copy)
 
 
 def find_best_data_fit(row: str, column_patterns: json) -> tuple[int, int, ConfidenceCalculation]:

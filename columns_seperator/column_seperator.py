@@ -4,6 +4,7 @@ import numpy as np
 
 from columns_seperator.contours_definer import ContoursDefiner
 from columns_seperator.image_rotator import ImageRotator
+from invoice_processing_utils.common_utils import save_image
 
 
 def get_cells_in_columns(bounding_boxes):
@@ -23,6 +24,7 @@ def get_cells_in_columns(bounding_boxes):
 
 
 class ColumnsSeperator:
+    __BINARY_TABLE_PATH_PREFIX = "3.Binary table.png"
     __ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX = "4.Original contours.png"
     __FIXED_CONTOURS_OUTPUT_PATH_PREFIX = "5.Fixed contours.png"
     __TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX = "6.Table with bounding boxes.png"
@@ -32,22 +34,21 @@ class ColumnsSeperator:
 
     def separate_cells_in_columns(self):
         # original table
-        table_grayscale = self.image_to_grayscale()
-        contours_definer_on_orig = ContoursDefiner(self.table_image, table_grayscale)
+        table_binary = self.image_to_binary()
+        contours_definer_on_orig = ContoursDefiner(self.table_image, table_binary)
 
         # rotated table
-        self.table_image = ImageRotator(contours_definer_on_orig, table_grayscale, self.table_image).rotate_image()
-        contours_definer_on_rotated = ContoursDefiner(self.table_image, self.image_to_grayscale())
+        self.table_image = ImageRotator(contours_definer_on_orig, table_binary, self.table_image).rotate_image()
+        contours_definer_on_rotated = ContoursDefiner(self.table_image, self.image_to_binary())
 
         # Get original table contours
         original_contours_image, original_table_contours = contours_definer_on_rotated.get_table_contours()
-        cv2.imwrite(config.Config.directory_to_save + self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX,
-                    original_contours_image)
+        save_image(self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX, original_contours_image)
 
         # Get fixed table contours
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
-        cv2.imwrite(config.Config.directory_to_save + self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX,
-                    fixed_table_contours_image)
+        save_image(self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX, fixed_table_contours_image)
+
         self.table_image = self.table_image[0: fixed_table_contours_image.shape[0], :]
 
         # Get cells with corresponding columns
@@ -70,16 +71,11 @@ class ColumnsSeperator:
                 index += 1
             else:
                 index = 0
-        cv2.imwrite(config.Config.directory_to_save + self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX,
-                    table_image_copy)
+        save_image(self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
 
-    def image_to_grayscale(self):
+    def image_to_binary(self):
         # thresholding the image to a binary image
-        try:
-            self.table_image = cv2.cvtColor(self.table_image, cv2.COLOR_BGR2GRAY)
-        except:
-            pass
         thresh, img_bin = cv2.threshold(self.table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         img_bin = 255 - img_bin
-        cv2.imwrite("resources/test_outputs/3.Table in grayscale.png", img_bin)
+        save_image(self.__BINARY_TABLE_PATH_PREFIX, img_bin)
         return img_bin

@@ -1,4 +1,4 @@
-class TableItem:
+class TableProduct:
 
     def __init__(self, row: dict[str, str]):
         self.__ordinal_number = row.get("ordinal_number")

@@ -3,12 +3,12 @@ import config
 
 from entities.matching_header import MatchingHeader
 from parsers.json_encoder import JsonEncoder
-from entities.table_item import TableItem
+from entities.table_item import TableProduct
 
 __FINAL_TABLE_OUTPUT_PATH_PREFIX = "9.Final table.json"
 
 
-def save_to_file(table_items: list[TableItem]):
+def save_to_file(table_items: list[TableProduct]):
     table_json = json.dumps(table_items, indent=4, cls=JsonEncoder, ensure_ascii=False)
     f = open(config.Config.directory_to_save + __FINAL_TABLE_OUTPUT_PATH_PREFIX, mode="w", encoding="utf-8")
     f.write(table_json)
@@ -21,11 +21,11 @@ class TableParser:
         self.__matching_headers = matching_headers
         self.__rows = rows
 
-    def parse_rows(self) -> list[TableItem]:
+    def parse_rows(self) -> list[TableProduct]:
         table_items = list()
         for row in self.__rows:
             row_dict = self.parse_row(row)
-            table_items.append(TableItem(row_dict))
+            table_items.append(TableProduct(row_dict))
         save_to_file(table_items[1:len(table_items)])
         return table_items[1:len(table_items)]
 

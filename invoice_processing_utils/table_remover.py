@@ -14,7 +14,7 @@ class TableRemover:
 
     def remove_table(self):
         hei_cut, _ = self.__cut_table.shape
-        height, width, _ = self.__invoice.shape
+        height, width = self.__invoice.shape
         desired_height = height - (height - self.__position.starting_y) + hei_cut
         first_crop_start_height, first_crop_end_height = 0, self.__position.starting_y
         second_crop_start_height, second_crop_end_height = desired_height, height
