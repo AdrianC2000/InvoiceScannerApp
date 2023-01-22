@@ -1,4 +1,4 @@
-from google.cloud.vision_v1 import TextAnnotation
+from google.cloud.vision import TextAnnotation
 from numpy import ndarray
 
 from entities.block_position import BlockPosition

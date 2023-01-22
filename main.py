@@ -5,6 +5,7 @@
 # from processors.invoice_info_processor import InvoiceInfoProcessor
 #
 # if __name__ == "__main__":
+#     # This file is left for the testing purpose
 #     file_path = "resources/censored_invoices/Invoice 1 faked data.png"
 #     invoice_image = io.imread(file_path)[:, :, :3]
 #

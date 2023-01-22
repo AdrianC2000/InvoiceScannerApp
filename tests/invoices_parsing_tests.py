@@ -1,4 +1,3 @@
-from pdf2image import convert_from_path
 from skimage import io
 import json
 import os
@@ -54,6 +53,7 @@ class InvoicesParsingTests(unittest.TestCase):
                 self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect! ")
 
     # def test_single_invoice(self):
+    #     # This test is left for the purpose of testing a single invoice
     #     invoices_set = "tests/invoices_testing_set/"
     #     outputs_set = "tests/invoices_output_set/"
     #     cwd = os.getcwd()

@@ -1,10 +1,7 @@
 import re
 
-from regex import regex
-
 from entities.matching_block import MatchingBlock
 from entities.position import Position
-from entities.text_position import TextPosition
 from extractors.key_data_extractor.constants_key_words import address, nip
 from entities.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
@@ -47,7 +44,8 @@ def create_partially_not_found_response(key_prefix, address_row_index: int, zip_
         if zip_code_row_index != -1:
             if zip_code_row_index != address_row_index:
                 address_rows = matching_block.block.rows[
-                           min(address_row_index, zip_code_row_index): max(address_row_index, zip_code_row_index) + 1]
+                               min(address_row_index, zip_code_row_index): max(address_row_index,
+                                                                               zip_code_row_index) + 1]
             else:
                 address_rows = [matching_block.block.rows[address_row_index]]
             address_status = ValueFindingStatus.FOUND

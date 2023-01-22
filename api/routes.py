@@ -2,18 +2,24 @@ import json
 import logging
 import os
 
-import numpy
 import requests
-from PIL import Image
 from flask import Blueprint, Response, request
 
+from entities.invoice_info_response import InvoiceInfoResponse
 from invoice_processing_utils.format_unifier import FormatUnifier
-from parsers.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
 from settings import settings
 from settings.settings import customize_json, dump_to_json
 
 invoice_blueprint = Blueprint("invoice", __name__)
+
+
+def get_response(file_name: str, invoice_info_response: InvoiceInfoResponse) -> dict:
+    if str(invoice_info_response.status)[0] == '2':
+        response_value = invoice_info_response.invoice_info
+    else:
+        response_value = invoice_info_response.message
+    return {file_name: response_value}
 
 
 @invoice_blueprint.route("/health", methods=["GET"])
@@ -32,8 +38,9 @@ def process_invoice():
             os.makedirs(directory)
         file_name = file.filename
         invoice = FormatUnifier(directory, file).unify_format()
-        invoice_info = InvoiceInfoProcessor(invoice, directory).extract_info()
-        all_invoices_info.append({file_name: invoice_info})
+        invoice_info_response = InvoiceInfoProcessor(invoice, directory).extract_info()
+        content = get_response(file_name, invoice_info_response)
+        all_invoices_info.append(content)
     all_invoices_info_json = dump_to_json(all_invoices_info)
     return Response(all_invoices_info_json, status=201, mimetype='application/json')
 

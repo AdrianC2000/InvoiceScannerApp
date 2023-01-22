@@ -21,6 +21,3 @@ class Position:
     @property
     def ending_y(self) -> int:
         return self.__ending_y
-
-
-

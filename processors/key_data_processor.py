@@ -1,9 +1,7 @@
-from random import randrange
-
 import cv2
-from numpy import ndarray
-
 import config
+
+from numpy import ndarray
 from classifiers.block_classifier.block_classifier import BlockClassifier
 from entities.matching_block import MatchingBlock
 from entities.position import Position

@@ -19,7 +19,3 @@ class BlockPosition:
     @rows.setter
     def rows(self, rows: list[TextPosition]):
         self.__rows = rows
-
-
-
-

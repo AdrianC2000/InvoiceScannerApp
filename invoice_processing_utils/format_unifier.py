@@ -1,6 +1,4 @@
-import base64
 import logging
-import fitz
 
 import numpy
 from pdf2image import convert_from_path
@@ -11,7 +9,6 @@ from PIL import Image
 
 
 class FormatUnifier:
-
     __POPPLER_PATH = r"C:\Users\adria\poppler-0.68.0\bin"
 
     def __init__(self, path: str, invoice_file: FileStorage):

@@ -2,7 +2,6 @@ import logging
 
 from flask import Flask
 from flask_cors import CORS
-
 from api.routes import invoice_blueprint
 
 UPLOAD_FOLDER = 'resources/upload'

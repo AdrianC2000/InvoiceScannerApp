@@ -36,7 +36,8 @@ class InvoiceNumberResolvers:
                     if not self.__is_preliminary:
                         try:
                             alleged_invoice_number_index = number_index + 1
-                            alleged_invoice_number = row_with_invoice_number_key_text.split(' ')[alleged_invoice_number_index]
+                            alleged_invoice_number = row_with_invoice_number_key_text.split(' ')[
+                                alleged_invoice_number_index]
                             if has_numbers(alleged_invoice_number):
                                 return SearchResponse(key_word, alleged_invoice_number,
                                                       ValueFindingStatus.FOUND, rows[0].position)

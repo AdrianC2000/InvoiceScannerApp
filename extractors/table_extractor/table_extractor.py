@@ -9,7 +9,6 @@ from entities.table_position import TablePosition
 
 
 class TableExtractor:
-
     __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX = "2.Extracted table.png"
 
     def __init__(self, image: ndarray):

@@ -8,6 +8,7 @@ from PIL import Image
 from pathlib import Path
 
 import warnings
+
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
@@ -42,7 +43,6 @@ def find_first_horizontal_line(horizontal_lines):
 
 
 class ImageRotator:
-
     __STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX = "3.Table rotated by small angle.png"
 
     def __init__(self, contours_definer, table_image_bin, original_table):
@@ -59,7 +59,7 @@ class ImageRotator:
         angle = calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
         if abs(angle) < 10:
             rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
-                                                                    fillcolor=255)
+                                                                        fillcolor=255)
             logging.info(f'Table rotated by {angle} degrees.')
             Path(config.Config.directory_to_save).mkdir(parents=True, exist_ok=True)
             rotated_table.save(config.Config.directory_to_save + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)

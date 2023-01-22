@@ -1,7 +1,6 @@
 from statistics import mean
 import cv2
 import numpy as np
-from numpy import e
 
 
 def separate_lines(horizontal_lines, is_vertical):

@@ -1,5 +1,3 @@
-from random import randrange
-
 import config
 import cv2
 import numpy as np

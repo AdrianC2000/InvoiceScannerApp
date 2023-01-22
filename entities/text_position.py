@@ -24,5 +24,5 @@ class TextPosition:
 
     def __repr__(self):
         return '["' + self.__text + '"' + " -> " + str(self.__position.starting_x) + ", " \
-               + str(self.__position.starting_y) + ", " + str(self.__position.ending_x) + ", " \
-               + str(self.__position.ending_y) + "]"
+            + str(self.__position.starting_y) + ", " + str(self.__position.ending_x) + ", " \
+            + str(self.__position.ending_y) + "]"

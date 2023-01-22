@@ -1,7 +1,7 @@
 import config
 import cv2
-from numpy import ndarray
 
+from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
 from extractors.table_extractor.table_extractor import TableExtractor
@@ -14,7 +14,6 @@ from text_handler.words_converter import WordsConverter
 
 
 class TableDataProcessor:
-
     __INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX = "10.Invoice without table.png"
 
     def __init__(self, invoice: ndarray):
@@ -43,7 +42,8 @@ class TableDataProcessor:
             raise ValueError
 
         invoice_table_removed = TableRemover(self.__invoice, table_position.position, rotated_table).remove_table()
-        cv2.imwrite(config.Config.directory_to_save + self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
+        cv2.imwrite(config.Config.directory_to_save + self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX,
+                    invoice_table_removed)
 
         parsed_rows = TableParser(columns_ordered, cells_with_phrases).parse_rows()
         return parsed_rows, invoice_table_removed
