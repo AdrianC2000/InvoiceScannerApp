@@ -1,3 +1,4 @@
+import json
 import os
 
 from entities.invoice_info_response import InvoiceInfoResponse
@@ -6,15 +7,8 @@ from processors.invoice_info_processor import InvoiceInfoProcessor
 from settings.settings import dump_to_json
 
 
-def get_response(file_name: str, invoice_info_response: InvoiceInfoResponse) -> dict:
-    if str(invoice_info_response.status)[0] == '2':
-        response_value = invoice_info_response.invoice_info
-    else:
-        response_value = invoice_info_response.message
-    return {file_name: response_value}
-
-
-def get_invoices_info(invoices_files):
+def get_invoices_info(invoices_files) -> json:
+    """ Method returns list of all InvoiceInfoResponse transformed into a json """
     all_invoices_info = list()
     for file in invoices_files:
         file_name = file.filename
@@ -28,3 +22,11 @@ def get_invoices_info(invoices_files):
         all_invoices_info.append(content)
     all_invoices_info_json = dump_to_json(all_invoices_info)
     return all_invoices_info_json
+
+
+def get_response(file_name: str, invoice_info_response: InvoiceInfoResponse) -> dict:
+    if str(invoice_info_response.status)[0] == '2':
+        response_value = invoice_info_response.invoice_info
+    else:
+        response_value = invoice_info_response.message
+    return {file_name: response_value}

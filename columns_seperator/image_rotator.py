@@ -1,12 +1,13 @@
 import logging
 import math
-import config
 import cv2
 import numpy as np
 import warnings
 
 from PIL import Image
 from pathlib import Path
+
+from settings.config_consts import ConfigConsts
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -58,8 +59,8 @@ class ImageRotator:
             rotated_table = Image.fromarray(self.original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                         fillcolor=255)
             logging.info(f'Table rotated by {angle} degrees.')
-            Path(config.Config.directory_to_save).mkdir(parents=True, exist_ok=True)
-            rotated_table.save(config.Config.directory_to_save + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)
+            Path(ConfigConsts.DIRECTORY_TO_SAVE).mkdir(parents=True, exist_ok=True)
+            rotated_table.save(ConfigConsts.DIRECTORY_TO_SAVE + self.__STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX)
             return np.asarray(rotated_table)
         else:
             return np.asarray(self.original_table)

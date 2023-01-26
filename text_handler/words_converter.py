@@ -1,7 +1,7 @@
-import config
 import warnings
 import pandas as pd
 
+from settings.config_consts import ConfigConsts
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition
 
@@ -45,7 +45,7 @@ def append_text_to_final_phrase(rows_in_cell: list[TextPosition]) -> str:
 
 def write_to_xls(cells_with_phrases: list[list[str]]):
     df = pd.DataFrame(cells_with_phrases)
-    writer = pd.ExcelWriter(config.Config.directory_to_save + __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, engine='xlsxwriter',
+    writer = pd.ExcelWriter(ConfigConsts.DIRECTORY_TO_SAVE + __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, engine='xlsxwriter',
                             engine_kwargs={'options': {'strings_to_numbers': True}})
     df.to_excel(writer, sheet_name='Extracted table', index=False)
     writer.save()

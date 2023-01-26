@@ -1,5 +1,4 @@
 import cv2
-import config
 
 from numpy import ndarray
 from classifiers.block_classifier.block_classifier import BlockClassifier

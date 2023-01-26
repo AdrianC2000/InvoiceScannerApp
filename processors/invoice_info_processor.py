@@ -1,5 +1,4 @@
 import logging
-import config
 
 from numpy import ndarray
 from entities.invoice_info_response import InvoiceInfoResponse
@@ -8,6 +7,7 @@ from invoice_processing_utils.invoice_straightener import InvoiceStraightener
 from entities.invoice_info import InvoiceInfo
 from processors.key_data_processor import KeyDataProcessor
 from processors.table_data_processor import TableDataProcessor
+from settings.config_consts import ConfigConsts
 
 ERROR_MESSAGE = "Incorrect invoice - check if given document meets the requirements."
 NOT_ENOUGH_COLUMNS_ERROR_MESSAGE = "Incorrect invoice table - check if the document table meet the requirements."
@@ -28,7 +28,7 @@ class InvoiceInfoProcessor:
         self.__directory_to_save = directory_to_save
 
     def extract_info(self) -> InvoiceInfoResponse:
-        config.Config.directory_to_save = self.__directory_to_save
+        ConfigConsts.DIRECTORY_TO_SAVE = self.__directory_to_save
         straightened_and_grayscale_invoice = InvoiceStraightener(self.__original_invoice).straighten_image()
 
         try:

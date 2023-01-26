@@ -1,10 +1,10 @@
-import config
 import cv2
 import numpy as np
 
-from columns_seperator.contours_definer import ContoursDefiner
+from columns_seperator.contours_definer import ContoursDefiner, sort_contours
 from columns_seperator.image_rotator import ImageRotator
 from invoice_processing_utils.common_utils import save_image
+from settings.config_consts import ConfigConsts
 
 
 def get_cells_in_columns(bounding_boxes):
@@ -55,7 +55,7 @@ class ColumnsSeperator:
 
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        fixed_table_contours_sorted, bounding_boxes = contours_definer_on_rotated.sort_contours(fixed_table_contours)
+        fixed_table_contours_sorted, bounding_boxes = sort_contours(fixed_table_contours)
         cells_in_columns = get_cells_in_columns(bounding_boxes)
 
         self.save_table_with_bounding_boxes(cells_in_columns)
@@ -65,11 +65,11 @@ class ColumnsSeperator:
         table_image_copy = cv2.cvtColor(self.table_image.copy(), cv2.COLOR_RGB2BGR)
         index = 0
         for columns in cells_in_columns:
-            color = config.Config.COLORS_LIST[index]
+            color = ConfigConsts.COLORS_LIST[index]
             for cell in columns:
                 cv2.rectangle(table_image_copy, (cell[0], cell[1]), (cell[0] + cell[2], cell[1] + cell[3]),
                               color, 1)
-            if index < len(config.Config.COLORS_LIST) - 1:
+            if index < len(ConfigConsts.COLORS_LIST) - 1:
                 index += 1
             else:
                 index = 0

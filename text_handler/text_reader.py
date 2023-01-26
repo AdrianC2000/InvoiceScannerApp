@@ -1,4 +1,3 @@
-import config
 import cv2
 import logging
 
@@ -8,6 +7,7 @@ from random import randrange
 from entities.position import Position
 from entities.text_position import TextPosition
 from invoice_processing_utils.common_utils import save_image
+from settings.config_consts import ConfigConsts
 
 __EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX = "7.Extracted texts.png"
 __EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX = "11.Blocks and text extracted.png"
@@ -24,7 +24,7 @@ def get_response(invoice: ndarray):
 
 
 def save_table_with_bounding_boxes(invoice: ndarray, texts_with_positions: list[TextPosition], flag: bool):
-    color = config.Config.COLORS_LIST[randrange(len(config.Config.COLORS_LIST))]
+    color = ConfigConsts.COLORS_LIST[randrange(len(ConfigConsts.COLORS_LIST))]
     table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
     for text_position in texts_with_positions:
         cv2.rectangle(table_image_copy, (text_position.position.starting_x, text_position.position.starting_y),

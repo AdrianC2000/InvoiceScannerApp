@@ -1,5 +1,4 @@
 import json
-import config
 import cv2
 
 from random import randrange
@@ -9,6 +8,7 @@ from entities.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
 from entities.block_position import BlockPosition
 from invoice_processing_utils.common_utils import save_image
+from settings.config_consts import ConfigConsts
 
 __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
 
@@ -19,7 +19,7 @@ def load_data():
 
 
 def save_table_with_bounding_boxes(invoice: ndarray, unique_keys_blocks: list[MatchingBlock]):
-    color = config.Config.COLORS_LIST[randrange(len(config.Config.COLORS_LIST))]
+    color = ConfigConsts.COLORS_LIST[randrange(len(ConfigConsts.COLORS_LIST))]
     table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
     for matching_block in unique_keys_blocks:
         block = matching_block.block

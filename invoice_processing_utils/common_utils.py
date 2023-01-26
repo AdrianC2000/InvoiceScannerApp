@@ -1,8 +1,8 @@
 import cv2
-import config
 
 from numpy import ndarray
+from settings.config_consts import ConfigConsts
 
 
 def save_image(file_name: str, image: ndarray):
-    cv2.imwrite(config.Config.directory_to_save + file_name, image)
+    cv2.imwrite(ConfigConsts.DIRECTORY_TO_SAVE + file_name, image)

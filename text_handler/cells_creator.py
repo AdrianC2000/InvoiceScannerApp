@@ -57,7 +57,6 @@ class CellsCreator:
 
     def check_column_belonging(self, coordinates: Position) -> tuple[int, float]:
         index = 0
-        # TODO -> handle first 'column' - actual approach is kinda sus
         cells_in_columns = self.__cells_in_columns[1:]
         for column in cells_in_columns:
             column_starting_x = column[0][0]
@@ -70,7 +69,6 @@ class CellsCreator:
 
     def check_row_belonging(self, coordinates: Position) -> tuple[int, float]:
         index = 0
-        # TODO -> handle first 'column' - actual approach is kinda sus
         # TODO -> case, when a "word" floods over the row (for example api made a mistake and merge two signs from
         #  two separate cells into one -> extended parsing needed
         cells_in_columns = self.__cells_in_columns[1:]

@@ -48,6 +48,11 @@ def find_middle_lines(horizontal_lines_separated, height, width):
     return empty_image
 
 
+def sort_contours(contours):
+    bounding_boxes = [cv2.boundingRect(c) for c in contours]
+    return zip(*sorted(zip(contours, bounding_boxes), key=lambda b: b[1][0], reverse=False))
+
+
 class ContoursDefiner:
 
     def __init__(self, original_table_image, bin_table_image):
@@ -87,10 +92,6 @@ class ContoursDefiner:
         # Detect contours for following box detection
         contours, hierarchy = cv2.findContours(table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         return table_contours_image, contours
-
-    def sort_contours(self, contours):
-        bounding_boxes = [cv2.boundingRect(c) for c in contours]
-        return zip(*sorted(zip(contours, bounding_boxes), key=lambda b: b[1][0], reverse=False))
 
     def fix_contours(self):
         horizontal_lines_separated, _ = separate_lines(self.horizontal_lines, False)
