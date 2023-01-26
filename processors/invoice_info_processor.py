@@ -16,7 +16,7 @@ SUCCESS_MESSAGE = "Success"
 
 
 def check_data(key_data: KeyData):
-    # Checking if at least 4 out of 9 fields have the value
+    """ Checking if at least 4 out of 9 fields have the value """
     return sum(value is None for value in key_data.__dict__.values()) < 4
 
 

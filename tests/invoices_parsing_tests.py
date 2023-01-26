@@ -3,17 +3,19 @@ import os
 import unittest
 import numpy
 import warnings
+import numpy as np
 
+from PIL import Image
+from pdf2image import convert_from_path
 from parsers.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
-from settings import settings
-from settings.settings import dump_to_json
-from skimage import io
 
 
 class InvoicesParsingTests(unittest.TestCase):
     __previous_configuration = None
     __POPPLER_PATH = r"C:\Users\adria\poppler-0.68.0\bin"
+    __invoices_set = "tests/app_testing_set/"
+    __outputs_set = "tests/invoices_output_set/"
 
     @classmethod
     def setUpClass(cls):
@@ -22,67 +24,47 @@ class InvoicesParsingTests(unittest.TestCase):
         warnings.simplefilter('ignore', category=ResourceWarning)
         cls.maxDiff = None
 
-        cls.__previous_configuration = settings.get_configuration()
-        with open('settings/configuration.json', mode="r", encoding="utf-8") as f:
-            test_config = json.load(f)
-        settings.set_configuration(json.dumps(test_config))
-
     def test_every_invoice(self):
-        invoices_set = "tests/invoices_testing_set/"
-        outputs_set = "tests/invoices_output_set/"
-        cwd = os.getcwd()
-
-        for file in os.listdir(os.fsencode(invoices_set)):
+        for file in os.listdir(os.fsencode(self.__invoices_set)):
             filename = os.fsdecode(file)
-            print(filename)
-            test_output_dir = cwd + '/tests/outputs/' + filename + "/"
-            invoice_path = invoices_set + filename
-            invoice_image = io.imread(invoice_path)[:, :, :3]
-            invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
-
-            output_file = outputs_set + filename.split('.')[0] + ".json"
-            f = open(output_file, mode="r", encoding="utf-8")
-            output_json = json.load(f)
-
-            expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-            actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
+            print(f"Testing invoice {filename}")
+            actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
             with self.subTest(expected_output=expected_output):
-                self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect! ")
+                self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
 
-    # def test_single_invoice(self):
-    #     # This test is left for the purpose of testing a single invoice
-    #     invoices_set = "tests/invoices_testing_set/"
-    #     outputs_set = "tests/invoices_output_set/"
-    #     cwd = os.getcwd()
-    #
-    #     filename = "test_invoice_17.jpg"
-    #     test_output_dir = cwd + '/tests/outputs/' + filename + "/"
-    #
-    #     if not os.path.exists(test_output_dir):
-    #         os.makedirs(test_output_dir)
-    #
-    #     invoice_path = invoices_set + filename
-    #
-    #     if filename.endswith("pdf"):
-    #         pages = convert_from_path(invoice_path, poppler_path=self.__POPPLER_PATH)
-    #         invoice_image = pages[0]
-    #     else:
-    #         invoice_image = io.imread(invoice_path)[:, :, :3]
-    #     invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info()
-    #
-    #     output_file = outputs_set + filename.split('.')[0] + ".json"
-    #     f = open(output_file, mode="r", encoding="utf-8")
-    #     output_json = json.load(f)
-    #
-    #     expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-    #     actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
-    #
-    #     self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect! ")
+    @unittest.skip('')
+    def test_single_invoice(self):
+        filename = "test_invoice_9.png"
+        actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
-    @classmethod
-    def tearDownClass(cls):
-        settings.set_configuration(dump_to_json(cls.__previous_configuration))
+        self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
+
+    def get_expected_and_actual_outputs(self, filename):
+        test_output_dir = f"{os.getcwd()}/tests/outputs/{filename}/"
+
+        if not os.path.exists(test_output_dir):
+            os.makedirs(test_output_dir)
+
+        invoice_path = f"tests/app_testing_set/{filename}"
+        invoice_image = self.get_invoice_with_unified_format(filename, invoice_path)
+        invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info().invoice_info
+        output_file = f"tests/invoices_output_set/{filename.split('.')[0]}.json"
+
+        with open(output_file, encoding="utf-8") as fh:
+            output_json = json.load(fh)
+
+        expected_output = json.dumps(output_json, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
+        actual_output = json.dumps(invoice_info, indent=4, cls=JsonEncoder, ensure_ascii=False, sort_keys=True)
+        return actual_output, expected_output
+
+    def get_invoice_with_unified_format(self, filename, invoice_path):
+        if filename.endswith("pdf"):
+            pages = convert_from_path(invoice_path, poppler_path=self.__POPPLER_PATH)
+            invoice_image = pages[0]  # TODO - add all pages handling
+        else:
+            invoice_image = np.array(Image.open(invoice_path))
+        return invoice_image
 
 
 if __name__ == '__main__':

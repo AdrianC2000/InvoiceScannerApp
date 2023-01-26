@@ -24,6 +24,8 @@ def get_cells_in_columns(bounding_boxes):
 
 
 class ColumnsSeperator:
+    """ Separating columns from the given table """
+
     __BINARY_TABLE_PATH_PREFIX = "3.Binary table.png"
     __ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX = "4.Original contours.png"
     __FIXED_CONTOURS_OUTPUT_PATH_PREFIX = "5.Fixed contours.png"
@@ -74,7 +76,7 @@ class ColumnsSeperator:
         save_image(self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
 
     def image_to_binary(self):
-        # thresholding the image to a binary image
+        """ Thresholding the image to a binary image """
         thresh, img_bin = cv2.threshold(self.table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         img_bin = 255 - img_bin
         save_image(self.__BINARY_TABLE_PATH_PREFIX, img_bin)

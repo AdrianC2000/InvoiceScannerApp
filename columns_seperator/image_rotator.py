@@ -29,15 +29,13 @@ def get_horizontal_line_points(horizontal_line):
 
 def find_first_horizontal_line(horizontal_lines):
     next_zero_break = False
-    first_horizontal_line = {}
-    index = 0
-    for i in horizontal_lines:
-        if not np.all(i == 0):
-            first_horizontal_line[index] = i
+    first_horizontal_line = dict()
+    for index, horizontal_line in enumerate(horizontal_lines):
+        if not np.all(horizontal_line == 0):
+            first_horizontal_line[index] = horizontal_line
             next_zero_break = True
-        if np.all(i == 0) and next_zero_break:
+        if np.all(horizontal_line == 0) and next_zero_break:
             break
-        index += 1
     return first_horizontal_line
 
 
