@@ -7,6 +7,9 @@ import warnings
 from PIL import Image
 from pathlib import Path
 
+from numpy import ndarray
+
+from columns_seperator.contours_definer import ContoursDefiner
 from settings.config_consts import ConfigConsts
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -45,12 +48,12 @@ class ImageRotator:
 
     __STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX = "3.Table rotated by small angle.png"
 
-    def __init__(self, contours_definer, table_image_bin, original_table):
+    def __init__(self, contours_definer: ContoursDefiner, table_image_bin: ndarray, original_table: ndarray):
         self.original_table_contours_definer = contours_definer
         self.binary_table = table_image_bin
         self.original_table = original_table
 
-    def rotate_image(self):
+    def rotate_image(self) -> ndarray:
         horizontal_lines = self.original_table_contours_definer.get_horizontal_lines()
         first_horizontal_line = find_first_horizontal_line(horizontal_lines)
         horizontal_line_first_point, horizontal_line_last_point = get_horizontal_line_points(first_horizontal_line)

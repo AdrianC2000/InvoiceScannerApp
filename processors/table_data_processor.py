@@ -1,6 +1,7 @@
 from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
+from entities.table import Table
 from extractors.table_extractor.table_extractor import TableExtractor
 from invoice_processing_utils.common_utils import save_image
 from invoice_processing_utils.table_remover import TableRemover
@@ -12,17 +13,17 @@ from text_handler.words_converter import WordsConverter
 
 
 def check_columns(cells_in_columns):
-    if len(cells_in_columns[1]) == len(cells_in_columns[2]):
+    if len(cells_in_columns[1].cells) == len(cells_in_columns[2].cells):
         if len(cells_in_columns) < 4:
-            raise ValueError
+            raise ValueError("Incorrect invoice table - only 4 or less columns detected.")
     else:
-        raise ValueError
+        raise ValueError("Incorrect invoice table - detected columns do not have the same amount of cells.")
 
 
 def check_confidences(columns_ordered):
     all_confidences = [matching_header.confidence_calculation.confidence for matching_header in columns_ordered]
     if sum(all_confidences) / len(all_confidences) < 0.3:
-        raise ValueError
+        raise ValueError("Incorrect invoice table - cannot match headers content to known header values.")
 
 
 class TableDataProcessor:
@@ -33,9 +34,9 @@ class TableDataProcessor:
     def __init__(self, invoice: ndarray):
         self.__invoice = invoice
 
-    def extract_table_data(self) -> tuple[list[TableProduct], ndarray]:
+    def extract_table_data(self) -> tuple[Table, ndarray]:
         table_position = TableExtractor(self.__invoice).extract_table()
-        rotated_table, cells_in_columns = ColumnsSeperator(table_position.table).separate_cells_in_columns()
+        rotated_table, cells_in_columns = ColumnsSeperator(table_position.table_image).separate_cells_in_columns()
         check_columns(cells_in_columns)
 
         text_with_position = TextReader(rotated_table).read_words()
@@ -47,5 +48,5 @@ class TableDataProcessor:
         invoice_table_removed = TableRemover(self.__invoice, table_position.position, rotated_table).remove_table()
         save_image(self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
 
-        parsed_rows = TableParser(columns_ordered, cells_with_phrases).parse_rows()
-        return parsed_rows, invoice_table_removed
+        table = TableParser(columns_ordered, cells_with_phrases).get_table_content()
+        return table, invoice_table_removed

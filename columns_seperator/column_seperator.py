@@ -1,26 +1,30 @@
 import cv2
 import numpy as np
+from numpy import ndarray
 
-from columns_seperator.contours_definer import ContoursDefiner, sort_contours
+from columns_seperator.contours_definer import ContoursDefiner, get_sorted_cells_bounding_boxes
 from columns_seperator.image_rotator import ImageRotator
+from entities.column import Column
 from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
 
 
-def get_cells_in_columns(bounding_boxes):
-    column_start = bounding_boxes[0][0]
+def get_cells_in_columns(bounding_boxes) -> list[Column]:
+    """ Method returns a list of columns, and every column is a list of cells positions (coordinates) that it
+    consists of. """
+    column_start = bounding_boxes[0].starting_x
     single_column = []
     cells_in_columns = []
     for cell in bounding_boxes:
-        if cell[0] == column_start:
+        if cell.starting_x == column_start:
             single_column.append(cell)
         else:
             cells_in_columns.append(single_column)
             single_column = [cell]
-            column_start = cell[0]
+            column_start = cell.starting_x
     cells_in_columns.append(single_column)
-    cells_in_columns = [sorted(column, key=lambda t: t[1]) for column in cells_in_columns]
-    return cells_in_columns
+    columns = [Column(sorted(columns_cells, key=lambda t: t.starting_y)) for columns_cells in cells_in_columns]
+    return columns
 
 
 class ColumnsSeperator:
@@ -34,7 +38,9 @@ class ColumnsSeperator:
     def __init__(self, table_image):
         self.table_image = table_image
 
-    def separate_cells_in_columns(self):
+    def separate_cells_in_columns(self) -> tuple[ndarray, list[Column]]:
+        """ Method returns table image rotated by the small angle and list of columns (every column consists of its
+        cells positions) """
         # original table
         table_binary = self.image_to_binary()
         contours_definer_on_orig = ContoursDefiner(self.table_image, table_binary)
@@ -51,23 +57,27 @@ class ColumnsSeperator:
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
         save_image(self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX, fixed_table_contours_image)
 
-        self.table_image = self.table_image[0: fixed_table_contours_image.shape[0], :]
+        self.remove_redundant_table_part(fixed_table_contours_image)
 
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        fixed_table_contours_sorted, bounding_boxes = sort_contours(fixed_table_contours)
+        bounding_boxes = get_sorted_cells_bounding_boxes(fixed_table_contours)
         cells_in_columns = get_cells_in_columns(bounding_boxes)
 
         self.save_table_with_bounding_boxes(cells_in_columns)
         return self.table_image, cells_in_columns
+
+    def remove_redundant_table_part(self, fixed_table_contours_image):
+        self.table_image = self.table_image[0: fixed_table_contours_image.shape[0], :]
 
     def save_table_with_bounding_boxes(self, cells_in_columns):
         table_image_copy = cv2.cvtColor(self.table_image.copy(), cv2.COLOR_RGB2BGR)
         index = 0
         for columns in cells_in_columns:
             color = ConfigConsts.COLORS_LIST[index]
-            for cell in columns:
-                cv2.rectangle(table_image_copy, (cell[0], cell[1]), (cell[0] + cell[2], cell[1] + cell[3]),
+            for cell in columns.cells:
+                cv2.rectangle(table_image_copy, (cell.starting_x, cell.starting_y), (cell.starting_x + cell.ending_x,
+                                                                                     cell.starting_y + cell.ending_y),
                               color, 1)
             if index < len(ConfigConsts.COLORS_LIST) - 1:
                 index += 1
@@ -76,7 +86,6 @@ class ColumnsSeperator:
         save_image(self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
 
     def image_to_binary(self):
-        """ Thresholding the image to a binary image """
         thresh, img_bin = cv2.threshold(self.table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         img_bin = 255 - img_bin
         save_image(self.__BINARY_TABLE_PATH_PREFIX, img_bin)

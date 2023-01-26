@@ -1,5 +1,6 @@
 import logging
 
+from entities.column import Column
 from entities.position import Position
 from entities.text_position import TextPosition
 
@@ -29,7 +30,7 @@ def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: 
 
 class CellsCreator:
 
-    def __init__(self, texts_with_positions: list[TextPosition], cells_in_columns: list):
+    def __init__(self, texts_with_positions: list[TextPosition], cells_in_columns: list[Column]):
         self.__texts_with_positions = texts_with_positions
         self.__cells_in_columns = cells_in_columns
 
@@ -38,7 +39,7 @@ class CellsCreator:
         # Aligning words to columns
         cells_content = []
         columns_number = len(self.__cells_in_columns) - 1
-        rows_number = len(self.__cells_in_columns[1])
+        rows_number = len(self.__cells_in_columns[1].cells)
         for columns in range(rows_number):
             cell = []
             for row in range(columns_number):
@@ -59,8 +60,8 @@ class CellsCreator:
         index = 0
         cells_in_columns = self.__cells_in_columns[1:]
         for column in cells_in_columns:
-            column_starting_x = column[0][0]
-            column_ending_x = column[0][0] + column[0][2]
+            column_starting_x = column.cells[0].starting_x
+            column_ending_x = column.cells[0].starting_x + column.cells[0].ending_x
             percentage = check_percentage_inclusion(coordinates.starting_x, coordinates.ending_x, column_starting_x,
                                                     column_ending_x)
             if percentage != 0:
@@ -72,9 +73,9 @@ class CellsCreator:
         # TODO -> case, when a "word" floods over the row (for example api made a mistake and merge two signs from
         #  two separate cells into one -> extended parsing needed
         cells_in_columns = self.__cells_in_columns[1:]
-        for cell in cells_in_columns[0]:
-            row_starting_y = cell[1]
-            row_ending_y = cell[1] + cell[3]
+        for cell in cells_in_columns[0].cells:
+            row_starting_y = cell.starting_y
+            row_ending_y = cell.starting_y + cell.ending_y
             percentage = check_percentage_inclusion(coordinates.starting_y, coordinates.ending_y, row_starting_y,
                                                     row_ending_y)
             if percentage != 0:

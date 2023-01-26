@@ -1,6 +1,7 @@
 import json
 
 from entities.matching_header import MatchingHeader
+from entities.table import Table
 from parsers.json_encoder import JsonEncoder
 from entities.table_item import TableProduct
 from settings.config_consts import ConfigConsts
@@ -21,13 +22,13 @@ class TableParser:
         self.__matching_headers = matching_headers
         self.__rows = rows
 
-    def parse_rows(self) -> list[TableProduct]:
+    def get_table_content(self) -> Table:
         table_items = list()
         for row in self.__rows:
             row_dict = self.parse_row(row)
             table_items.append(TableProduct(row_dict))
         save_to_file(table_items[1:len(table_items)])
-        return table_items[1:len(table_items)]
+        return Table(table_items[1:len(table_items)])
 
     def parse_row(self, row: list[str]) -> dict[str, str]:
         row_dict = {}

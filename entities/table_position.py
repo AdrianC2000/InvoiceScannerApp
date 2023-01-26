@@ -4,12 +4,12 @@ from entities.position import Position
 
 class TablePosition:
 
-    def __init__(self, table: ndarray, position: Position):
-        self.__table = table
+    def __init__(self, table_image: ndarray, position: Position):
+        self.__table = table_image
         self.__position = position
 
     @property
-    def table(self) -> ndarray:
+    def table_image(self) -> ndarray:
         return self.__table
 
     @property
