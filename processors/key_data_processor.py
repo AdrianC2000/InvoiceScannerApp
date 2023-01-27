@@ -2,12 +2,12 @@ import cv2
 
 from numpy import ndarray
 from classifiers.block_classifier.block_classifier import BlockClassifier
-from entities.matching_block import MatchingBlock
-from entities.position import Position
-from entities.search_response import SearchResponse
+from entities.key_data_processing.matching_block import MatchingBlock
+from entities.common.position import Position
+from entities.key_data_processing.search_response import SearchResponse
 from extractors.key_data_extractor.blocks_extractor import BlocksExtractor
 from extractors.key_data_extractor.key_values_extractor import KeyValuesExtractor
-from entities.key_data import KeyData
+from entities.key_data_processing.key_data import KeyData
 from extractors.key_data_extractor.person_values_extractor import PersonValuesExtractor
 from extractors.value_finding_status import ValueFindingStatus
 from invoice_processing_utils.common_utils import save_image

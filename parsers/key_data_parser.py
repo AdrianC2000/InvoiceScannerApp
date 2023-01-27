@@ -1,6 +1,6 @@
-from entities.search_response import SearchResponse
+from entities.key_data_processing.search_response import SearchResponse
 from extractors.value_finding_status import ValueFindingStatus
-from entities.key_data import KeyData
+from entities.key_data_processing.key_data import KeyData
 
 
 class KeyDataParser:

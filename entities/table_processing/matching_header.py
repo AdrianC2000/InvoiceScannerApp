@@ -1,4 +1,4 @@
-from entities.confidence_calculation import ConfidenceCalculation
+from entities.table_processing.confidence_calculation import ConfidenceCalculation
 
 
 class MatchingHeader:

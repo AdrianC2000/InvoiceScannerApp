@@ -1,10 +1,10 @@
 import logging
 
 from numpy import ndarray
-from entities.invoice_info_response import InvoiceInfoResponse
-from entities.key_data import KeyData
+from entities.common.invoice_info_response import InvoiceInfoResponse
+from entities.key_data_processing.key_data import KeyData
 from invoice_processing_utils.invoice_straightener import InvoiceStraightener
-from entities.invoice_info import InvoiceInfo
+from entities.common.invoice_info import InvoiceInfo
 from processors.key_data_processor import KeyDataProcessor
 from processors.table_data_processor import TableDataProcessor
 from settings.config_consts import ConfigConsts

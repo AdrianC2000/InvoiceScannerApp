@@ -5,7 +5,7 @@ from entities.table_processing.row_content import RowContent
 from entities.table_processing.table import Table
 from settings.config_consts import ConfigConsts
 from text_handler.cells_creator import check_percentage_inclusion
-from entities.text_position import TextPosition
+from entities.common.text_position import TextPosition
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 

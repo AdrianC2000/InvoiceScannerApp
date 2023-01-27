@@ -1,5 +1,5 @@
-from entities.matching_block import MatchingBlock
-from entities.search_response import SearchResponse
+from entities.key_data_processing.matching_block import MatchingBlock
+from entities.key_data_processing.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.invoice_number_resolvers import has_numbers
 from extractors.key_data_extractor.resolvers.resolver_utils import check_regex_for_single_word
 from extractors.value_finding_status import ValueFindingStatus

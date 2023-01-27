@@ -1,5 +1,5 @@
-from entities.confidence_calculation import ConfidenceCalculation
-from entities.block_position import BlockPosition
+from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from entities.key_data_processing.block_position import BlockPosition
 
 
 class MatchingBlock:

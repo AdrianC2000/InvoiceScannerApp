@@ -1,16 +1,16 @@
 import logging
 
 from numpy import ndarray
-from entities.confidence_calculation import ConfidenceCalculation
-from entities.matching_block import MatchingBlock
-from entities.search_response import SearchResponse
+from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from entities.key_data_processing.matching_block import MatchingBlock
+from entities.key_data_processing.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.currency_resolver import CurrencyResolvers
 from extractors.key_data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
 from extractors.key_data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data, get_closest_block_below, \
     get_closest_block_on_the_right
 from extractors.value_finding_status import ValueFindingStatus
-from entities.block_position import BlockPosition
+from entities.key_data_processing.block_position import BlockPosition
 from text_handler.cells_creator import check_percentage_inclusion
 
 

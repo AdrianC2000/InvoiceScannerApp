@@ -3,10 +3,10 @@ import cv2
 
 from random import randrange
 from numpy import ndarray
-from entities.confidence_calculation import ConfidenceCalculation
-from entities.matching_block import MatchingBlock
+from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from entities.key_data_processing.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
-from entities.block_position import BlockPosition
+from entities.key_data_processing.block_position import BlockPosition
 from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
 

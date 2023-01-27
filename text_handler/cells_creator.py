@@ -2,10 +2,10 @@ import logging
 
 from entities.table_processing.cell import Cell
 from entities.table_processing.column import Column
-from entities.position import Position
+from entities.common.position import Position
 from entities.table_processing.row import Row
 from entities.table_processing.table import Table
-from entities.text_position import TextPosition
+from entities.common.text_position import TextPosition
 
 
 def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,

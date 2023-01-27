@@ -1,7 +1,7 @@
 import json
 import os
 
-from entities.invoice_info_response import InvoiceInfoResponse
+from entities.common.invoice_info_response import InvoiceInfoResponse
 from invoice_processing_utils.format_unifier import FormatUnifier
 from processors.invoice_info_processor import InvoiceInfoProcessor
 from settings.settings import dump_to_json

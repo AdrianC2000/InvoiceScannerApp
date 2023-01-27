@@ -1,4 +1,4 @@
-from entities.text_position import TextPosition
+from entities.common.text_position import TextPosition
 
 
 class Cell:

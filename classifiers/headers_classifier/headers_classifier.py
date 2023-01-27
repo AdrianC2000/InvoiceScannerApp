@@ -2,7 +2,7 @@ import json
 import logging
 
 from entities.table_processing.matching_header import MatchingHeader
-from entities.confidence_calculation import ConfidenceCalculation
+from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from Levenshtein import ratio
 
 from entities.table_processing.row_content import RowContent

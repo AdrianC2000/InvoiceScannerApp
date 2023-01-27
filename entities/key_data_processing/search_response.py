@@ -1,4 +1,4 @@
-from entities.position import Position
+from entities.common.position import Position
 from extractors.value_finding_status import ValueFindingStatus
 
 

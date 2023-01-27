@@ -1,4 +1,4 @@
-from entities.invoice_info import InvoiceInfo
+from entities.common.invoice_info import InvoiceInfo
 
 
 class InvoiceInfoResponse:

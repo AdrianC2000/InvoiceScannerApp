@@ -1,17 +1,17 @@
 import logging
 
 from numpy import ndarray
-from entities.confidence_calculation import ConfidenceCalculation
-from entities.matching_block import MatchingBlock
-from entities.position import Position
-from entities.search_response import SearchResponse
-from entities.text_position import TextPosition
+from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from entities.key_data_processing.matching_block import MatchingBlock
+from entities.common.position import Position
+from entities.key_data_processing.search_response import SearchResponse
+from entities.common.text_position import TextPosition
 from extractors.key_data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers, \
     create_common_not_found_response
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data, \
     get_closest_block_on_the_right, get_closest_block_below, calculate_data_position
 from extractors.value_finding_status import ValueFindingStatus
-from entities.block_position import BlockPosition
+from entities.key_data_processing.block_position import BlockPosition
 
 
 def person_info_resolver(block: MatchingBlock, keyword: str, is_preliminary: bool) -> list[SearchResponse]:

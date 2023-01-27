@@ -2,7 +2,7 @@ import logging
 import numpy as np
 
 from numpy import ndarray
-from entities.position import Position
+from entities.common.position import Position
 
 
 class TableRemover:

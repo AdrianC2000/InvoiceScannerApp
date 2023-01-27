@@ -5,7 +5,7 @@ from statistics import mean
 
 from numpy import ndarray
 
-from entities.position import Position
+from entities.common.position import Position
 
 
 def separate_lines(horizontal_lines: ndarray, is_vertical: bool) -> tuple[list[dict[ndarray]], int]:

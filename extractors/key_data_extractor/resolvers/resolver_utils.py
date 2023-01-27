@@ -1,10 +1,10 @@
 from regex import regex
 
 from classifiers.block_classifier.block_classifier import find_best_data_fit
-from entities.matching_block import MatchingBlock
+from entities.key_data_processing.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, prepare_row
-from entities.position import Position
-from entities.text_position import TextPosition
+from entities.common.position import Position
+from entities.common.text_position import TextPosition
 
 
 def remove_redundant_data(matching_block: MatchingBlock):

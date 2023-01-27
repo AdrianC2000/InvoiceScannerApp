@@ -1,9 +1,9 @@
 import re
 
-from entities.matching_block import MatchingBlock
-from entities.position import Position
+from entities.key_data_processing.matching_block import MatchingBlock
+from entities.common.position import Position
 from extractors.key_data_extractor.constants_key_words import address, nip
-from entities.search_response import SearchResponse
+from entities.key_data_processing.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
     get_row_index_by_regex_with_keyword, get_row_index_by_regex, rows_to_string, calculate_data_position
 from extractors.value_finding_status import ValueFindingStatus

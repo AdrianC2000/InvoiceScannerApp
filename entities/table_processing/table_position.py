@@ -1,5 +1,5 @@
 from numpy import ndarray
-from entities.position import Position
+from entities.common.position import Position
 
 
 class TablePosition:

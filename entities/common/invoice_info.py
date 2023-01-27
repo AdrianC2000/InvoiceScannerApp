@@ -1,4 +1,4 @@
-from entities.key_data import KeyData
+from entities.key_data_processing.key_data import KeyData
 from entities.table_processing.parsed_table import ParsedTable
 
 

@@ -4,8 +4,8 @@ import logging
 from google.cloud import vision
 from numpy import ndarray
 from random import randrange
-from entities.position import Position
-from entities.text_position import TextPosition
+from entities.common.position import Position
+from entities.common.text_position import TextPosition
 from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
 
