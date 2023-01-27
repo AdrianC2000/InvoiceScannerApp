@@ -1,4 +1,4 @@
-from entities.table_item import TableProduct
+from entities.table_processing.table_item import TableProduct
 
 
 class ParsedTable:

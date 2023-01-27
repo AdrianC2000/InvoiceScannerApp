@@ -1,6 +1,5 @@
 from entities.key_data import KeyData
-from entities.parsed_table import ParsedTable
-from entities.table_item import TableProduct
+from entities.table_processing.parsed_table import ParsedTable
 
 
 class InvoiceInfo:

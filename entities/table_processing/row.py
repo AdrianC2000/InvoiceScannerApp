@@ -1,4 +1,4 @@
-from entities.cell import Cell
+from entities.table_processing.cell import Cell
 
 
 class Row:

@@ -4,7 +4,7 @@ from numpy import ndarray
 
 from columns_seperator.contours_definer import ContoursDefiner, get_sorted_cells_bounding_boxes
 from columns_seperator.image_rotator import ImageRotator
-from entities.column import Column
+from entities.table_processing.column import Column
 from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
 

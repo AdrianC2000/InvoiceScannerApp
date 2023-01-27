@@ -1,5 +1,4 @@
-from entities.cell import Cell
-from entities.row import Row
+from entities.table_processing.row import Row
 
 
 class Table:

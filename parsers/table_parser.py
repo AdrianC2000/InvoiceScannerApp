@@ -1,10 +1,10 @@
 import json
 
-from entities.matching_header import MatchingHeader
-from entities.parsed_table import ParsedTable
-from entities.row_content import RowContent
+from entities.table_processing.matching_header import MatchingHeader
+from entities.table_processing.parsed_table import ParsedTable
+from entities.table_processing.row_content import RowContent
 from parsers.json_encoder import JsonEncoder
-from entities.table_item import TableProduct
+from entities.table_processing.table_item import TableProduct
 from settings.config_consts import ConfigConsts
 
 __FINAL_TABLE_OUTPUT_PATH_PREFIX = "9.Final table.json"

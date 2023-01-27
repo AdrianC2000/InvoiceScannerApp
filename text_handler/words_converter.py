@@ -1,8 +1,8 @@
 import warnings
 import pandas as pd
 
-from entities.row_content import RowContent
-from entities.table import Table
+from entities.table_processing.row_content import RowContent
+from entities.table_processing.table import Table
 from settings.config_consts import ConfigConsts
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition

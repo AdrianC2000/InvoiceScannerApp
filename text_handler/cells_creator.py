@@ -1,10 +1,10 @@
 import logging
 
-from entities.cell import Cell
-from entities.column import Column
+from entities.table_processing.cell import Cell
+from entities.table_processing.column import Column
 from entities.position import Position
-from entities.row import Row
-from entities.table import Table
+from entities.table_processing.row import Row
+from entities.table_processing.table import Table
 from entities.text_position import TextPosition
 
 

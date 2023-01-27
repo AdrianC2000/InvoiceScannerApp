@@ -3,7 +3,7 @@ import cv2
 
 from numpy import ndarray
 from entities.position import Position
-from entities.table_position import TablePosition
+from entities.table_processing.table_position import TablePosition
 from invoice_processing_utils.common_utils import save_image
 
 
