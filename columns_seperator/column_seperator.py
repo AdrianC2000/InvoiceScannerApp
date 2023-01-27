@@ -62,12 +62,16 @@ class ColumnsSeperator:
         # Get cells with corresponding columns
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         bounding_boxes = get_sorted_cells_bounding_boxes(fixed_table_contours)
-        cells_in_columns = get_cells_in_columns(bounding_boxes)
+        # Removing first "cell", because it is not a cell but a whole table
+        cells_in_columns = get_cells_in_columns(bounding_boxes)[1:]
 
         self.save_table_with_bounding_boxes(cells_in_columns)
         return self.table_image, cells_in_columns
 
     def remove_redundant_table_part(self, fixed_table_contours_image):
+        """ Only part of the table containing products is required, whatever is below of it (e.g. summary) is
+        redundant """
+
         self.table_image = self.table_image[0: fixed_table_contours_image.shape[0], :]
 
     def save_table_with_bounding_boxes(self, cells_in_columns):

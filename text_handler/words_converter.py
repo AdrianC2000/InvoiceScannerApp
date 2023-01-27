@@ -1,6 +1,8 @@
 import warnings
 import pandas as pd
 
+from entities.row_content import RowContent
+from entities.table import Table
 from settings.config_consts import ConfigConsts
 from text_handler.cells_creator import check_percentage_inclusion
 from entities.text_position import TextPosition
@@ -43,8 +45,8 @@ def append_text_to_final_phrase(rows_in_cell: list[TextPosition]) -> str:
     return final_phrase_in_cell
 
 
-def write_to_xls(cells_with_phrases: list[list[str]]):
-    df = pd.DataFrame(cells_with_phrases)
+def write_to_xls(rows_content: list[RowContent]):
+    df = pd.DataFrame([row_content.cells_content for row_content in rows_content])
     writer = pd.ExcelWriter(ConfigConsts.DIRECTORY_TO_SAVE + __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, engine='xlsxwriter',
                             engine_kwargs={'options': {'strings_to_numbers': True}})
     df.to_excel(writer, sheet_name='Extracted table', index=False)
@@ -75,19 +77,19 @@ def process_single_text_in_cell(rows_in_cell: list[TextPosition], text_position:
 
 class WordsConverter:
 
-    def __init__(self, texts_in_cells_with_positions: list[list[list[TextPosition]]]):
-        self.__texts_in_cells_with_positions = texts_in_cells_with_positions
+    def __init__(self, table: Table):
+        self.__table = table
 
-    def merge_words_into_phrases(self) -> list[list[str]]:
-        cells_with_phrases = []
-        for rows in self.__texts_in_cells_with_positions:
-            row_cells = []
-            for cells in rows:
-                rows_in_cell = []
-                for text_position in cells:
+    def merge_words_into_phrases(self) -> list[RowContent]:
+        cells_with_phrases = list()
+        for rows in self.__table.rows:
+            row_cells = list()
+            for cells in rows.cells:
+                rows_in_cell = list()
+                for text_position in cells.text_positions:
                     process_single_text_in_cell(rows_in_cell, text_position)
                 final_phrase_in_cell = append_text_to_final_phrase(rows_in_cell)
                 row_cells.append(final_phrase_in_cell)
-            cells_with_phrases.append(row_cells)
+            cells_with_phrases.append(RowContent(row_cells))
         write_to_xls(cells_with_phrases)
         return cells_with_phrases

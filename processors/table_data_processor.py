@@ -1,7 +1,7 @@
 from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.column_seperator import ColumnsSeperator
-from entities.table import Table
+from entities.parsed_table import ParsedTable
 from extractors.table_extractor.table_extractor import TableExtractor
 from invoice_processing_utils.common_utils import save_image
 from invoice_processing_utils.table_remover import TableRemover
@@ -13,7 +13,7 @@ from text_handler.words_converter import WordsConverter
 
 
 def check_columns(cells_in_columns):
-    if len(cells_in_columns[1].cells) == len(cells_in_columns[2].cells):
+    if len(cells_in_columns[0].cells) == len(cells_in_columns[1].cells):
         if len(cells_in_columns) < 4:
             raise ValueError("Incorrect invoice table - only 4 or less columns detected.")
     else:
@@ -34,19 +34,19 @@ class TableDataProcessor:
     def __init__(self, invoice: ndarray):
         self.__invoice = invoice
 
-    def extract_table_data(self) -> tuple[Table, ndarray]:
+    def extract_table_data(self) -> tuple[ParsedTable, ndarray]:
         table_position = TableExtractor(self.__invoice).extract_table()
         rotated_table, cells_in_columns = ColumnsSeperator(table_position.table_image).separate_cells_in_columns()
         check_columns(cells_in_columns)
 
         text_with_position = TextReader(rotated_table).read_words()
         cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()
-        cells_with_phrases = WordsConverter(cells_with_words).merge_words_into_phrases()
-        columns_ordered = HeadersClassifier(cells_with_phrases[0]).find_corresponding_columns()
+        cells_in_row_content = WordsConverter(cells_with_words).merge_words_into_phrases()
+        columns_ordered = HeadersClassifier(cells_in_row_content[0]).find_corresponding_columns()
         check_confidences(columns_ordered)
 
         invoice_table_removed = TableRemover(self.__invoice, table_position.position, rotated_table).remove_table()
         save_image(self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
 
-        table = TableParser(columns_ordered, cells_with_phrases).get_table_content()
+        table = TableParser(columns_ordered, cells_in_row_content).get_table_content()
         return table, invoice_table_removed

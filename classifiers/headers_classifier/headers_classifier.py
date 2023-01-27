@@ -4,6 +4,8 @@ import logging
 from entities.matching_header import MatchingHeader
 from entities.confidence_calculation import ConfidenceCalculation
 from Levenshtein import ratio
+
+from entities.row_content import RowContent
 from text_handler.words_converter import SIGNS_WITHOUT_SPACE_BEFORE, SIGNS_WITHOUT_SPACE_AFTER
 
 SPACE_CHECK_SIGNS = [":", ";", ",", "."]
@@ -73,13 +75,13 @@ def prepare_word(word: str) -> str:
 
 class HeadersClassifier:
 
-    def __init__(self, headers_cells: list[str]):
+    def __init__(self, headers_cells: RowContent):
         self.__headers_cells = headers_cells
 
     def find_corresponding_columns(self) -> list[MatchingHeader]:
         column_patterns = load_data()
         matching_headers = list()
-        for single_header in self.__headers_cells:
+        for single_header in self.__headers_cells.cells_content:
             percentage_calculation = find_best_fit(single_header, column_patterns)
             if percentage_calculation.confidence > 0.9:
                 del column_patterns[percentage_calculation.value]

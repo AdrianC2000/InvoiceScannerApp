@@ -1,11 +1,11 @@
 from entities.key_data import KeyData
-from entities.table import Table
+from entities.parsed_table import ParsedTable
 from entities.table_item import TableProduct
 
 
 class InvoiceInfo:
 
-    def __init__(self, table: Table, parsed_data: KeyData):
+    def __init__(self, table: ParsedTable, parsed_data: KeyData):
         self.__table_products = None if table is None else table.table_products
         self.__seller_name = parsed_data.seller_name
         self.__seller_address = parsed_data.seller_address
@@ -18,7 +18,7 @@ class InvoiceInfo:
         self.__listing_date = parsed_data.listing_date
 
     @property
-    def table_products(self) -> Table.table_products:
+    def table_products(self) -> ParsedTable.table_products:
         return self.__table_products
 
     @property
