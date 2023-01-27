@@ -1,10 +1,11 @@
-from entities.table_item import TableProduct
+from entities.cell import Cell
+from entities.row import Row
 
 
 class Table:
-    def __init__(self, table_products: list[TableProduct]):
-        self.__table_products = table_products
+    def __init__(self, rows: list[Row]):
+        self.__rows = rows
 
     @property
-    def table_products(self) -> list[TableProduct]:
-        return self.__table_products
+    def rows(self) -> list[Row]:
+        return self.__rows
