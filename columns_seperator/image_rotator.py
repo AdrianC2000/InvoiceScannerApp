@@ -8,12 +8,14 @@ from PIL import Image
 from pathlib import Path
 from numpy import ndarray
 from columns_seperator.contours_definer import ContoursDefiner
+from entities.table_processing.line import Line
+from entities.table_processing.line_property import LineProperty
 from settings.config_consts import ConfigConsts
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-def calculate_angle(first_point, second_point) -> float:
+def calculate_angle(first_point: tuple[int, int], second_point: tuple[int, int]) -> float:
     start_point = first_point if first_point[0] < second_point[0] else second_point
     end_point = second_point if start_point == first_point else first_point
     radians = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
@@ -21,24 +23,24 @@ def calculate_angle(first_point, second_point) -> float:
     return degrees if degrees < 5 else 90 - degrees
 
 
-def get_horizontal_line_points(horizontal_line):
-    first_line_non_zero_indexes = np.where(list(horizontal_line.values())[0] == 255)
-    last_line_non_zero_indexes = np.where(list(horizontal_line.values())[-1] == 255)
-    first_point_coordinates = list(horizontal_line.keys())[0], first_line_non_zero_indexes[0][0]
-    last_point_coordinates = list(horizontal_line.keys())[-1], last_line_non_zero_indexes[0][-1]
+def get_horizontal_line_points(horizontal_line: Line) -> tuple[tuple[int, int], tuple[int, int]]:
+    first_line_non_zero_indexes = np.where(horizontal_line.lines_properties[0].image_row == 255)
+    last_line_non_zero_indexes = np.where(horizontal_line.lines_properties[-1].image_row == 255)
+    first_point_coordinates = horizontal_line.lines_properties[0].index, first_line_non_zero_indexes[0][0]
+    last_point_coordinates = horizontal_line.lines_properties[-1].index, last_line_non_zero_indexes[0][-1]
     return first_point_coordinates, last_point_coordinates
 
 
-def find_first_horizontal_line(horizontal_lines):
+def find_first_horizontal_line(horizontal_lines: ndarray) -> Line:
     next_zero_break = False
-    first_horizontal_line = dict()
+    first_horizontal_line = list()
     for index, horizontal_line in enumerate(horizontal_lines):
         if not np.all(horizontal_line == 0):
-            first_horizontal_line[index] = horizontal_line
+            first_horizontal_line.append(LineProperty(index, horizontal_line))
             next_zero_break = True
         if np.all(horizontal_line == 0) and next_zero_break:
             break
-    return first_horizontal_line
+    return Line(first_horizontal_line)
 
 
 class ImageRotator:

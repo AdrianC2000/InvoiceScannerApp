@@ -20,6 +20,7 @@ def separate_lines(horizontal_lines: ndarray) -> tuple[TableLines, int]:
     last_elements_indexes = list of maximum last elements from each line -> the minimum of it will be equal to the
                             height - this value will be used to cut the redundant part of the table
     """
+
     all_horizontal_lines, single_line, last_element_indexes, last_elements = list(), list(), list(), list()
     next_zero_break = False
     for index, line in enumerate(horizontal_lines):
@@ -36,7 +37,7 @@ def separate_lines(horizontal_lines: ndarray) -> tuple[TableLines, int]:
     return TableLines(all_horizontal_lines), height
 
 
-def find_middle_lines(table_lines: TableLines, height, width) -> ndarray:
+def find_middle_lines(table_lines: TableLines, height: int, width: int) -> ndarray:
     """ Method calculates mean position of every line, and return perfectly aligned contours of the table,
     out of which the cells positions will be calculated. """
     middle_lines = np.zeros(shape=(height, width))
@@ -110,4 +111,4 @@ class ContoursDefiner:
         horizontal_single_lines = find_middle_lines(horizontal_lines_separated, height, width)
         vertical_single_lines = find_middle_lines(vertical_lines_separated, width, height).transpose()
 
-        return cv2.bitwise_or(horizontal_single_lines, vertical_single_lines)
+        return cv2.bitwise_or(horizontal_single_lines, vertical_single_lines).astype(np.uint8)

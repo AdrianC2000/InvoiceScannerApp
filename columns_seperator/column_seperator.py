@@ -66,7 +66,7 @@ class ColumnsSeperator:
         return img_bin
 
     def get_fixed_table_contours_image(self, contours_definer_on_rotated: ContoursDefiner) -> ndarray:
-        fixed_table_contours_image = contours_definer_on_rotated.fix_contours().astype(np.uint8)
+        fixed_table_contours_image = contours_definer_on_rotated.fix_contours()
         save_image(self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX, fixed_table_contours_image)
         self.remove_redundant_table_part(fixed_table_contours_image)
         return fixed_table_contours_image
