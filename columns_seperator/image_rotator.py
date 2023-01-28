@@ -6,16 +6,14 @@ import warnings
 
 from PIL import Image
 from pathlib import Path
-
 from numpy import ndarray
-
 from columns_seperator.contours_definer import ContoursDefiner
 from settings.config_consts import ConfigConsts
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-def calculate_angle(first_point, second_point):
+def calculate_angle(first_point, second_point) -> float:
     start_point = first_point if first_point[0] < second_point[0] else second_point
     end_point = second_point if start_point == first_point else first_point
     radians = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])

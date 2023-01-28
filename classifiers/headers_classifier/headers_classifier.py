@@ -4,7 +4,6 @@ import logging
 from entities.table_processing.matching_header import MatchingHeader
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from Levenshtein import ratio
-
 from entities.table_processing.row_content import RowContent
 from text_handler.words_converter import SIGNS_WITHOUT_SPACE_BEFORE, SIGNS_WITHOUT_SPACE_AFTER
 
@@ -73,6 +72,12 @@ def prepare_word(word: str) -> str:
     return word
 
 
+def log_headers_data(matching_headers):
+    for matching_header in matching_headers:
+        logging.info(f'{matching_header.phrase} -> {matching_header.confidence_calculation.value} = '
+                     f'{matching_header.confidence_calculation.confidence}')
+
+
 class HeadersClassifier:
 
     def __init__(self, headers_cells: RowContent):
@@ -87,7 +92,5 @@ class HeadersClassifier:
                 del column_patterns[percentage_calculation.value]
             matching_headers.append(MatchingHeader(single_header, percentage_calculation))
         logging.info('Headers classification: ')
-        for matching_header in matching_headers:
-            logging.info(f'{matching_header.phrase} -> {matching_header.confidence_calculation.value} = '
-                         f'{matching_header.confidence_calculation.confidence}')
+        log_headers_data(matching_headers)
         return matching_headers
