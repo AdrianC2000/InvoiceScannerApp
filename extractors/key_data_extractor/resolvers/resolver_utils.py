@@ -5,15 +5,16 @@ from entities.key_data_processing.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word, prepare_row
 from entities.common.position import Position
 from entities.common.text_position import TextPosition
+from invoice_processing_utils.common_utils import check_percentage_inclusion
 
 
-def remove_redundant_data(matching_block: MatchingBlock):
+def remove_redundant_data(matching_block: MatchingBlock) -> MatchingBlock:
     key_word_index = matching_block.row_index
     matching_block.block.rows = matching_block.block.rows[key_word_index:]
     return matching_block
 
 
-def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict):
+def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict) -> tuple[int, int]:
     for index, row in enumerate(matching_block.block.rows):
         row = prepare_row(row.text)
         for word in row.split(' '):
@@ -24,13 +25,13 @@ def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict):
     return -1, -1
 
 
-def get_row_index_by_regex_with_keyword(regex_pattern: str, row_index: int, rows: list[TextPosition]):
+def get_row_index_by_regex_with_keyword(regex_pattern: str, row_index: int, rows: list[TextPosition]) -> int:
     actual_row = rows[row_index]
-    if check_regex_for_single_word(regex_pattern, actual_row.text) is True:
+    if check_regex_for_single_word(regex_pattern, actual_row.text):
         return row_index
     try:
         next_row = rows[row_index + 1]
-        if check_regex_for_single_word(regex_pattern, next_row.text) is True:
+        if check_regex_for_single_word(regex_pattern, next_row.text):
             return row_index + 1
     except IndexError:
         return - 1
@@ -147,24 +148,3 @@ def get_block_below(all_blocks, block_below, closest_position, key_row_position,
                 block_below = block
                 closest_position = block_starting_y - row_ending_y
     return block_below
-
-
-def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
-                               outer_object_ending: int) -> float:
-    if (outer_object_starting <= inner_object_starting) and (outer_object_ending >= inner_object_ending):
-        return 100
-    elif inner_object_starting < outer_object_starting < inner_object_ending:
-        common_start = inner_object_starting
-        common_end = inner_object_ending
-        common_length = common_end - common_start
-        word_length = inner_object_ending - inner_object_starting
-        percentage = common_length / word_length * 100
-        return percentage
-    elif inner_object_starting < outer_object_ending < inner_object_ending:
-        common_start = inner_object_starting
-        common_end = outer_object_ending
-        common_length = common_end - common_start
-        word_length = inner_object_ending - inner_object_starting
-        percentage = common_length / word_length * 100
-        return percentage
-    return 0

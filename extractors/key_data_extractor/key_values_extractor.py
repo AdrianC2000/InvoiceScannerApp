@@ -8,10 +8,9 @@ from extractors.key_data_extractor.resolvers.currency_resolver import CurrencyRe
 from extractors.key_data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
 from extractors.key_data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data, get_closest_block_below, \
-    get_closest_block_on_the_right
+    get_closest_block_on_the_right, check_percentage_inclusion
 from extractors.value_finding_status import ValueFindingStatus
 from entities.key_data_processing.block_position import BlockPosition
-from text_handler.cells_creator import check_percentage_inclusion
 
 
 def invoice_number_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:

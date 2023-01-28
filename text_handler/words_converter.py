@@ -3,8 +3,8 @@ import pandas as pd
 
 from entities.table_processing.row_content import RowContent
 from entities.table_processing.table import Table
-from settings.config_consts import ConfigConsts
 from text_handler.cells_creator import check_percentage_inclusion
+from settings.config_consts import ConfigConsts
 from entities.common.text_position import TextPosition
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -20,7 +20,6 @@ def get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition
         percentage = check_percentage_inclusion(text_position.position.starting_y, text_position.position.ending_y,
                                                 row.position.starting_y, row.position.ending_y)
         if percentage > 50:
-            # Row found
             return index
         index += 1
     starting_y = rows_in_cell[0].position.starting_y
