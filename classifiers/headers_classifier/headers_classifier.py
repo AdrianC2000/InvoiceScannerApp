@@ -4,7 +4,7 @@ import logging
 from entities.table_processing.matching_header import MatchingHeader
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.table_processing.row_content import RowContent
-from invoice_processing_utils.common_utils import prepare_word, process_all_header_patterns
+from invoice_processing_utils.common_utils import prepare_word, process_all_word_patterns
 
 
 class HeadersClassifier:
@@ -32,7 +32,7 @@ class HeadersClassifier:
     @staticmethod
     def _find_best_fit(header: str, column_patterns: json) -> ConfidenceCalculation:
         """ Given a text inside a single header and all the remaining headers pattern calculate which one is the
-        most likely to be compatible with the column header """
+            most likely to be compatible with the column header """
         overall_biggest_compatibility = 0
         best_fit = ""
         for patterns in column_patterns.items():
@@ -40,7 +40,7 @@ class HeadersClassifier:
             column_pattern_name, all_header_patterns = patterns[0], patterns[1]
             for word in header.split(" "):
                 word = prepare_word(word)
-                best_actual_word_compatibility = process_all_header_patterns(all_header_patterns, word)
+                best_actual_word_compatibility = process_all_word_patterns(all_header_patterns, word)
                 actual_summarized_compatibility += best_actual_word_compatibility
             if actual_summarized_compatibility > overall_biggest_compatibility:
                 overall_biggest_compatibility = actual_summarized_compatibility

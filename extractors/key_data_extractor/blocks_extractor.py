@@ -2,7 +2,8 @@ from google.cloud.vision import TextAnnotation
 from numpy import ndarray
 from entities.key_data_processing.block_position import BlockPosition
 from entities.common.text_position import TextPosition
-from text_handler.text_reader import create_position, process_line, save_table_with_bounding_boxes, get_response
+from invoice_processing_utils.common_utils import get_response
+from text_handler.text_reader import create_position, process_line, save_table_with_bounding_boxes
 
 
 class BlocksExtractor:

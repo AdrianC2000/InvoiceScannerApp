@@ -7,7 +7,7 @@ from entities.table_processing.confidence_calculation import ConfidenceCalculati
 from entities.key_data_processing.matching_block import MatchingBlock
 from classifiers.headers_classifier.headers_classifier import prepare_word
 from entities.key_data_processing.block_position import BlockPosition
-from invoice_processing_utils.common_utils import save_image, process_all_header_patterns
+from invoice_processing_utils.common_utils import save_image, process_all_word_patterns
 from settings.config_consts import ConfigConsts
 
 __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
@@ -40,7 +40,7 @@ def find_best_data_fit(row: str, column_patterns: json) -> tuple[int, int, Confi
             best_last_word_index = -1
             for word_index, word in enumerate(row.split(" ")):
                 word = prepare_word(word)
-                best_actual_word_compatibility = process_all_header_patterns(all_patterns, word)
+                best_actual_word_compatibility = process_all_word_patterns(all_patterns, word)
                 summarized_compatibility += best_actual_word_compatibility
                 if best_actual_word_compatibility > 0.8:
                     best_row_index = row_index

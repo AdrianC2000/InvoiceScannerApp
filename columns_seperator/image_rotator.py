@@ -14,34 +14,6 @@ from settings.config_consts import ConfigConsts
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-def calculate_angle(first_point: tuple[int, int], second_point: tuple[int, int]) -> float:
-    start_point = first_point if first_point[0] < second_point[0] else second_point
-    end_point = second_point if start_point == first_point else first_point
-    radians = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
-    degrees = math.degrees(radians)
-    return degrees if degrees < 5 else 90 - degrees
-
-
-def get_horizontal_line_points(horizontal_line: Line) -> tuple[tuple[int, int], tuple[int, int]]:
-    first_line_non_zero_indexes = np.where(horizontal_line.lines_properties[0].image_row == 255)
-    last_line_non_zero_indexes = np.where(horizontal_line.lines_properties[-1].image_row == 255)
-    first_point_coordinates = horizontal_line.lines_properties[0].index, first_line_non_zero_indexes[0][0]
-    last_point_coordinates = horizontal_line.lines_properties[-1].index, last_line_non_zero_indexes[0][-1]
-    return first_point_coordinates, last_point_coordinates
-
-
-def find_first_horizontal_line(horizontal_lines: ndarray) -> Line:
-    next_zero_break = False
-    first_horizontal_line = list()
-    for index, horizontal_line in enumerate(horizontal_lines):
-        if not np.all(horizontal_line == 0):
-            first_horizontal_line.append(LineProperty(index, horizontal_line))
-            next_zero_break = True
-        if np.all(horizontal_line == 0) and next_zero_break:
-            break
-    return Line(first_horizontal_line)
-
-
 class ImageRotator:
     """ Given original table, rotate it based on the tables contours """
 
@@ -54,9 +26,9 @@ class ImageRotator:
 
     def rotate_image(self) -> ndarray:
         horizontal_lines = self.__original_table_contours_definer.get_horizontal_lines()
-        first_horizontal_line = find_first_horizontal_line(horizontal_lines)
-        horizontal_line_first_point, horizontal_line_last_point = get_horizontal_line_points(first_horizontal_line)
-        angle = calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
+        first_horizontal_line = self._find_first_horizontal_line(horizontal_lines)
+        horizontal_line_first_point, horizontal_line_last_point = self._get_horizontal_line_points(first_horizontal_line)
+        angle = self._calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
         if abs(angle) < 10:
             rotated_table = Image.fromarray(self.__original_table).rotate(angle, resample=Image.BICUBIC, expand=True,
                                                                           fillcolor=255)
@@ -65,6 +37,34 @@ class ImageRotator:
             return np.asarray(rotated_table)
         else:
             return np.asarray(self.__original_table)
+
+    @staticmethod
+    def _find_first_horizontal_line(horizontal_lines: ndarray) -> Line:
+        next_zero_break = False
+        first_horizontal_line = list()
+        for index, horizontal_line in enumerate(horizontal_lines):
+            if not np.all(horizontal_line == 0):
+                first_horizontal_line.append(LineProperty(index, horizontal_line))
+                next_zero_break = True
+            if np.all(horizontal_line == 0) and next_zero_break:
+                break
+        return Line(first_horizontal_line)
+
+    @staticmethod
+    def _get_horizontal_line_points(horizontal_line: Line) -> tuple[tuple[int, int], tuple[int, int]]:
+        first_line_non_zero_indexes = np.where(horizontal_line.lines_properties[0].image_row == 255)
+        last_line_non_zero_indexes = np.where(horizontal_line.lines_properties[-1].image_row == 255)
+        first_point_coordinates = horizontal_line.lines_properties[0].index, first_line_non_zero_indexes[0][0]
+        last_point_coordinates = horizontal_line.lines_properties[-1].index, last_line_non_zero_indexes[0][-1]
+        return first_point_coordinates, last_point_coordinates
+
+    @staticmethod
+    def _calculate_angle(first_point: tuple[int, int], second_point: tuple[int, int]) -> float:
+        start_point = first_point if first_point[0] < second_point[0] else second_point
+        end_point = second_point if start_point == first_point else first_point
+        radians = math.atan2(end_point[1] - start_point[1], end_point[0] - start_point[0])
+        degrees = math.degrees(radians)
+        return degrees if degrees < 5 else 90 - degrees
 
     def remove_noise(self):
         # TODO -> TO BE USED

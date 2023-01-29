@@ -1,38 +1,12 @@
 import cv2
 from numpy import ndarray
 
-from columns_seperator.contours_definer import ContoursDefiner, get_sorted_cells_bounding_boxes
+from columns_seperator.contours_definer import ContoursDefiner
 from columns_seperator.image_rotator import ImageRotator
 from entities.common.position import Position
 from entities.table_processing.column import Column
 from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
-
-
-def get_cells_in_columns(bounding_boxes: list[Position]) -> list[Column]:
-    """ Method returns a list of columns, and every column is a list of cells positions (coordinates) that it
-    consists of. """
-    column_start = bounding_boxes[0].starting_x
-    single_column, cells_in_columns = list(), list()
-    for cell in bounding_boxes:
-        if cell.starting_x == column_start:
-            single_column.append(cell)
-        else:
-            cells_in_columns.append(single_column)
-            single_column = [cell]
-            column_start = cell.starting_x
-    cells_in_columns.append(single_column)
-    columns = [Column(sorted(columns_cells, key=lambda t: t.starting_y)) for columns_cells in cells_in_columns]
-    return columns
-
-
-def get_color(index: int) -> tuple[int, tuple[int, int, int]]:
-    color = ConfigConsts.COLORS_LIST[index]
-    if index < len(ConfigConsts.COLORS_LIST) - 1:
-        index += 1
-    else:
-        index = 0
-    return index, color
 
 
 class ColumnsSeperator:
@@ -86,18 +60,56 @@ class ColumnsSeperator:
 
     def _calculate_cells_positions(self, fixed_table_contours_image: ndarray) -> list[Column]:
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        bounding_boxes = get_sorted_cells_bounding_boxes(fixed_table_contours)
+        bounding_boxes = self._get_sorted_cells_bounding_boxes(fixed_table_contours)
         # Removing first "cell", because it is not a cell but a whole table
-        cells_in_columns = get_cells_in_columns(bounding_boxes)[1:]
+        cells_in_columns = self._get_cells_in_columns(bounding_boxes)[1:]
         self._save_table_with_bounding_boxes(cells_in_columns)
         return cells_in_columns
+
+    def _get_sorted_cells_bounding_boxes(self, contours) -> list[Position]:
+        bounding_boxes = [cv2.boundingRect(c) for c in contours]
+        return self._convert_bounding_boxes_to_position(bounding_boxes)
+
+    @staticmethod
+    def _convert_bounding_boxes_to_position(bounding_boxes: list[tuple[int]]) -> list[Position]:
+        positions = list()
+        for single_bounding_boxes in bounding_boxes:
+            positions.append(Position(single_bounding_boxes[0], single_bounding_boxes[1],
+                                      single_bounding_boxes[2], single_bounding_boxes[3]))
+        return sorted(positions, key=lambda position: position.starting_x)
+
+    @staticmethod
+    def _get_cells_in_columns(bounding_boxes: list[Position]) -> list[Column]:
+        """ Method returns a list of columns, and every column is a list of cells positions (coordinates) that it
+        consists of. """
+        column_start = bounding_boxes[0].starting_x
+        single_column, cells_in_columns = list(), list()
+        for cell in bounding_boxes:
+            if cell.starting_x == column_start:
+                single_column.append(cell)
+            else:
+                cells_in_columns.append(single_column)
+                single_column = [cell]
+                column_start = cell.starting_x
+        cells_in_columns.append(single_column)
+        columns = [Column(sorted(columns_cells, key=lambda t: t.starting_y)) for columns_cells in cells_in_columns]
+        return columns
 
     def _save_table_with_bounding_boxes(self, cells_in_columns: list[Column]):
         table_image_copy = cv2.cvtColor(self.__table_image.copy(), cv2.COLOR_RGB2BGR)
         index = 0
         for columns in cells_in_columns:
-            index, color = get_color(index)
+            index, color = self._get_color(index)
             for cell in columns.cells:
                 cv2.rectangle(table_image_copy, (cell.starting_x, cell.starting_y),
                               (cell.starting_x + cell.ending_x, cell.starting_y + cell.ending_y), color, 1)
         save_image(self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
+
+    @staticmethod
+    def _get_color(index: int) -> tuple[int, tuple[int, int, int]]:
+        color = ConfigConsts.COLORS_LIST[index]
+        if index < len(ConfigConsts.COLORS_LIST) - 1:
+            index += 1
+        else:
+            index = 0
+        return index, color

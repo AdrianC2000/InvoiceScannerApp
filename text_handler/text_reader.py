@@ -1,26 +1,13 @@
 import cv2
-import logging
-
-from google.cloud import vision
 from numpy import ndarray
 from random import randrange
 from entities.common.position import Position
 from entities.common.text_position import TextPosition
-from invoice_processing_utils.common_utils import save_image
+from invoice_processing_utils.common_utils import save_image, get_response
 from settings.config_consts import ConfigConsts
 
 __EXTRACTED_TEXTS_OUTPUT_PATH_PREFIX = "7.Extracted texts.png"
 __EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX = "11.Blocks and text extracted.png"
-
-
-def get_response(invoice: ndarray):
-    client = vision.ImageAnnotatorClient()
-    _, encoded_invoice = cv2.imencode('.png', invoice)
-    image = vision.Image(content=encoded_invoice.tobytes())
-    response = client.document_text_detection(image=image, image_context={"language_hints": ["pl"]})
-    logging.info(f'Successfully received response from google vision api -> text annotations detected = '
-                 f'{len(response.text_annotations)}')
-    return response
 
 
 def save_table_with_bounding_boxes(invoice: ndarray, texts_with_positions: list[TextPosition], flag: bool):

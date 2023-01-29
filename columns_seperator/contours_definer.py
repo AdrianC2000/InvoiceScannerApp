@@ -3,64 +3,9 @@ import numpy as np
 
 from statistics import mean
 from numpy import ndarray
-from entities.common.position import Position
 from entities.table_processing.line import Line
 from entities.table_processing.line_property import LineProperty
 from entities.table_processing.table_lines import TableLines
-
-
-def separate_lines(horizontal_lines: ndarray) -> tuple[TableLines, int]:
-    """ Method returns separated lines, it proceeds horizontal lines so in vertical case transposition does the job.
-
-    horizontal_lines = ndarray that includes image of all horizontal lines
-    line = single row (element) in the horizontal_lines array
-    all_horizontal_lines = list of Line objects, which are the lists of LineProperty objects that are the
-                           indexes of a line single row and its content
-    last_elements = list of last 255 elements in each row
-    last_elements_indexes = list of maximum last elements from each line -> the minimum of it will be equal to the
-                            height - this value will be used to cut the redundant part of the table
-    """
-
-    all_horizontal_lines, single_line, last_element_indexes, last_elements = list(), list(), list(), list()
-    next_zero_break = False
-    for index, line in enumerate(horizontal_lines):
-        if not np.all(line == 0):
-            single_line.append(LineProperty(index, line))
-            last_elements.append(np.max(np.argwhere(line == 255).squeeze()))
-            next_zero_break = True
-        if np.all(line == 0) and next_zero_break:
-            next_zero_break = False
-            last_element_indexes.append(max(last_elements))
-            all_horizontal_lines.append(Line(single_line))
-            single_line, last_elements = list(), list()
-    height = min(last_element_indexes) + 3
-    return TableLines(all_horizontal_lines), height
-
-
-def find_middle_lines(table_lines: TableLines, height: int, width: int) -> ndarray:
-    """ Method calculates mean position of every line, and return perfectly aligned contours of the table,
-    out of which the cells positions will be calculated. """
-    middle_lines = np.zeros(shape=(height, width))
-    for line in table_lines.lines:
-        middle_line_index = int(mean(line_property.index for line_property in line.lines_properties))
-        # Condition for not taking into consideration the lines that overflows the table with removed redundant part
-        if middle_line_index < height:
-            middle_lines[int(mean(line_property.index for line_property in line.lines_properties))] \
-                = np.full((1, width), 255)
-    return middle_lines
-
-
-def get_sorted_cells_bounding_boxes(contours) -> list[Position]:
-    bounding_boxes = [cv2.boundingRect(c) for c in contours]
-    return convert_bounding_boxes_to_position(bounding_boxes)
-
-
-def convert_bounding_boxes_to_position(bounding_boxes: list[tuple[int]]) -> list[Position]:
-    positions = list()
-    for single_bounding_boxes in bounding_boxes:
-        positions.append(Position(single_bounding_boxes[0], single_bounding_boxes[1],
-                                  single_bounding_boxes[2], single_bounding_boxes[3]))
-    return sorted(positions, key=lambda position: position.starting_x)
 
 
 class ContoursDefiner:
@@ -104,11 +49,52 @@ class ContoursDefiner:
         return table_contours_image, contours
 
     def fix_contours(self) -> ndarray:
-        horizontal_lines_separated, _ = separate_lines(self.__horizontal_lines)
-        vertical_lines_separated, height = separate_lines(self.__vertical_lines.transpose())
+        horizontal_lines_separated, _ = self._separate_lines(self.__horizontal_lines)
+        vertical_lines_separated, height = self._separate_lines(self.__vertical_lines.transpose())
         _, width = self.__horizontal_lines.shape
 
-        horizontal_single_lines = find_middle_lines(horizontal_lines_separated, height, width)
-        vertical_single_lines = find_middle_lines(vertical_lines_separated, width, height).transpose()
+        horizontal_single_lines = self._find_middle_lines(horizontal_lines_separated, height, width)
+        vertical_single_lines = self._find_middle_lines(vertical_lines_separated, width, height).transpose()
 
         return cv2.bitwise_or(horizontal_single_lines, vertical_single_lines).astype(np.uint8)
+
+    @staticmethod
+    def _separate_lines(horizontal_lines: ndarray) -> tuple[TableLines, int]:
+        """ Method returns separated lines, it proceeds horizontal lines so in vertical case transposition does the job.
+
+        horizontal_lines = ndarray that includes image of all horizontal lines
+        line = single row (element) in the horizontal_lines array
+        all_horizontal_lines = list of Line objects, which are the lists of LineProperty objects that are the
+                               indexes of a line single row and its content
+        last_elements = list of last 255 elements in each row
+        last_elements_indexes = list of maximum last elements from each line -> the minimum of it will be equal to the
+                                height - this value will be used to cut the redundant part of the table
+        """
+
+        all_horizontal_lines, single_line, last_element_indexes, last_elements = list(), list(), list(), list()
+        next_zero_break = False
+        for index, line in enumerate(horizontal_lines):
+            if not np.all(line == 0):
+                single_line.append(LineProperty(index, line))
+                last_elements.append(np.max(np.argwhere(line == 255).squeeze()))
+                next_zero_break = True
+            if np.all(line == 0) and next_zero_break:
+                next_zero_break = False
+                last_element_indexes.append(max(last_elements))
+                all_horizontal_lines.append(Line(single_line))
+                single_line, last_elements = list(), list()
+        height = min(last_element_indexes) + 3
+        return TableLines(all_horizontal_lines), height
+
+    @staticmethod
+    def _find_middle_lines(table_lines: TableLines, height: int, width: int) -> ndarray:
+        """ Method calculates mean position of every line, and return perfectly aligned contours of the table,
+        out of which the cells positions will be calculated. """
+        middle_lines = np.zeros(shape=(height, width))
+        for line in table_lines.lines:
+            middle_line_index = int(mean(line_property.index for line_property in line.lines_properties))
+            # Condition for not taking into consideration the lines that overflows the table with removed redundant part
+            if middle_line_index < height:
+                middle_lines[int(mean(line_property.index for line_property in line.lines_properties))] \
+                    = np.full((1, width), 255)
+        return middle_lines

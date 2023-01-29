@@ -1,5 +1,9 @@
+import logging
+
 import cv2
 from Levenshtein import ratio
+from google.cloud import vision
+from google.cloud.vision_v1 import AnnotateImageResponse
 
 from numpy import ndarray
 from settings.config_consts import ConfigConsts
@@ -13,12 +17,12 @@ def save_image(file_name: str, image: ndarray):
     cv2.imwrite(ConfigConsts.DIRECTORY_TO_SAVE + file_name, image)
 
 
-def process_all_header_patterns(all_header_patterns: list[str], word: str) -> float:
+def process_all_word_patterns(all_patterns: list[str], word: str) -> float:
     """ Table -> given all words that a header of specific type can have find the best compatibility for that word
         Key data -> given all words that a data of specific type can have find the best compatibility for that word """
     best_actual_word_compatibility = 0
-    for header_single_word_pattern in all_header_patterns:
-        compatibility = ratio(word, header_single_word_pattern)
+    for pattern in all_patterns:
+        compatibility = ratio(word, pattern)
         if compatibility > best_actual_word_compatibility:
             best_actual_word_compatibility = compatibility
             if compatibility > 0.9:
@@ -80,3 +84,13 @@ def prepare_word(word: str) -> str:
                         word = word[:index] + "" + word[index + 1:]
             word = word.replace(sign, "")
     return word
+
+
+def get_response(invoice: ndarray) -> AnnotateImageResponse:
+    client = vision.ImageAnnotatorClient()
+    _, encoded_invoice = cv2.imencode('.png', invoice)
+    image = vision.Image(content=encoded_invoice.tobytes())
+    response = client.document_text_detection(image=image, image_context={"language_hints": ["pl"]})
+    logging.info(f'Successfully received response from google vision api -> text annotations detected = '
+                 f'{len(response.text_annotations)}')
+    return response

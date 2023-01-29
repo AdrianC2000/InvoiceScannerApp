@@ -9,17 +9,6 @@ from entities.common.text_position import TextPosition
 from invoice_processing_utils.common_utils import check_percentage_inclusion
 
 
-def parse_data_into_table(cells_content: list[list[list[TextPosition]]]) -> Table:
-    rows = list()
-    for row in cells_content:
-        cells_in_row = list()
-        for cell in row:
-            cell = Cell(cell)
-            cells_in_row.append(cell)
-        rows.append(Row(cells_in_row))
-    return Table(rows)
-
-
 class CellsCreator:
     """ Aligning words to columns in correct order """
 
@@ -28,17 +17,17 @@ class CellsCreator:
         self.__cells_in_columns = cells_in_columns
 
     def align_words_to_cells(self) -> Table:
-        cells_content = self.generate_empty_table()
+        cells_content = self._generate_empty_table()
 
         for text_position in self.__texts_with_positions:
             coordinates = text_position.position
-            column_index, confidence_column = self.check_column_belonging(coordinates)
-            row_index, confidence_row = self.check_row_belonging(coordinates)
+            column_index, confidence_column = self._check_column_belonging(coordinates)
+            row_index, confidence_row = self._check_row_belonging(coordinates)
             cells_content[row_index][column_index].append(text_position)
 
-        return parse_data_into_table(cells_content)
+        return self._parse_data_into_table(cells_content)
 
-    def generate_empty_table(self):
+    def _generate_empty_table(self) -> list[list[list]]:
         empty_cells = list()
         columns_number = len(self.__cells_in_columns)
         rows_number = len(self.__cells_in_columns[0].cells)
@@ -50,7 +39,7 @@ class CellsCreator:
         logging.info(f'Columns number: {columns_number}, Rows number: {rows_number}')
         return empty_cells
 
-    def check_column_belonging(self, coordinates: Position) -> tuple[int, float]:
+    def _check_column_belonging(self, coordinates: Position) -> tuple[int, float]:
         """ Calculating which column is given cell in """
         for index, column in enumerate(self.__cells_in_columns):
             column_starting_x = column.cells[0].starting_x
@@ -60,10 +49,9 @@ class CellsCreator:
             if percentage != 0:
                 return index, percentage
 
-    def check_row_belonging(self, coordinates: Position) -> tuple[int, float]:
+    def _check_row_belonging(self, coordinates: Position) -> tuple[int, float]:
         """ Calculating which row is given cell in """
-        # TODO -> case, when a "word" floods over the row (for example api made a mistake and merge two signs from
-        #  two separate cells into one -> extended parsing needed
+
         for index, cell in enumerate(self.__cells_in_columns[0].cells):
             row_starting_y = cell.starting_y
             row_ending_y = cell.starting_y + cell.ending_y
@@ -71,3 +59,14 @@ class CellsCreator:
                                                     row_ending_y)
             if percentage != 0:
                 return index, percentage
+
+    @staticmethod
+    def _parse_data_into_table(cells_content: list[list[list[TextPosition]]]) -> Table:
+        rows = list()
+        for row in cells_content:
+            cells_in_row = list()
+            for cell in row:
+                cell = Cell(cell)
+                cells_in_row.append(cell)
+            rows.append(Row(cells_in_row))
+        return Table(rows)
