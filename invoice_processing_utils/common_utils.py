@@ -3,6 +3,10 @@ import cv2
 from numpy import ndarray
 from settings.config_consts import ConfigConsts
 
+SPACE_CHECK_SIGNS = [":", ";", ",", "."]
+SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
+SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
+
 
 def save_image(file_name: str, image: ndarray):
     cv2.imwrite(ConfigConsts.DIRECTORY_TO_SAVE + file_name, image)
@@ -34,3 +38,31 @@ def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: 
 def calculate_percentage(common_start: int, common_end: int, word_length: int) -> float:
     common_length = common_end - common_start
     return common_length / word_length * 100
+
+
+def prepare_row(row: str) -> str:
+    new_row = ''
+    for word in row.split(' '):
+        if new_row != '':
+            new_row += ' ' + prepare_word(word)
+        else:
+            new_row += prepare_word(word)
+    return new_row
+
+
+def prepare_word(word: str) -> str:
+    """ Words preparation - switch letter to lowercase, delete special signs """
+    word = word.lower()
+    all_signs_to_delete = SIGNS_WITHOUT_SPACE_BEFORE + SIGNS_WITHOUT_SPACE_AFTER
+    if any(substring in word for substring in all_signs_to_delete):
+        for sign in all_signs_to_delete:
+            if sign in SPACE_CHECK_SIGNS:
+                while word.find(sign) != -1:
+                    index = word.find(sign)
+                    try:
+                        if word[index - 1] != " " and word[index + 1] != " ":
+                            word = word[:index] + " " + word[index + 1:]
+                    except IndexError:
+                        word = word[:index] + "" + word[index + 1:]
+            word = word.replace(sign, "")
+    return word

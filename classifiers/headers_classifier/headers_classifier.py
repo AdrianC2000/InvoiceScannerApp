@@ -5,9 +5,7 @@ from entities.table_processing.matching_header import MatchingHeader
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from Levenshtein import ratio
 from entities.table_processing.row_content import RowContent
-from text_handler.words_converter import SIGNS_WITHOUT_SPACE_BEFORE, SIGNS_WITHOUT_SPACE_AFTER
-
-SPACE_CHECK_SIGNS = [":", ";", ",", "."]
+from invoice_processing_utils.common_utils import prepare_word
 
 
 def load_data() -> json:
@@ -16,12 +14,13 @@ def load_data() -> json:
 
 
 def find_best_fit(header: str, column_patterns: json) -> ConfidenceCalculation:
+    """ Given a text inside a single header and all the remaining headers pattern calculate which one is the
+    most likely to be compatible with the column header """
     overall_biggest_compatibility = 0
     best_fit = ""
     for patterns in column_patterns.items():
         actual_summarized_compatibility = 0
-        column_pattern_name = patterns[0]
-        all_header_patterns = patterns[1]
+        column_pattern_name, all_header_patterns = patterns[0], patterns[1]
         for word in header.split(" "):
             word = prepare_word(word)
             best_actual_word_compatibility = process_all_header_patterns(all_header_patterns, word)
@@ -35,6 +34,7 @@ def find_best_fit(header: str, column_patterns: json) -> ConfidenceCalculation:
 
 
 def process_all_header_patterns(all_header_patterns: list[str], word: str) -> float:
+    """ Given all words that a header of specific type can have find the best compatibility for that word """
     best_actual_word_compatibility = 0
     for header_single_word_pattern in all_header_patterns:
         compatibility = ratio(word, header_single_word_pattern)
@@ -43,34 +43,6 @@ def process_all_header_patterns(all_header_patterns: list[str], word: str) -> fl
             if compatibility > 0.9:
                 break
     return best_actual_word_compatibility
-
-
-def prepare_row(row: str) -> str:
-    new_row = ''
-    for word in row.split(' '):
-        if new_row != '':
-            new_row += ' ' + prepare_word(word)
-        else:
-            new_row += prepare_word(word)
-    return new_row
-
-
-def prepare_word(word: str) -> str:
-    """ Words preparation - switch letter to lowercase, deleting special signs """
-    word = word.lower()
-    all_signs_to_delete = SIGNS_WITHOUT_SPACE_BEFORE + SIGNS_WITHOUT_SPACE_AFTER
-    if any(substring in word for substring in all_signs_to_delete):
-        for sign in all_signs_to_delete:
-            if sign in SPACE_CHECK_SIGNS:
-                while word.find(sign) != -1:
-                    index = word.find(sign)
-                    try:
-                        if word[index - 1] != " " and word[index + 1] != " ":
-                            word = word[:index] + " " + word[index + 1:]
-                    except IndexError:
-                        word = word[:index] + "" + word[index + 1:]
-            word = word.replace(sign, "")
-    return word
 
 
 def log_headers_data(matching_headers):

@@ -3,25 +3,22 @@ import pandas as pd
 
 from entities.table_processing.row_content import RowContent
 from entities.table_processing.table import Table
-from text_handler.cells_creator import check_percentage_inclusion
+from invoice_processing_utils.common_utils import check_percentage_inclusion, SIGNS_WITHOUT_SPACE_AFTER, \
+    SIGNS_WITHOUT_SPACE_BEFORE
 from settings.config_consts import ConfigConsts
 from entities.common.text_position import TextPosition
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
-SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
 __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX = "8.Extracted table.xlsx"
 
 
 def get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition) -> int:
-    index = 0
-    for row in rows_in_cell:
+    for index, row in enumerate(rows_in_cell):
         percentage = check_percentage_inclusion(text_position.position.starting_y, text_position.position.ending_y,
                                                 row.position.starting_y, row.position.ending_y)
         if percentage > 50:
             return index
-        index += 1
     starting_y = rows_in_cell[0].position.starting_y
     ending_y = rows_in_cell[-1].position.ending_y
     if text_position.position.ending_y <= starting_y:

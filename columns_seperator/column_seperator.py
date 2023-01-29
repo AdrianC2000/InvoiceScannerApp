@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 from numpy import ndarray
 
 from columns_seperator.contours_definer import ContoursDefiner, get_sorted_cells_bounding_boxes
@@ -14,8 +13,7 @@ def get_cells_in_columns(bounding_boxes: list[Position]) -> list[Column]:
     """ Method returns a list of columns, and every column is a list of cells positions (coordinates) that it
     consists of. """
     column_start = bounding_boxes[0].starting_x
-    single_column = list()
-    cells_in_columns = list()
+    single_column, cells_in_columns = list(), list()
     for cell in bounding_boxes:
         if cell.starting_x == column_start:
             single_column.append(cell)
