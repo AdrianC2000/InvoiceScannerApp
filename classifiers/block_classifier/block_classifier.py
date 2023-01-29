@@ -5,9 +5,9 @@ from random import randrange
 from numpy import ndarray
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.key_data_processing.matching_block import MatchingBlock
-from classifiers.headers_classifier.headers_classifier import prepare_word, process_all_header_patterns
+from classifiers.headers_classifier.headers_classifier import prepare_word
 from entities.key_data_processing.block_position import BlockPosition
-from invoice_processing_utils.common_utils import save_image
+from invoice_processing_utils.common_utils import save_image, process_all_header_patterns
 from settings.config_consts import ConfigConsts
 
 __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"

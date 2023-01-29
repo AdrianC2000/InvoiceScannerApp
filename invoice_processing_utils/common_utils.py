@@ -1,4 +1,5 @@
 import cv2
+from Levenshtein import ratio
 
 from numpy import ndarray
 from settings.config_consts import ConfigConsts
@@ -12,11 +13,24 @@ def save_image(file_name: str, image: ndarray):
     cv2.imwrite(ConfigConsts.DIRECTORY_TO_SAVE + file_name, image)
 
 
+def process_all_header_patterns(all_header_patterns: list[str], word: str) -> float:
+    """ Table -> given all words that a header of specific type can have find the best compatibility for that word
+        Key data -> given all words that a data of specific type can have find the best compatibility for that word """
+    best_actual_word_compatibility = 0
+    for header_single_word_pattern in all_header_patterns:
+        compatibility = ratio(word, header_single_word_pattern)
+        if compatibility > best_actual_word_compatibility:
+            best_actual_word_compatibility = compatibility
+            if compatibility > 0.9:
+                break
+    return best_actual_word_compatibility
+
+
 def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
                                outer_object_ending: int) -> float:
     """ Given object coordinates in one dimension calculating the percentage of inclusion in another given object,
-    example: given starting_x and ending_x of the cell calculate how likely is this cell inside the column that
-    starts in the point starting_x1 and ending in the ending_x1 """
+        example: given starting_x and ending_x of the cell calculate how likely is this cell inside the column that
+        starts in the point starting_x1 and ending in the ending_x1 """
 
     inner_object_length = inner_object_ending - inner_object_starting
     if (outer_object_starting <= inner_object_starting) and (outer_object_ending >= inner_object_ending):

@@ -66,15 +66,15 @@ def convert_bounding_boxes_to_position(bounding_boxes: list[tuple[int]]) -> list
 class ContoursDefiner:
 
     def __init__(self, original_table_image: ndarray, bin_table_image: ndarray):
-        self.table_image = original_table_image
-        self.bin_table_image = bin_table_image
-        self.vertical_kernel, self.horizontal_kernel, self.kernel = self.define_kernels()
-        self.vertical_lines = self.get_vertical_lines()
-        self.horizontal_lines = self.get_horizontal_lines()
+        self.__table_image = original_table_image
+        self.__bin_table_image = bin_table_image
+        self.__vertical_kernel, self.horizontal_kernel, self.kernel = self._define_kernels()
+        self.__vertical_lines = self.get_vertical_lines()
+        self.__horizontal_lines = self.get_horizontal_lines()
 
-    def define_kernels(self) -> tuple[ndarray, ndarray, ndarray]:
+    def _define_kernels(self) -> tuple[ndarray, ndarray, ndarray]:
         # Length(width) of kernel as 100th of total width
-        kernel_len = np.array(self.bin_table_image).shape[1] // 100
+        kernel_len = np.array(self.__bin_table_image).shape[1] // 100
         # Defining a vertical kernel to detect all vertical lines of image
         vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, kernel_len))
         # Defining a horizontal kernel to detect all horizontal lines of image
@@ -85,18 +85,18 @@ class ContoursDefiner:
 
     def get_vertical_lines(self) -> ndarray:
         """ Use vertical kernel to detect and save the vertical lines in a jpg """
-        image_1 = cv2.erode(self.bin_table_image, self.vertical_kernel, iterations=3)
-        self.vertical_lines = cv2.dilate(image_1, self.vertical_kernel, iterations=3)
-        return self.vertical_lines
+        image_1 = cv2.erode(self.__bin_table_image, self.__vertical_kernel, iterations=3)
+        self.__vertical_lines = cv2.dilate(image_1, self.__vertical_kernel, iterations=3)
+        return self.__vertical_lines
 
     def get_horizontal_lines(self) -> ndarray:
         """ Use horizontal kernel to detect and save the horizontal lines in a jpg """
-        image_2 = cv2.erode(self.bin_table_image, self.horizontal_kernel, iterations=3)
-        self.horizontal_lines = cv2.dilate(image_2, self.horizontal_kernel, iterations=3)
-        return self.horizontal_lines
+        image_2 = cv2.erode(self.__bin_table_image, self.horizontal_kernel, iterations=3)
+        self.__horizontal_lines = cv2.dilate(image_2, self.horizontal_kernel, iterations=3)
+        return self.__horizontal_lines
 
     def get_table_contours(self) -> tuple[ndarray, list[ndarray]]:
-        table_contours_image = cv2.bitwise_or(self.vertical_lines, self.horizontal_lines)
+        table_contours_image = cv2.bitwise_or(self.__vertical_lines, self.__horizontal_lines)
         thresh, table_contours_image = cv2.threshold(table_contours_image, 128, 255,
                                                      cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         # Detect contours for following box detection
@@ -104,9 +104,9 @@ class ContoursDefiner:
         return table_contours_image, contours
 
     def fix_contours(self) -> ndarray:
-        horizontal_lines_separated, _ = separate_lines(self.horizontal_lines)
-        vertical_lines_separated, height = separate_lines(self.vertical_lines.transpose())
-        _, width = self.horizontal_lines.shape
+        horizontal_lines_separated, _ = separate_lines(self.__horizontal_lines)
+        vertical_lines_separated, height = separate_lines(self.__vertical_lines.transpose())
+        _, width = self.__horizontal_lines.shape
 
         horizontal_single_lines = find_middle_lines(horizontal_lines_separated, height, width)
         vertical_single_lines = find_middle_lines(vertical_lines_separated, width, height).transpose()

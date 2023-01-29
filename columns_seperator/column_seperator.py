@@ -26,6 +26,15 @@ def get_cells_in_columns(bounding_boxes: list[Position]) -> list[Column]:
     return columns
 
 
+def get_color(index: int) -> tuple[int, tuple[int, int, int]]:
+    color = ConfigConsts.COLORS_LIST[index]
+    if index < len(ConfigConsts.COLORS_LIST) - 1:
+        index += 1
+    else:
+        index = 0
+    return index, color
+
+
 class ColumnsSeperator:
     """ Separating columns from the given table """
 
@@ -35,64 +44,60 @@ class ColumnsSeperator:
     __TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX = "6.Table with bounding boxes.png"
 
     def __init__(self, table_image: ndarray):
-        self.table_image = table_image
+        self.__table_image = table_image
 
     def separate_cells_in_columns(self) -> tuple[ndarray, list[Column]]:
         """ Method returns table image rotated by the small angle and list of columns (every column consists of its
         cells positions) """
         # original table
-        table_binary = self.image_to_binary()
-        contours_definer_on_orig = ContoursDefiner(self.table_image, table_binary)
+        table_binary = self._image_to_binary()
+        contours_definer_on_orig = ContoursDefiner(self.__table_image, table_binary)
 
         # rotated table
-        self.table_image = ImageRotator(contours_definer_on_orig, table_binary, self.table_image).rotate_image()
-        contours_definer_on_rotated = ContoursDefiner(self.table_image, self.image_to_binary())
+        self.__table_image = ImageRotator(contours_definer_on_orig, table_binary, self.__table_image).rotate_image()
+        contours_definer_on_rotated = ContoursDefiner(self.__table_image, self._image_to_binary())
 
         # Get original table contours
         original_contours_image, original_table_contours = contours_definer_on_rotated.get_table_contours()
         save_image(self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX, original_contours_image)
 
-        fixed_table_contours_image = self.get_fixed_table_contours_image(contours_definer_on_rotated)
-        cells_in_columns = self.calculate_cells(fixed_table_contours_image)
+        fixed_table_contours_image = self._get_fixed_table_contours_image(contours_definer_on_rotated)
+        cells_in_columns = self._calculate_cells_positions(fixed_table_contours_image)
 
-        return self.table_image, cells_in_columns
+        return self.__table_image, cells_in_columns
 
-    def image_to_binary(self) -> ndarray:
-        thresh, img_bin = cv2.threshold(self.table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    def _image_to_binary(self) -> ndarray:
+        thresh, img_bin = cv2.threshold(self.__table_image, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         img_bin = 255 - img_bin
         save_image(self.__BINARY_TABLE_PATH_PREFIX, img_bin)
         return img_bin
 
-    def get_fixed_table_contours_image(self, contours_definer_on_rotated: ContoursDefiner) -> ndarray:
+    def _get_fixed_table_contours_image(self, contours_definer_on_rotated: ContoursDefiner) -> ndarray:
         fixed_table_contours_image = contours_definer_on_rotated.fix_contours()
         save_image(self.__FIXED_CONTOURS_OUTPUT_PATH_PREFIX, fixed_table_contours_image)
-        self.remove_redundant_table_part(fixed_table_contours_image)
+        self._remove_redundant_table_part(fixed_table_contours_image)
         return fixed_table_contours_image
 
-    def remove_redundant_table_part(self, fixed_table_contours_image: ndarray):
+    def _remove_redundant_table_part(self, fixed_table_contours_image: ndarray):
         """ Only part of the table containing products is required, whatever is below of it (e.g. summary) is
         redundant """
 
-        self.table_image = self.table_image[0: fixed_table_contours_image.shape[0], :]
+        self.__table_image = self.__table_image[0: fixed_table_contours_image.shape[0], :]
 
-    def calculate_cells(self, fixed_table_contours_image: ndarray) -> list[Column]:
+    def _calculate_cells_positions(self, fixed_table_contours_image: ndarray) -> list[Column]:
         fixed_table_contours, _ = cv2.findContours(fixed_table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         bounding_boxes = get_sorted_cells_bounding_boxes(fixed_table_contours)
         # Removing first "cell", because it is not a cell but a whole table
         cells_in_columns = get_cells_in_columns(bounding_boxes)[1:]
-        self.save_table_with_bounding_boxes(cells_in_columns)
+        self._save_table_with_bounding_boxes(cells_in_columns)
         return cells_in_columns
 
-    def save_table_with_bounding_boxes(self, cells_in_columns: list[Column]):
-        table_image_copy = self.table_image.copy()
+    def _save_table_with_bounding_boxes(self, cells_in_columns: list[Column]):
+        table_image_copy = cv2.cvtColor(self.__table_image.copy(), cv2.COLOR_RGB2BGR)
         index = 0
         for columns in cells_in_columns:
-            color = ConfigConsts.COLORS_LIST[index]
+            index, color = get_color(index)
             for cell in columns.cells:
                 cv2.rectangle(table_image_copy, (cell.starting_x, cell.starting_y),
                               (cell.starting_x + cell.ending_x, cell.starting_y + cell.ending_y), color, 1)
-            if index < len(ConfigConsts.COLORS_LIST) - 1:
-                index += 1
-            else:
-                index = 0
         save_image(self.__TABLE_WITH_BOUNDING_BOXES_OUTPUT_PATH_PREFIX, table_image_copy)
