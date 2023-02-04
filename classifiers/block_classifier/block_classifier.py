@@ -25,6 +25,11 @@ class BlockClassifier:
                                        [matching_block.block.position for matching_block in matching_blocks])
         return matching_blocks
 
+    @staticmethod
+    def _load_data():
+        with open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8") as f:
+            return json.load(f)
+
     def _append_block_with_key_word(self, block, data_patterns, matching_blocks):
         confidence_calculation, found_row_index, found_pattern_index, best_last_word_index = None, 0, -1, -1
         for found_row_index, row in enumerate(block.rows):
@@ -35,11 +40,6 @@ class BlockClassifier:
                 break
         self._add_or_swap_best_fit_block(MatchingBlock(block, confidence_calculation, found_row_index,
                                                        found_pattern_index, best_last_word_index), matching_blocks)
-
-    @staticmethod
-    def _load_data():
-        with open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8") as f:
-            return json.load(f)
 
     @staticmethod
     def _add_or_swap_best_fit_block(matching_block: MatchingBlock,
