@@ -1,98 +1,60 @@
 import json
-import cv2
 
-from random import randrange
 from numpy import ndarray
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.key_data_processing.matching_block import MatchingBlock
-from classifiers.headers_classifier.headers_classifier import prepare_word
 from entities.key_data_processing.block_position import BlockPosition
-from invoice_processing_utils.common_utils import save_image, process_all_word_patterns
-from settings.config_consts import ConfigConsts
-
-__BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
-
-
-def load_data():
-    with open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def save_table_with_bounding_boxes(invoice: ndarray, unique_keys_blocks: list[MatchingBlock]):
-    color = ConfigConsts.COLORS_LIST[randrange(len(ConfigConsts.COLORS_LIST))]
-    table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
-    for matching_block in unique_keys_blocks:
-        block = matching_block.block
-        cv2.rectangle(table_image_copy, (block.position.starting_x, block.position.starting_y),
-                      (block.position.ending_x, block.position.ending_y), color, 1)
-    save_image(__BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX, table_image_copy)
-
-
-def find_best_data_fit(row: str, column_patterns: json) -> tuple[int, int, ConfidenceCalculation]:
-    actual_biggest_compatibility, best_fit, best_row_index, best_last_word_index = 0, "", -1, -1
-    for patterns_set in column_patterns.items():
-        column_pattern_name = patterns_set[0]
-        for row_index, patterns in enumerate(patterns_set[1]):
-            summarized_compatibility = 0
-            all_patterns = patterns.get('patterns')
-            enough_fit = patterns.get('enough_fit')
-            enough_fit_counter = 0
-            best_last_word_index = -1
-            for word_index, word in enumerate(row.split(" ")):
-                word = prepare_word(word)
-                best_actual_word_compatibility = process_all_word_patterns(all_patterns, word)
-                summarized_compatibility += best_actual_word_compatibility
-                if best_actual_word_compatibility > 0.8:
-                    best_row_index = row_index
-                    best_last_word_index = word_index
-                    enough_fit_counter += 1
-                    if enough_fit_counter == enough_fit:
-                        return best_row_index, best_last_word_index, ConfidenceCalculation(column_pattern_name, 1)
-            if summarized_compatibility > actual_biggest_compatibility:
-                actual_biggest_compatibility = summarized_compatibility
-                best_fit = column_pattern_name
-                if (summarized_compatibility / len(row.split(' '))) > 0.9:
-                    break
-    return best_row_index, best_last_word_index, ConfidenceCalculation(best_fit, (
-            actual_biggest_compatibility / len(row.split(' '))))
-
-
-def remove_duplicates(filtered_matching_blocks: list[MatchingBlock]) -> list[MatchingBlock]:
-    removed_duplicated_list = list()
-    for matching_block in filtered_matching_blocks:
-        actual_key = matching_block.confidence_calculation.value
-        actual_confidence = matching_block.confidence_calculation.confidence
-        if any(block.confidence_calculation.value == actual_key for block in removed_duplicated_list):
-            block_with_the_same_key = [block for block in removed_duplicated_list
-                                       if block.confidence_calculation.value == actual_key][0]
-            if block_with_the_same_key.confidence_calculation.confidence < actual_confidence:
-                removed_duplicated_list.remove(block_with_the_same_key)
-                removed_duplicated_list.append(matching_block)
-        else:
-            removed_duplicated_list.append(matching_block)
-    return removed_duplicated_list
+from extractors.key_data_extractor.resolvers.resolver_utils import find_best_data_fit
+from invoice_processing_utils.common_utils import save_image_with_bounding_boxes
 
 
 class BlockClassifier:
+    """ Finding blocks containing key words """
+
+    __BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX = "12. Blocks with keywords.png"
 
     def __init__(self, block_positions: list[BlockPosition], invoice_without_table: ndarray):
-        self.block_positions = block_positions
-        self.invoice_without_table = invoice_without_table
+        self.__block_positions = block_positions
+        self.__invoice_without_table = invoice_without_table
 
     def extract_blocks_with_key_words(self) -> list[MatchingBlock]:
-        confidence_calculation, index, best_row_index, best_last_word_index = "", 0, -1, -1
         matching_blocks = list()
-        data_patterns = load_data()
-        for block in self.block_positions:
-            for index, row in enumerate(block.rows):
-                best_row_index, best_last_word_index, confidence_calculation = find_best_data_fit(row.text,
-                                                                                                  data_patterns)
-                if confidence_calculation.confidence > 0.9:
-                    del data_patterns[confidence_calculation.value]
-                    break
-            matching_blocks.append(
-                MatchingBlock(block, confidence_calculation, index, best_row_index, best_last_word_index))
-        filtered_matching_blocks = [block for block in matching_blocks if block.confidence_calculation.confidence > 0.5]
-        unique_keys_blocks = remove_duplicates(filtered_matching_blocks)
-        save_table_with_bounding_boxes(self.invoice_without_table, unique_keys_blocks)
-        return unique_keys_blocks
+        data_patterns = self._load_data()
+        for block in self.__block_positions:
+            self._append_block_with_key_word(block, data_patterns, matching_blocks)
+        save_image_with_bounding_boxes(self.__invoice_without_table, self.__BLOCKS_WITH_KEYWORDS_OUTPUT_PATH_PREFIX,
+                                       [matching_block.block.position for matching_block in matching_blocks])
+        return matching_blocks
+
+    def _append_block_with_key_word(self, block, data_patterns, matching_blocks):
+        confidence_calculation, found_row_index, found_pattern_index, best_last_word_index = None, 0, -1, -1
+        for found_row_index, row in enumerate(block.rows):
+            found_pattern_index, best_last_word_index, confidence_calculation = \
+                find_best_data_fit(row.text, data_patterns)
+            if confidence_calculation.confidence > 0.9:
+                del data_patterns[confidence_calculation.value]
+                break
+        self._add_or_swap_best_fit_block(MatchingBlock(block, confidence_calculation, found_row_index,
+                                                       found_pattern_index, best_last_word_index), matching_blocks)
+
+    @staticmethod
+    def _load_data():
+        with open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def _add_or_swap_best_fit_block(matching_block: MatchingBlock,
+                                    matching_blocks: list[MatchingBlock]):
+        """ If it is the first found matching block for specified key word add it to the list
+            If it is not first, compare the similarities and left better block """
+        actual_key_word = matching_block.confidence_calculation.value
+        actual_confidence = matching_block.confidence_calculation.confidence
+        if actual_confidence < 0.5:
+            return
+        elif any(block.confidence_calculation.value == actual_key_word for block in matching_blocks):
+            block_with_the_same_key = [block for block in matching_blocks
+                                       if block.confidence_calculation.value == actual_key_word][0]
+            if block_with_the_same_key.confidence_calculation.confidence < actual_confidence:
+                matching_blocks.remove(block_with_the_same_key)
+                matching_blocks.append(matching_block)
+        else:
+            matching_blocks.append(matching_block)

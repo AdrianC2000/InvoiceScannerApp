@@ -36,13 +36,14 @@ class KeyDataProcessor:
         return KeyDataParser(final_data).parse_key_data()
 
     def _get_values_extractors(self) -> tuple[KeyValuesExtractor, PersonValuesExtractor]:
-        blocks_with_rows = BlocksExtractor(self.__invoice).read_blocks()
+        blocks_lines_with_position = BlocksExtractor(self.__invoice).read_blocks()
 
-        key_blocks = BlockClassifier(blocks_with_rows, self.__invoice).extract_blocks_with_key_words()
+        key_blocks = BlockClassifier(blocks_lines_with_position, self.__invoice).extract_blocks_with_key_words()
         blocks_with_key_words, blocks_with_personal_data = self._classify_blocks(key_blocks)
 
-        key_values_extractor = KeyValuesExtractor(self.__invoice, blocks_with_key_words, blocks_with_rows)
-        person_values_extractor = PersonValuesExtractor(self.__invoice, blocks_with_personal_data, blocks_with_rows)
+        key_values_extractor = KeyValuesExtractor(self.__invoice, blocks_with_key_words, blocks_lines_with_position)
+        person_values_extractor = PersonValuesExtractor(self.__invoice, blocks_with_personal_data,
+                                                        blocks_lines_with_position)
         return key_values_extractor, person_values_extractor
 
     @staticmethod

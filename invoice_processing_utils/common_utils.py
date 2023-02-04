@@ -15,10 +15,10 @@ SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
 SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
 
 
-def save_image_with_bounding_boxes(invoice: ndarray, file_name: str, blocks_positions: list[Position]):
+def save_image_with_bounding_boxes(invoice: ndarray, file_name: str, positions: list[Position]):
     color = ConfigConsts.COLORS_LIST[randrange(len(ConfigConsts.COLORS_LIST))]
     table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
-    for position in blocks_positions:
+    for position in positions:
         cv2.rectangle(table_image_copy, (position.starting_x, position.starting_y),
                       (position.ending_x, position.ending_y), color, 1)
     save_image(file_name, table_image_copy)

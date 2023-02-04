@@ -1,7 +1,7 @@
-from classifiers.block_classifier.block_classifier import find_best_data_fit
 from entities.key_data_processing.matching_block import MatchingBlock
 from extractors.key_data_extractor.constants_key_words import number, invoice_vat
 from entities.key_data_processing.search_response import SearchResponse
+from extractors.key_data_extractor.resolvers.resolver_utils import find_best_data_fit
 from extractors.value_finding_status import ValueFindingStatus
 
 
