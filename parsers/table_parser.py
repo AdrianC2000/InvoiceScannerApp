@@ -19,12 +19,12 @@ class TableParser:
     def get_table_content(self) -> ParsedTable:
         table_items = list()
         for row in self.__rows_content:
-            row_dict = self._parse_row(row.cells_content)
+            row_dict = self._parse_row_to_dict(row.cells_content)
             table_items.append(TableProduct(row_dict))
         self._save_to_file(table_items[1:len(table_items)])
         return ParsedTable(table_items[1:len(table_items)])
 
-    def _parse_row(self, row: list[str]) -> dict[str, str]:
+    def _parse_row_to_dict(self, row: list[str]) -> dict[str, str]:
         row_dict = dict()
         for index, cell_phrase in enumerate(row):
             row_dict[self.__matching_headers[index].confidence_calculation.value] = cell_phrase

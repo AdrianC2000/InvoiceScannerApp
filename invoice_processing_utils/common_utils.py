@@ -1,16 +1,36 @@
 import logging
+from random import randrange
 
 import cv2
 from Levenshtein import ratio
 from google.cloud import vision
-from google.cloud.vision_v1 import AnnotateImageResponse
-
+from google.cloud.vision_v1 import AnnotateImageResponse, BoundingPoly
 from numpy import ndarray
+
+from entities.common.position import Position
 from settings.config_consts import ConfigConsts
 
 SPACE_CHECK_SIGNS = [":", ";", ",", "."]
 SIGNS_WITHOUT_SPACE_BEFORE = [')', ']', '}', ':', ',', ';', '.']
 SIGNS_WITHOUT_SPACE_AFTER = ['(', '[', '{']
+
+
+def save_image_with_bounding_boxes(invoice: ndarray, file_name: str, blocks_positions: list[Position]):
+    color = ConfigConsts.COLORS_LIST[randrange(len(ConfigConsts.COLORS_LIST))]
+    table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
+    for position in blocks_positions:
+        cv2.rectangle(table_image_copy, (position.starting_x, position.starting_y),
+                      (position.ending_x, position.ending_y), color, 1)
+    save_image(file_name, table_image_copy)
+
+
+def create_position(positioned_object: BoundingPoly) -> Position:
+    vertices = positioned_object.vertices
+    start_x = vertices[0].x
+    start_y = vertices[0].y
+    end_x = vertices[2].x
+    end_y = vertices[2].y
+    return Position(start_x, start_y, end_x, end_y)
 
 
 def save_image(file_name: str, image: ndarray):
@@ -32,9 +52,9 @@ def process_all_word_patterns(all_patterns: list[str], word: str) -> float:
 
 def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
                                outer_object_ending: int) -> float:
-    """ Given object coordinates in one dimension calculating the percentage of inclusion in another given object,
+    """ Given object coordinates in one dimension calculate the percentage of inclusion in another given object,
         example: given starting_x and ending_x of the cell calculate how likely is this cell inside the column that
-        starts in the point starting_x1 and ending in the ending_x1 """
+        starts in the point starting_x1 and ends in the ending_x1 """
 
     inner_object_length = inner_object_ending - inner_object_starting
     if (outer_object_starting <= inner_object_starting) and (outer_object_ending >= inner_object_ending):
@@ -75,18 +95,23 @@ def prepare_word(word: str) -> str:
     if any(substring in word for substring in all_signs_to_delete):
         for sign in all_signs_to_delete:
             if sign in SPACE_CHECK_SIGNS:
-                while word.find(sign) != -1:
-                    index = word.find(sign)
-                    try:
-                        if word[index - 1] != " " and word[index + 1] != " ":
-                            word = word[:index] + " " + word[index + 1:]
-                    except IndexError:
-                        word = word[:index] + "" + word[index + 1:]
+                word = remove_signs(sign, word)
             word = word.replace(sign, "")
     return word
 
 
-def get_response(invoice: ndarray) -> AnnotateImageResponse:
+def remove_signs(sign: str, word: str) -> str:
+    while word.find(sign) != -1:
+        index = word.find(sign)
+        try:
+            if word[index - 1] != " " and word[index + 1] != " ":
+                word = word[:index] + " " + word[index + 1:]
+        except IndexError:
+            word = word[:index] + "" + word[index + 1:]
+    return word
+
+
+def get_ocr_response(invoice: ndarray) -> AnnotateImageResponse:
     client = vision.ImageAnnotatorClient()
     _, encoded_invoice = cv2.imencode('.png', invoice)
     image = vision.Image(content=encoded_invoice.tobytes())
