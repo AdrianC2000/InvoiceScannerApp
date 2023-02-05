@@ -71,10 +71,10 @@ class KeyDataProcessor:
         final_keys_extraction = key_values_extractor.final_extract_key_values(preliminary_extracted_keys_values)
         final_person_extraction = person_values_extractor.final_extract_key_values(preliminary_extracted_person_values)
 
-        found_final_keys = self._get_final_search_objects(preliminary_extracted_keys_values,
-                                                          final_keys_extraction)
-        found_final_person = self._get_final_search_objects(preliminary_extracted_person_values,
-                                                            final_person_extraction)
+        found_final_keys = self._get_all_search_objects(preliminary_extracted_keys_values,
+                                                        final_keys_extraction)
+        found_final_person = self._get_all_search_objects(preliminary_extracted_person_values,
+                                                          final_person_extraction)
 
         self._draw_bounding_boxes((0, 0, 255), self.__COMBINE_SEARCH_OUTPUT_PATH_PREFIX, final_keys_extraction,
                                   final_person_extraction)
@@ -84,7 +84,7 @@ class KeyDataProcessor:
         return final_keys_extraction + final_person_extraction
 
     @staticmethod
-    def _get_final_search_objects(preliminary_responses: list[SearchResponse], final_responses: list[SearchResponse]) \
+    def _get_all_search_objects(preliminary_responses: list[SearchResponse], final_responses: list[SearchResponse]) \
             -> list[SearchResponse]:
         """ Merge found values from preliminary and final searches """
 

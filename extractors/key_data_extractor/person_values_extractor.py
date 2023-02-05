@@ -8,7 +8,7 @@ from entities.key_data_processing.search_response import SearchResponse
 from entities.common.text_position import TextPosition
 from extractors.key_data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers, \
     create_common_not_found_response
-from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_data, \
+from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_lines, \
     get_closest_block_on_the_right, get_closest_block_below, calculate_data_position
 from extractors.value_finding_status import ValueFindingStatus
 from entities.key_data_processing.block_position import BlockPosition
@@ -47,7 +47,7 @@ class PersonValuesExtractor:
         all_data = list()
         for block in self.matching_blocks_with_keywords:
             keyword = block.confidence_calculation.value
-            block = remove_redundant_data(block)
+            block = remove_redundant_lines(block)
             responses = person_info_resolver(block, keyword, True)
             all_data.extend(responses)
         logging.info("Preliminary search:")

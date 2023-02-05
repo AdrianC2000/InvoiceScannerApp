@@ -4,9 +4,10 @@ from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
 from extractors.key_data_extractor.constants_key_words import address, nip
 from entities.key_data_processing.search_response import SearchResponse
-from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_pattern, \
-    get_row_index_by_regex_with_keyword, get_row_index_by_regex, rows_to_string, calculate_data_position
+from extractors.key_data_extractor.resolvers.resolver_utils import get_row_index_by_regex_with_keyword, \
+    get_row_index_by_regex, rows_to_string, calculate_data_position, find_best_data_fit
 from extractors.value_finding_status import ValueFindingStatus
+from invoice_processing_utils.common_utils import prepare_row, prepare_word
 
 
 def get_search_response(rows, key_word, status):
@@ -74,6 +75,17 @@ def create_partially_not_found_response(key_prefix, address_row_index: int, zip_
     return [get_search_response(name_rows, key_prefix + "_name", ValueFindingStatus.FOUND),
             get_search_response(address_rows, key_prefix + "_address", address_status),
             nip_response]
+
+
+def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict) -> tuple[int, int]:
+    for index, row in enumerate(matching_block.block.rows):
+        row = prepare_row(row.text)
+        for word in row.split(' '):
+            word = prepare_word(word)
+            _, best_word_index, confidence_calculation = find_best_data_fit(word, pattern)
+            if confidence_calculation.confidence > 0.8:
+                return index, best_word_index
+    return -1, -1
 
 
 def get_common_value(address_row_index, zip_code_row_index):

@@ -45,7 +45,7 @@ class BlockClassifier:
     def _add_or_swap_best_fit_block(matching_block: MatchingBlock,
                                     matching_blocks: list[MatchingBlock]):
         """ If it is the first found matching block for specified key word add it to the list
-            If it is not first, compare the similarities and left better block """
+            If it is not first, compare the similarities and leave only the better block """
         actual_key_word = matching_block.confidence_calculation.value
         actual_confidence = matching_block.confidence_calculation.confidence
         if actual_confidence < 0.5:

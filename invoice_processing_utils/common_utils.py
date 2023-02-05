@@ -1,12 +1,11 @@
 import logging
-from random import randrange
-
 import cv2
+
+from random import randrange
 from Levenshtein import ratio
 from google.cloud import vision
 from google.cloud.vision_v1 import AnnotateImageResponse, BoundingPoly
 from numpy import ndarray
-
 from entities.common.position import Position
 from settings.config_consts import ConfigConsts
 
