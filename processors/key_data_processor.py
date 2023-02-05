@@ -15,7 +15,6 @@ from parsers.key_data_parser import KeyDataParser
 
 
 class KeyDataProcessor:
-
     __PRELIMINARY_SEARCH_OUTPUT_PATH_PREFIX = "13.Preliminary search.png"
     __FINAL_SEARCH_OUTPUT_PATH_PREFIX = "14.Final search.png"
     __COMBINE_SEARCH_OUTPUT_PATH_PREFIX = "15.Combine search.png"
@@ -58,7 +57,8 @@ class KeyDataProcessor:
                 blocks_with_key_words.append(block)
         return blocks_with_key_words, blocks_with_personal_data
 
-    def _get_preliminary_found_values(self, key_values_extractor, person_values_extractor)\
+    def _get_preliminary_found_values(self, key_values_extractor: KeyValuesExtractor,
+                                      person_values_extractor: PersonValuesExtractor) \
             -> tuple[list[SearchResponse], list[SearchResponse]]:
         preliminary_extracted_keys_values = key_values_extractor.preliminary_extract_key_values()
         preliminary_extracted_person_values = person_values_extractor.preliminary_extract_key_values()
@@ -66,14 +66,19 @@ class KeyDataProcessor:
                                   preliminary_extracted_keys_values, preliminary_extracted_person_values)
         return preliminary_extracted_keys_values, preliminary_extracted_person_values
 
-    def _get_final_found_values(self, key_values_extractor, person_values_extractor, preliminary_extracted_keys_values,
-                                preliminary_extracted_person_values) -> list[SearchResponse]:
-        final_keys_extraction = key_values_extractor.final_extract_key_values(preliminary_extracted_keys_values)
-        final_person_extraction = person_values_extractor.final_extract_key_values(preliminary_extracted_person_values)
+    def _get_final_found_values(self, key_values_extractor: KeyValuesExtractor,
+                                person_values_extractor: PersonValuesExtractor,
+                                preliminary_extracted_keys_values_responses: list[SearchResponse],
+                                preliminary_extracted_person_values_responses: list[SearchResponse]) \
+            -> list[SearchResponse]:
+        final_keys_extraction = key_values_extractor\
+            .final_extract_key_values(preliminary_extracted_keys_values_responses)
+        final_person_extraction = person_values_extractor\
+            .final_extract_key_values(preliminary_extracted_person_values_responses)
 
-        found_final_keys = self._get_all_search_objects(preliminary_extracted_keys_values,
+        found_final_keys = self._get_all_search_objects(preliminary_extracted_keys_values_responses,
                                                         final_keys_extraction)
-        found_final_person = self._get_all_search_objects(preliminary_extracted_person_values,
+        found_final_person = self._get_all_search_objects(preliminary_extracted_person_values_responses,
                                                           final_person_extraction)
 
         self._draw_bounding_boxes((0, 0, 255), self.__COMBINE_SEARCH_OUTPUT_PATH_PREFIX, final_keys_extraction,
@@ -93,7 +98,8 @@ class KeyDataProcessor:
         return [response for response in final_responses if
                 response.key_word in not_found_preliminary_responses and response.status == ValueFindingStatus.FOUND]
 
-    def _draw_bounding_boxes(self, color, path, preliminary_extracted_keys_values: list[SearchResponse],
+    def _draw_bounding_boxes(self, color: tuple[int, int, int], path: str,
+                             preliminary_extracted_keys_values: list[SearchResponse],
                              preliminary_extracted_person_values: list[SearchResponse]):
         preliminary_search_responses = preliminary_extracted_keys_values + preliminary_extracted_person_values
         found_responses = [response for response in preliminary_search_responses if
@@ -102,7 +108,8 @@ class KeyDataProcessor:
         self._save_table_with_bounding_boxes(self.__invoice, color, positions, path)
 
     @staticmethod
-    def _save_table_with_bounding_boxes(invoice: ndarray, color, positions: list[Position], prefix: str):
+    def _save_table_with_bounding_boxes(invoice: ndarray, color: tuple[int, int, int],
+                                        positions: list[Position], prefix: str):
         table_image_copy = cv2.cvtColor(invoice.copy(), cv2.COLOR_RGB2BGR)
         for position in positions:
             cv2.rectangle(table_image_copy, (position.starting_x, position.starting_y),
