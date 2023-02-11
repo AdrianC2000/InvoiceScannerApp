@@ -40,9 +40,8 @@ class KeyDataProcessor:
         key_blocks = BlockClassifier(blocks_lines_with_position, self.__invoice).extract_blocks_with_key_words()
         blocks_with_key_words, blocks_with_personal_data = self._classify_blocks(key_blocks)
 
-        key_values_extractor = KeyValuesExtractor(self.__invoice, blocks_with_key_words, blocks_lines_with_position)
-        person_values_extractor = PersonValuesExtractor(self.__invoice, blocks_with_personal_data,
-                                                        blocks_lines_with_position)
+        key_values_extractor = KeyValuesExtractor(blocks_with_key_words, blocks_lines_with_position)
+        person_values_extractor = PersonValuesExtractor(blocks_with_personal_data, blocks_lines_with_position)
         return key_values_extractor, person_values_extractor
 
     @staticmethod

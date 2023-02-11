@@ -31,7 +31,7 @@ class InvoicesParsingTests(unittest.TestCase):
             print(f"Testing invoice {filename}")
             actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
-            with self.subTest(expected_output=expected_output):
+            with self.subTest(expected_output=expected_output, msg=filename):
                 self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
 
     @unittest.skip('')

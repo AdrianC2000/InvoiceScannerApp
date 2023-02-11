@@ -1,6 +1,5 @@
 import logging
 
-from numpy import ndarray
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.key_data_processing.search_response import SearchResponse
@@ -14,10 +13,9 @@ from entities.key_data_processing.block_position import BlockPosition
 
 
 class KeyValuesExtractor:
+    """ Extracting key values - invoice number, currency and listing date """
 
-    def __init__(self, invoice: ndarray, matching_blocks_with_keywords: list[MatchingBlock],
-                 all_blocks: list[BlockPosition]):
-        self.__invoice = invoice
+    def __init__(self, matching_blocks_with_keywords: list[MatchingBlock], all_blocks: list[BlockPosition]):
         self.__matching_blocks_with_keywords = matching_blocks_with_keywords
         self.__all_blocks = all_blocks
         self.__methods = {
@@ -28,15 +26,15 @@ class KeyValuesExtractor:
 
     @staticmethod
     def _invoice_number_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
-        return InvoiceNumberResolvers(block, is_preliminary).get_invoice_number()
+        return InvoiceNumberResolvers(block, is_preliminary).find_invoice_number()
 
     @staticmethod
     def _currency_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
-        return CurrencyResolvers(block, is_preliminary).get_currency()
+        return CurrencyResolvers(block, is_preliminary).find_currency()
 
     @staticmethod
     def _listing_date_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
-        return ListingDateResolvers(block, is_preliminary).get_listing_date()
+        return ListingDateResolvers(block, is_preliminary).find_listing_date()
 
     def preliminary_extract_key_values(self) -> list[SearchResponse]:
         preliminary_key_values_search_responses = list()

@@ -26,7 +26,7 @@ class CurrencyResolvers:
         self.__matching_block = matching_block
         self.__is_preliminary = is_preliminary
 
-    def get_currency(self) -> SearchResponse:
+    def find_currency(self) -> SearchResponse:
         key_word = self.__matching_block.confidence_calculation.value
         rows = self.__matching_block.block.rows
         row_with_currency_key = rows[0]

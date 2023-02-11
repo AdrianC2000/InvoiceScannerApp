@@ -27,7 +27,7 @@ class ListingDateResolvers:
         self.__matching_block = matching_block
         self.__is_preliminary = is_preliminary
 
-    def get_listing_date(self) -> SearchResponse:
+    def find_listing_date(self) -> SearchResponse:
         key_word = self.__matching_block.confidence_calculation.value
         rows = self.__matching_block.block.rows
         row_with_listing_date_key = rows[0]
