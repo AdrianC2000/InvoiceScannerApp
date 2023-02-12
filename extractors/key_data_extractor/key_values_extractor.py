@@ -96,8 +96,8 @@ class KeyValuesExtractor:
         index = 0
         for index, right_row in enumerate(block_on_the_right.rows):
             right_row_starting_y, right_row_ending_y = right_row.position.starting_y, right_row.position.ending_y
-            percentage = check_percentage_inclusion(row_starting_y, row_ending_y, right_row_starting_y,
-                                                    right_row_ending_y)
+            percentage = check_percentage_inclusion(right_row_starting_y, right_row_ending_y,
+                                                    row_starting_y, row_ending_y)
             if percentage > 50:
                 break
         return index

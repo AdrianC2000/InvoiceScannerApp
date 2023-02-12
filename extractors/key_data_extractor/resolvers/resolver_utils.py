@@ -7,8 +7,7 @@ from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
 from entities.common.text_position import TextPosition
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
-from invoice_processing_utils.common_utils import check_percentage_inclusion, prepare_row, prepare_word, \
-    process_all_word_patterns
+from invoice_processing_utils.common_utils import check_percentage_inclusion, prepare_word, process_all_word_patterns
 
 
 def find_best_data_fit(row: str, all_patterns_sets: json) -> tuple[int, int, ConfidenceCalculation]:

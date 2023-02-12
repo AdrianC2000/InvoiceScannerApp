@@ -12,10 +12,8 @@ from processors.invoice_info_processor import InvoiceInfoProcessor
 
 
 class InvoicesParsingTests(unittest.TestCase):
-    __previous_configuration = None
     __POPPLER_PATH = r"C:\Users\adria\poppler-0.68.0\bin"
     __invoices_set = "tests/app_testing_set/"
-    __outputs_set = "tests/invoices_output_set/"
 
     @classmethod
     def setUpClass(cls):
@@ -24,7 +22,7 @@ class InvoicesParsingTests(unittest.TestCase):
         warnings.simplefilter('ignore', category=ResourceWarning)
         cls.maxDiff = None
 
-    # @unittest.skip('')
+    # @unittest.skip('Comment this line to run the following test')
     def test_every_invoice(self):
         for file in os.listdir(os.fsencode(self.__invoices_set)):
             filename = os.fsdecode(file)
@@ -34,9 +32,9 @@ class InvoicesParsingTests(unittest.TestCase):
             with self.subTest(expected_output=expected_output, msg=filename):
                 self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
 
-    @unittest.skip('')
+    @unittest.skip('Comment this line to run the following test')
     def test_single_invoice(self):
-        filename = "test_invoice_1.png"
+        filename = "test_invoice_5.png"
         actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
         self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
