@@ -14,14 +14,6 @@ class CustomParserInfo(parserinfo):
               ("paź", "październik"), ("lis", "listopad"), ("gr", "grudzień")]
 
 
-def check_date(alleged_date: str) -> bool:
-    try:
-        parse(alleged_date, fuzzy=True, parserinfo=CustomParserInfo())
-        return True
-    except ValueError:
-        return False
-
-
 class ListingDateResolvers:
 
     def __init__(self, matching_block: MatchingBlock, is_preliminary: bool):
@@ -36,7 +28,7 @@ class ListingDateResolvers:
         row_with_listing_date_key_word = self._get_row_with_listing_date_key_word()
         try:
             alleged_listing_date = row_with_listing_date_key_word.text.split(' ')[alleged_listing_date_index]
-            if check_date(alleged_listing_date):
+            if self._check_date(alleged_listing_date):
                 return SearchResponse(key_word, alleged_listing_date, ValueFindingStatus.FOUND,
                                       row_with_listing_date_key_word.position)
         except IndexError:
@@ -62,13 +54,20 @@ class ListingDateResolvers:
         return row_with_listing_date_key_word
 
     @staticmethod
-    def _search_date_in_row_below(key_word, row_with_listing_date_key, rows):
+    def _check_date(alleged_date: str) -> bool:
         try:
-            row_below_currency_key = rows[1]
-            row_below_text = row_below_currency_key.text
+            parse(alleged_date, fuzzy=True, parserinfo=CustomParserInfo())
+            return True
+        except ValueError:
+            return False
+
+    def _search_date_in_row_below(self, key_word, row_with_listing_date_key, rows) -> SearchResponse:
+        try:
+            row_below_date_key_word = rows[1]
+            row_below_text = row_below_date_key_word.text
             for word in row_below_text.split(' '):
-                if check_date(word):
-                    return SearchResponse(key_word, word, ValueFindingStatus.FOUND, row_below_currency_key.position)
+                if self._check_date(word):
+                    return SearchResponse(key_word, word, ValueFindingStatus.FOUND, row_below_date_key_word.position)
             logging.info("Date is not in the indicated row nor below it - date value will be searched on the right.")
             return SearchResponse(key_word, "", ValueFindingStatus.VALUE_ON_THE_RIGHT, rows[0].position)
         except IndexError:
