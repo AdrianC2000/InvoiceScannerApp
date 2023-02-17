@@ -5,7 +5,7 @@ from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
 from entities.key_data_processing.search_response import SearchResponse
 from entities.common.text_position import TextPosition
-from extractors.key_data_extractor.resolvers.personal_info_resolvers import PersonInfoResolvers, \
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_resolver import PersonInfoResolver, \
     create_common_not_found_response
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_lines, \
     get_closest_block_on_the_right, get_closest_block_below, calculate_data_position
@@ -25,7 +25,7 @@ class PersonValuesExtractor:
         for block in self.__matching_blocks_with_keywords:
             keyword = block.confidence_calculation.value
             block = remove_redundant_lines(block)
-            responses = PersonInfoResolvers(block, keyword, True).get_person_info()
+            responses = PersonInfoResolver(block, keyword, True).get_person_info()
             person_key_values.extend(responses)
         logging.info("Preliminary search:")
         for person_key_values_response in person_key_values:
@@ -95,7 +95,7 @@ class PersonValuesExtractor:
             -> list[SearchResponse]:
         if adjacent_block is not None:
             matching_below_block = MatchingBlock(adjacent_block, ConfidenceCalculation(key_word, 1), 0, 0, 0)
-            return PersonInfoResolvers(matching_below_block, key_word, False).get_person_info()
+            return PersonInfoResolver(matching_below_block, key_word, False).get_person_info()
         else:
             return create_common_not_found_response(key_word, ValueFindingStatus.VALUE_MISSING, key_row_position)
 

@@ -96,7 +96,7 @@ def has_numbers(input_string):
     return bool(re.search(r'\d', input_string))
 
 
-class PersonInfoResolvers:
+class PersonInfoResolver:
 
     def __init__(self, matching_block: MatchingBlock, person_type: str, is_preliminary: bool):
         self.__matching_block = matching_block
@@ -107,9 +107,6 @@ class PersonInfoResolvers:
         address_row_index = self.__get_address_row_index()
         zip_code_row_index = self.__get_zip_code_row_index()
         nip_row_index, nip_word_index = self.__get_nip_row_index()
-
-        if not self.__is_preliminary:
-            abc = 5
 
         if address_row_index == nip_row_index:
             address_row_index = -1

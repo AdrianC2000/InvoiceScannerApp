@@ -13,11 +13,15 @@
   ],
   "invoice_number": [
     {
-      "patterns": ["numer", "faktury"],
+      "patterns": ["faktura", "vat", "nr", "numer"],
+      "enough_fit": 3
+    },
+    {
+      "patterns": ["faktura", "nr", "numer"],
       "enough_fit": 2
     },
     {
-      "patterns": ["faktura", "vat", "nr", "numer"],
+      "patterns": ["numer", "nr", "faktury"],
       "enough_fit": 2
     }
   ],

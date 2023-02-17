@@ -3,9 +3,9 @@ import logging
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.key_data_processing.search_response import SearchResponse
-from extractors.key_data_extractor.resolvers.currency_resolver import CurrencyResolvers
-from extractors.key_data_extractor.resolvers.invoice_number_resolvers import InvoiceNumberResolvers
-from extractors.key_data_extractor.resolvers.listing_date_resolver import ListingDateResolvers
+from extractors.key_data_extractor.resolvers.simple_resolvers.currency_resolver import CurrencyResolver
+from extractors.key_data_extractor.resolvers.simple_resolvers.invoice_number_resolver import InvoiceNumberResolver
+from extractors.key_data_extractor.resolvers.simple_resolvers.listing_date_resolver import ListingDateResolver
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_lines, get_closest_block_below, \
     get_closest_block_on_the_right, check_percentage_inclusion
 from extractors.value_finding_status import ValueFindingStatus
@@ -26,15 +26,21 @@ class KeyValuesExtractor:
 
     @staticmethod
     def _invoice_number_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
-        return InvoiceNumberResolvers(block, is_preliminary).find_invoice_number()
+        invoice_number_resolver = InvoiceNumberResolver(block)
+        return invoice_number_resolver.find_preliminary_key_value() if is_preliminary \
+            else invoice_number_resolver.find_further_key_value()
 
     @staticmethod
     def _currency_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
-        return CurrencyResolvers(block, is_preliminary).find_currency()
+        currency_resolver = CurrencyResolver(block)
+        return currency_resolver.find_preliminary_key_value() if is_preliminary \
+            else currency_resolver.find_further_key_value()
 
     @staticmethod
     def _listing_date_resolver(block: MatchingBlock, is_preliminary: bool) -> SearchResponse:
-        return ListingDateResolvers(block, is_preliminary).find_listing_date()
+        listing_date_resolver = ListingDateResolver(block)
+        return listing_date_resolver.find_preliminary_key_value() if is_preliminary \
+            else listing_date_resolver.find_further_key_value()
 
     def preliminary_extract_key_values(self) -> list[SearchResponse]:
         preliminary_key_values_search_responses = list()
