@@ -1,3 +1,3 @@
 # InvoiceScannerApp
-Final thesis project
+## Final thesis project <br>
 Application under development - documentation and first functional version release soon. 
