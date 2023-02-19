@@ -4,7 +4,7 @@ from entities.table_processing.parsed_table import ParsedTable
 
 class InvoiceInfo:
 
-    def __init__(self, table: ParsedTable, parsed_data: KeyData):
+    def __init__(self, table: ParsedTable or None, parsed_data: KeyData):
         self.__table_products = None if table is None else table.table_products
         self.__seller_name = parsed_data.seller_name
         self.__seller_address = parsed_data.seller_address

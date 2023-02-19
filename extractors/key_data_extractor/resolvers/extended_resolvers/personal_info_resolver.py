@@ -19,13 +19,14 @@ class PersonInfoResolver:
         address_row_index = self._get_address_row_index()
         zip_code_row_index = self._get_zip_code_row_index()
         nip_row_index, nip_word_index = self._get_nip_row_index()
-        if address_row_index == nip_row_index:
-            address_row_index = -1
-        max_address_and_zip_code = max(zip_code_row_index, address_row_index)
+        if not self.__is_preliminary:
+            address_row_index = self._fit_address_row_index(address_row_index, nip_row_index)
 
+        max_address_and_zip_code = max(zip_code_row_index, address_row_index)
         personal_info_response_creator = PersonalInfoResponseCreator(self.__matching_block, self.__person_type,
                                                                      self.__is_preliminary, address_row_index,
                                                                      zip_code_row_index, nip_row_index, nip_word_index)
+
         if any(x == -1 for x in [max_address_and_zip_code, nip_row_index]):
             return personal_info_response_creator.get_not_everything_found_response()
         else:
@@ -36,10 +37,9 @@ class PersonInfoResolver:
         return row_index if row_index != -1 else self._get_address_row_if_not_found()
 
     def _get_address_row_if_not_found(self):
-        """ Sometimes there won't be any of ADDRESS_PATTERN words in the real address
+        """ Sometimes there won't be any of ADDRESS_PATTERN words in the real address (like ul or os)
             Supposing that rows[0] is a name, address should usually be on the 1 or 2 line and has the number value.
         """
-
         if len(self.__matching_block.block.rows) > 1 and has_numbers(self.__matching_block.block.rows[1].text):
             return 1
         if len(self.__matching_block.block.rows) > 2 and has_numbers(self.__matching_block.block.rows[2].text):
@@ -52,3 +52,10 @@ class PersonInfoResolver:
     def _get_nip_row_index(self):
         row_index, last_word_index = get_row_index_by_pattern(self.__matching_block, NIP_PATTERN)
         return get_nip_row_index(row_index, self.__matching_block.block.rows), last_word_index
+
+    @staticmethod
+    def _fit_address_row_index(address_row_index, nip_row_index):
+        """ This method has been introduced for the case when address is split apart between two blocks.
+            Then (in the further search), due to the fact that NIP is usually below the address and obviously contains
+            numbers, it will be classified as the address row by the _get_address_row_if_not_found function. """
+        return -1 if address_row_index == nip_row_index else address_row_index

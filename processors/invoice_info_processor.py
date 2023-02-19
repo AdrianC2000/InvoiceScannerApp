@@ -35,7 +35,7 @@ class InvoiceInfoProcessor:
             else:
                 return InvoiceInfoResponse(404, self.__NOT_ENOUGH_COLUMNS_ERROR_MESSAGE, None)
         except Exception:
-            logging.exception("Table parsing error: ")
+            logging.debug("Table parsing error: ")
             parsed_data = KeyDataProcessor(self.__original_invoice).extract_key_data()
             if self._check_data(parsed_data):
                 return InvoiceInfoResponse(206, self.__NO_TABLE_MESSAGE, InvoiceInfo(None, parsed_data))

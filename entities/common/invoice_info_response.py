@@ -3,7 +3,7 @@ from entities.common.invoice_info import InvoiceInfo
 
 class InvoiceInfoResponse:
 
-    def __init__(self, status: int, message: str, invoice_info: InvoiceInfo):
+    def __init__(self, status: int, message: str, invoice_info: InvoiceInfo or None):
         self.__status = status
         self.__message = message
         self.__invoice_info = invoice_info

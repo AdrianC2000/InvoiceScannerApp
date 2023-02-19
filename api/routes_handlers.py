@@ -25,8 +25,6 @@ def get_invoices_info(invoices_files) -> json:
 
 
 def get_response(file_name: str, invoice_info_response: InvoiceInfoResponse) -> dict:
-    if str(invoice_info_response.status)[0] == '2':
-        response_value = invoice_info_response.invoice_info
-    else:
-        response_value = invoice_info_response.message
+    response_value = invoice_info_response.invoice_info if str(invoice_info_response.status)[0] == '2' else \
+        invoice_info_response.message
     return {file_name: response_value}

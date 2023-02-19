@@ -10,7 +10,7 @@ NIP_PATTERN = {
 ADDRESS_PATTERN = {
   "address": [
     {
-      "patterns": ["ul", "ui", "u1", "al", "ai", "a1", "os", "0s"],
+      "patterns": ["ul", "al", "os"],
       "enough_fit": 1
     }
   ]
