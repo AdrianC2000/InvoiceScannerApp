@@ -1,11 +1,8 @@
 import json
 
-from regex import regex
-
 from entities.key_data_processing.block_position import BlockPosition
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
-from entities.common.text_position import TextPosition
 from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from invoice_processing_utils.common_utils import check_percentage_inclusion, prepare_word, process_all_word_patterns
 
@@ -50,58 +47,8 @@ def remove_redundant_lines(matching_block: MatchingBlock) -> MatchingBlock:
     return matching_block
 
 
-def get_row_index_by_regex_with_keyword(regex_pattern: str, row_index: int, rows: list[TextPosition]) -> int:
-    actual_row = rows[row_index]
-    if check_regex_for_single_word(regex_pattern, actual_row.text):
-        return row_index
-    try:
-        next_row = rows[row_index + 1]
-        if check_regex_for_single_word(regex_pattern, next_row.text):
-            return row_index + 1
-    except IndexError:
-        return - 1
-    return -1
-
-
-def get_row_index_by_regex(regex_pattern: str, rows: list[TextPosition]) -> int:
-    for row_index, row in enumerate(rows):
-        if check_regex_for_single_word(regex_pattern, row.text) is True:
-            return row_index
-        else:
-            if check_regex_for_single_zip_code(r'.*[0-9]{2}-[0-9]{0}.*', row.text) is True:
-                return row_index
-    return -1
-
-
-def check_regex_for_single_word(regex_pattern: str, word: str) -> bool:
-    fuzzy_pattern = f'({regex_pattern}){{e<=3}}'
-    match_actual_row = regex.search(fuzzy_pattern, word, regex.BESTMATCH)
-    return match_actual_row is not None
-
-
-def check_regex_for_single_zip_code(regex_pattern: str, word: str) -> bool:
-    fuzzy_pattern = f'({regex_pattern}){{e<=0}}'
-    match_actual_row = regex.search(fuzzy_pattern, word, regex.BESTMATCH)
-    return match_actual_row is not None
-
-
-def rows_to_string(rows: list[TextPosition]) -> str:
-    return ' '.join([row.text.strip() for row in rows])
-
-
-def remove_key_word(info: str, matching_block: MatchingBlock) -> str:
-    key_word = matching_block.block.rows[0].text.split(' ')[matching_block.last_word_index]
-    return info.replace(key_word, '').strip()
-
-
-def calculate_data_position(rows: list[TextPosition]) -> Position:
-    longest_x = max(row.position.ending_x for row in rows)
-    first_row_position = rows[0].position
-    last_row_position = rows[len(rows) - 1].position
-    starting_x = first_row_position.starting_x
-    starting_y = first_row_position.starting_y
-    ending_y = last_row_position.ending_y
-    return Position(starting_x, starting_y, longest_x, ending_y)
+def has_numbers(word: str) -> bool:
+    return any(char.isdigit() for char in word)
 
 
 def get_closest_block_on_the_right(all_blocks: list[BlockPosition], key_row_position: Position, row_starting_y: int,

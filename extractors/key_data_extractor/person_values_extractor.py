@@ -5,10 +5,12 @@ from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
 from entities.key_data_processing.search_response import SearchResponse
 from entities.common.text_position import TextPosition
-from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_resolver import PersonInfoResolver, \
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_resolver import PersonInfoResolver
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creator import \
     create_common_not_found_response
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_utils import calculate_common_data_position
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_lines, \
-    get_closest_block_on_the_right, get_closest_block_below, calculate_data_position
+    get_closest_block_on_the_right, get_closest_block_below
 from extractors.value_finding_status import ValueFindingStatus
 from entities.key_data_processing.block_position import BlockPosition
 
@@ -42,12 +44,10 @@ class PersonValuesExtractor:
         found_key_words = [response.key_word for response in found_responses
                            if response.status == ValueFindingStatus.FOUND]
 
-        searching_responses = list()
-        searching_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words,
-                                                                          "seller"))
-        searching_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words,
-                                                                          "buyer"))
-        found_responses.extend(searching_responses)
+        found_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words,
+                                                                      "seller"))
+        found_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words,
+                                                                      "buyer"))
         return found_responses
 
     def _append_further_search_for_person(self, not_found_responses: list[SearchResponse],
@@ -112,7 +112,7 @@ class PersonValuesExtractor:
                 new_response.value = old_response_for_key_word[0].value + " " + new_response.value
                 old_row_position = old_response_for_key_word[0].row_position
                 row_list = [TextPosition("", old_row_position), TextPosition("", new_response.row_position)]
-                new_response.row_position = calculate_data_position(row_list)
+                new_response.row_position = calculate_common_data_position(row_list)
         return new_responses
 
     def _get_right_responses(self, new_person_responses: list[SearchResponse],
