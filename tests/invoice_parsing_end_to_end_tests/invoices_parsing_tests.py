@@ -13,7 +13,8 @@ from processors.invoice_info_processor import InvoiceInfoProcessor
 
 class InvoicesParsingTests(unittest.TestCase):
     __POPPLER_PATH = r"C:\Users\adria\poppler-0.68.0\bin"
-    __invoices_set = "tests/app_testing_set/"
+    __tests_directory_path = "tests/invoice_parsing_end_to_end_tests"
+    __invoices_set = __tests_directory_path + "/app_testing_set/"
 
     @classmethod
     def setUpClass(cls):
@@ -43,15 +44,15 @@ class InvoicesParsingTests(unittest.TestCase):
         self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
 
     def get_expected_and_actual_outputs(self, filename):
-        test_output_dir = f"{os.getcwd()}/tests/outputs/{filename}/"
+        test_output_dir = f"{os.getcwd()}/{self.__tests_directory_path}/outputs/{filename}/"
 
         if not os.path.exists(test_output_dir):
             os.makedirs(test_output_dir)
 
-        invoice_path = f"tests/app_testing_set/{filename}"
+        invoice_path = f"{self.__tests_directory_path}/app_testing_set/{filename}"
         invoice_image = self.get_invoice_with_unified_format(filename, invoice_path)
         invoice_info = InvoiceInfoProcessor(numpy.array(invoice_image), test_output_dir).extract_info().invoice_info
-        output_file = f"tests/invoices_output_set/{filename.split('.')[0]}.json"
+        output_file = f"{self.__tests_directory_path}/invoices_output_set/{filename.split('.')[0]}.json"
 
         with open(output_file, encoding="utf-8") as fh:
             output_json = json.load(fh)

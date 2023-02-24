@@ -9,11 +9,11 @@
         "X-inFakt-ApiKey": "49139f268c535563e40faf7f1eb52e0d9b8f8e0b"
     },
     "data_configuration": {
-        "remove_nulls": false,
+        "remove_nulls": true,
         "convert_to_cents": true,
         "remove_percentage": true,
         "convert_currency": true,
-        "parsed_table": {
+        "table_products": {
             "value": "services",
             "included": true
         },

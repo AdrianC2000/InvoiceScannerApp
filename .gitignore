@@ -5,7 +5,7 @@ extractors/table_extractor/models/*
 extractors/table_extractor/output_examples/*
 extractors/table_extractor/to_be_tested/*
 columns_seperator/output_examples/*
-tests/invoices_output_set/*
-tests/invoices_testing_set/*
-tests/app_testing_set/*
-tests/outputs/*
+tests/invoice_parsing_end_to_end_tests/invoices_output_set/*
+tests/invoice_parsing_end_to_end_tests/invoices_testing_set/*
+tests/invoice_parsing_end_to_end_tests/app_testing_set/*
+tests/invoice_parsing_end_to_end_tests/outputs/*

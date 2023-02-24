@@ -9,24 +9,24 @@
         "X-inFakt-ApiKey": "49139f268c535563e40faf7f1eb52e0d9b8f8e0b"
     },
     "data_configuration": {
-        "remove_nulls": false,
-        "convert_to_cents": false,
-        "remove_percentage": false,
-        "convert_currency": false,
-        "parsed_table": {
-            "value": "parsed_table",
+        "remove_nulls": true,
+        "convert_to_cents": true,
+        "remove_percentage": true,
+        "convert_currency": true,
+        "table_products": {
+            "value": "services",
             "included": true
         },
         "ordinal_number": {
             "value": "ordinal_number",
-            "included": true
+            "included": false
         },
         "name": {
             "value": "name",
             "included": true
         },
         "pkwiu": {
-            "value": "pkwiu",
+            "value": "pkwiua",
             "included": false
         },
         "quantity": {
@@ -34,35 +34,35 @@
             "included": true
         },
         "unit_of_measure": {
-            "value": "unit_of_measure",
+            "value": "unit",
             "included": true
         },
         "gross_price": {
             "value": "gross_price",
-            "included": true
+            "included": false
         },
         "net_price": {
+            "value": "unit_net_price",
+            "included": false
+        },
+        "net_value": {
             "value": "net_price",
             "included": true
         },
-        "net_value": {
-            "value": "net_value",
-            "included": true
-        },
         "vat": {
-            "value": "vat",
+            "value": "tax_symbol",
             "included": true
         },
         "vat_value": {
             "value": "vat_value",
-            "included": true
+            "included": false
         },
         "gross_value": {
             "value": "gross_value",
-            "included": true
+            "included": false
         },
         "invoice_number": {
-            "value": "invoice_number",
+            "value": "number",
             "included": true
         },
         "currency": {
@@ -70,32 +70,32 @@
             "included": true
         },
         "listing_date": {
-            "value": "listing_date",
+            "value": "invoice_date",
             "included": true
         },
         "seller_name": {
             "value": "seller_name",
-            "included": true
+            "included": false
         },
         "seller_address": {
             "value": "seller_address",
-            "included": true
+            "included": false
         },
         "seller_nip": {
             "value": "seller_nip",
-            "included": true
+            "included": false
         },
         "buyer_name": {
-            "value": "buyer_name",
+            "value": "client_company_name",
             "included": true
         },
         "buyer_address": {
-            "value": "buyer_address",
+            "value": "client_street",
             "included": true
         },
         "buyer_nip": {
-            "value": "buyer_nip",
-            "included": true
+            "value": "client_tax_code",
+            "included": false
         }
     }
 }

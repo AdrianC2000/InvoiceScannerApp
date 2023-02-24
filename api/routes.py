@@ -4,26 +4,28 @@ import requests
 
 from flask import Blueprint, Response, request
 from api.routes_handlers import get_invoices_info
-from settings.settings import customize_json, dump_to_json, get_configuration, set_configuration
+from settings.json_configurator import JsonConfigurator
+from settings.settings import dump_to_json, get_configuration, set_configuration
 
 invoice_blueprint = Blueprint("invoice", __name__)
+MIMETYPE = "application/json"
 
 
 @invoice_blueprint.route("/health", methods=["GET"])
 def check_health():
-    return Response("Alive!", status=200, mimetype='application/json')
+    return Response("Alive!", status=200, mimetype=MIMETYPE)
 
 
 @invoice_blueprint.route("/invoice", methods=["POST"])
 def process_invoice() -> Response:
     invoices_files = request.files.getlist('image')
     all_invoices_info_json = get_invoices_info(invoices_files)
-    return Response(all_invoices_info_json, status=201, mimetype='application/json')
+    return Response(all_invoices_info_json, status=201, mimetype=MIMETYPE)
 
 
 @invoice_blueprint.route("/settings", methods=["GET"])
 def get_settings() -> Response:
-    return Response(json.dumps(get_configuration()), status=200, mimetype='application/json')
+    return Response(json.dumps(get_configuration()), status=200, mimetype=MIMETYPE)
 
 
 @invoice_blueprint.route("/settings", methods=["POST"])
@@ -37,7 +39,7 @@ def set_settings() -> Response:
 
 @invoice_blueprint.route("/customize_json", methods=["POST"])
 def get_customize_json() -> Response:
-    return Response(customize_json(request.get_json()), status=201, mimetype='application/json')
+    return Response(JsonConfigurator(request.get_json()).customize_json(), status=201, mimetype=MIMETYPE)
 
 
 @invoice_blueprint.route("/send_request", methods=["POST"])
@@ -51,4 +53,4 @@ def send_request() -> Response:
 
     res = requests.post(url, json=body, headers=headers)
     logging.info(f"Request from {url} -> {res.text}")
-    return Response(dump_to_json(res.text), status=201, mimetype='application/json')
+    return Response(dump_to_json(res.text), status=201, mimetype=MIMETYPE)
