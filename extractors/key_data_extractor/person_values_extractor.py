@@ -6,7 +6,7 @@ from entities.common.position import Position
 from entities.key_data_processing.search_response import SearchResponse
 from entities.common.text_position import TextPosition
 from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_resolver import PersonInfoResolver
-from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creator import \
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creators.full_response_creator import \
     create_common_not_found_response
 from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_utils import calculate_common_data_position
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_lines, \
