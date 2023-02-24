@@ -38,7 +38,7 @@ class InvoicesParsingTests(unittest.TestCase):
 
     @unittest.skip('Comment this line to run the following test')
     def test_single_invoice(self):
-        filename = "test_invoice_3.png"
+        filename = "test_invoice_11.png"
         actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
         self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")

@@ -12,7 +12,6 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 class WordsConverter:
-
     __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX = "8.Extracted table.xlsx"
 
     def __init__(self, table: Table):
@@ -36,33 +35,33 @@ class WordsConverter:
         if len(rows_in_cell) == 0:
             rows_in_cell.append(text_position)
         else:
-            row_number = self._get_row_number(rows_in_cell, text_position)
-            if row_number == -1:
-                rows_in_cell.insert(0, text_position)
-            elif row_number == len(rows_in_cell):
-                rows_in_cell.append(text_position)
-            else:
+            row_number, is_row_already_present = self._get_row_number(rows_in_cell, text_position)
+            if is_row_already_present:
                 actual_text = rows_in_cell[row_number].text
                 new_text = self._get_new_text(actual_text, text_position.text)
                 rows_in_cell[row_number].text = new_text
+            else:
+                rows_in_cell.insert(row_number, text_position)
 
     @staticmethod
-    def _get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition) -> int:
+    def _get_row_number(rows_in_cell: list[TextPosition], text_position: TextPosition) -> tuple[int, bool]:
         for index, row in enumerate(rows_in_cell):
             percentage = check_percentage_inclusion(text_position.position.starting_y, text_position.position.ending_y,
                                                     row.position.starting_y, row.position.ending_y)
             if percentage > 50:
-                return index
+                return index, True
+        # At this point it is known that the word is not inside any of the existing cells
         starting_y = rows_in_cell[0].position.starting_y
-        ending_y = rows_in_cell[-1].position.ending_y
         if text_position.position.ending_y <= starting_y:
             # Row does not exist yet, and is higher than any existing
-            return -1
-        if text_position.position.starting_y >= ending_y:
-            # Row does not exist yet, and is lower than any existing
-            return len(rows_in_cell)
-        else:
-            return -1
+            return -1, False
+        for index, row in enumerate(rows_in_cell):
+            # Looking for the first row that is below the word
+            ending_y = row.position.ending_y
+            if text_position.position.starting_y < ending_y:
+                return index, False
+        # Row does not exist yet, and is lower than any existing
+        return len(rows_in_cell), False
 
     @staticmethod
     def _get_new_text(actual_text: str, text: str) -> str:
