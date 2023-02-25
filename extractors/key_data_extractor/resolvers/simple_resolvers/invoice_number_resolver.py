@@ -8,7 +8,7 @@ class InvoiceNumberResolver(CommonSimpleResolver):
     def __init__(self, matching_block: MatchingBlock):
         super().__init__(matching_block)
 
-    def _check_key_value(self, word: str) -> bool:
+    def _check_key_value(self, alleged_key_value_index: int, alleged_row_text: list[str]) -> bool:
         """ Checking if given word contains digits """
 
-        return has_numbers(word)
+        return has_numbers(alleged_row_text[alleged_key_value_index])

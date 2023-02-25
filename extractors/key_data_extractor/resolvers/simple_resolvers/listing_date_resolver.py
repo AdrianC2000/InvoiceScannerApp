@@ -16,9 +16,9 @@ class ListingDateResolver(CommonSimpleResolver):
     def __init__(self, matching_block: MatchingBlock):
         super().__init__(matching_block)
 
-    def _check_key_value(self, alleged_date: str) -> bool:
+    def _check_key_value(self, alleged_key_value_index: int, alleged_row_text: list[str]) -> bool:
         """ Checking if given word is a date """
-
+        alleged_date = alleged_row_text[alleged_key_value_index]
         try:
             parse(alleged_date, fuzzy=True, parserinfo=CustomParserInfo())
             return True

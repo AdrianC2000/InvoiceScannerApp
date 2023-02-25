@@ -1,5 +1,6 @@
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.key_data_processing.search_response import SearchResponse
+from extractors.key_data_extractor.resolvers.resolver_utils import has_numbers
 from extractors.key_data_extractor.resolvers.simple_resolvers.common_resolver import CommonResolver
 from extractors.value_finding_status import ValueFindingStatus
 
@@ -22,10 +23,15 @@ class CurrencyResolver(CommonResolver):
 
         return self._search_key_value_in_given_row(1)
 
-    def _check_key_value(self, supposed_currency: str) -> bool:
-        """ Check if alleged currency value contains only letters and has 2 or 3 signs """
-
+    def _check_key_value(self, alleged_key_value_index: int, alleged_row_text: list[str]) -> bool:
+        """ Check if alleged currency value contains only letters and has 2 or 3 signs and if the previous word
+            was a number. """
+        supposed_currency = alleged_row_text[alleged_key_value_index]
         supposed_currency.strip()
         only_letters = supposed_currency.isalpha()
         two_or_three_signs = len(supposed_currency) == 2 or len(supposed_currency) == 3
-        return only_letters and two_or_three_signs
+        if alleged_key_value_index == 0:
+            return only_letters and two_or_three_signs
+        else:
+            # Checking if previous word in the string was the numerical value (e. g. 12.04 zł)
+            return has_numbers(alleged_row_text[alleged_key_value_index - 1]) and only_letters and two_or_three_signs

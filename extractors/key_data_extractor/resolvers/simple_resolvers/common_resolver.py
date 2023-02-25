@@ -11,6 +11,7 @@ class CommonResolver(ABC):
     def __init__(self, matching_block: MatchingBlock):
         self._key_word = matching_block.confidence_calculation.value
         self._all_rows = matching_block.block.rows
+        self._search_row_index = matching_block.row_index
         self._row_with_key_word = self._all_rows[0]
 
     @abstractmethod
@@ -37,16 +38,16 @@ class CommonResolver(ABC):
 
     def _search_key_value_in_row(self, row_index: int, starting_word_index: int) -> str:
         row = self._all_rows[row_index].text.split(' ')[starting_word_index:]
-        for word in row:
-            if self._check_key_value(word):
+        for index, word in enumerate(row):
+            if self._check_key_value(index, row):
                 return word
         return ""
 
     @abstractmethod
-    def _check_key_value(self, word: str):
+    def _check_key_value(self, alleged_key_value_index: int, alleged_row_text: list[str]) -> bool:
         pass
 
     def find_further_key_value(self):
         """ In the further case simply search through the whole first row """
 
-        return self._search_key_value_in_given_row(0)
+        return self._search_key_value_in_given_row(self._search_row_index)

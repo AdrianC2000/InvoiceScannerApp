@@ -17,6 +17,10 @@
       "enough_fit": 3
     },
     {
+      "patterns": ["faktura", "vat"],
+      "enough_fit": 2
+    },
+    {
       "patterns": ["faktura", "nr", "numer"],
       "enough_fit": 2
     },

@@ -27,7 +27,7 @@ class InvoicesParsingTests(unittest.TestCase):
     def test_every_invoice(self):
         for file in os.listdir(os.fsencode(self.__invoices_set)):
             filename = os.fsdecode(file)
-            if filename in ["test_invoice_2.png", "test_invoice_5.png", "test_invoice_12.png", "test_invoice_13.png"]:
+            if filename in ["test_invoice_5.png", "test_invoice_12.png"]:
                 # Known broken cases, will be fixed
                 continue
             print(f"Testing invoice {filename}")
@@ -38,7 +38,7 @@ class InvoicesParsingTests(unittest.TestCase):
 
     @unittest.skip('Comment this line to run the following test')
     def test_single_invoice(self):
-        filename = "test_invoice_11.png"
+        filename = "test_invoice_13.png"
         actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
         self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")

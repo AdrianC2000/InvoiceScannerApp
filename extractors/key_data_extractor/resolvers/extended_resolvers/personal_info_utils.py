@@ -6,7 +6,7 @@ from entities.key_data_processing.matching_block import MatchingBlock
 from extractors.key_data_extractor.resolvers.resolver_utils import find_best_data_fit
 from invoice_processing_utils.common_utils import prepare_row, prepare_word
 
-__ZIP_CODE_PATTERN = r'^[0-9]{2}-[0-9]{3}'
+__ZIP_CODE_PATTERN = r'[0-9]{2}-[0-9]{3}'
 __NIP_PATTERN = r'\d{10}'
 
 
@@ -22,7 +22,8 @@ def get_row_index_by_pattern(matching_block: MatchingBlock, pattern: dict) -> tu
 
 def get_zip_code_row_index(rows: list[TextPosition]) -> int:
     for row_index, row in enumerate(rows):
-        if check_regex_for_single_word(__ZIP_CODE_PATTERN, 3, row.text):
+        # Allowed_errors_number = 0 due to the fact that combinations like 12/137 are too common in the address
+        if check_regex_for_single_word(__ZIP_CODE_PATTERN, 0, row.text):
             return row_index
     return -1
 

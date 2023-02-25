@@ -82,7 +82,7 @@ def _find_closest_block_on_the_right(all_blocks, key_row_position, row_starting_
 def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x):
     """ Finding the closest block below the block with the key word based on the position of the key words row """
 
-    threshold = 200
+    threshold = 300
     extended_row_starting_x = row_starting_x - threshold
     extended_row_ending_x = row_ending_x + threshold
     try:
@@ -90,7 +90,7 @@ def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_en
                                                extended_row_starting_x, extended_row_ending_x)
     except IndexError:
         block_below = _get_closest_block_below(all_blocks, key_row_position,
-                                               extended_row_starting_x, extended_row_ending_x)
+                                               row_starting_x, row_ending_x)
     return block_below
 
 

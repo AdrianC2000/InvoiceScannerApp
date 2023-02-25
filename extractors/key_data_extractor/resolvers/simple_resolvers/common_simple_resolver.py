@@ -21,7 +21,7 @@ class CommonSimpleResolver(CommonResolver):
 
         if alleged_key_value_index < len(row_with_key_word_words):
             alleged_key_value = row_with_key_word_words[alleged_key_value_index]
-            if self._check_key_value(alleged_key_value):
+            if self._check_key_value(alleged_key_value_index, row_with_key_word_words):
                 return SearchResponse(self._key_word, alleged_key_value, ValueFindingStatus.FOUND,
                                       self._row_with_key_word.position)
         else:
@@ -30,5 +30,5 @@ class CommonSimpleResolver(CommonResolver):
         return self._search_key_value_in_given_row(1)
 
     @abstractmethod
-    def _check_key_value(self, word: str):
+    def _check_key_value(self, alleged_key_value_index: int, alleged_row_text: list[str]) -> bool:
         pass

@@ -44,8 +44,8 @@ class PersonInfoResolver:
         return -1
 
     def _get_nip_row_index(self):
-        row_index, last_word_index = get_row_index_by_pattern(self.__matching_block, NIP_PATTERN)
-        return get_nip_row_index(row_index, self.__matching_block.block.rows), last_word_index
+        nip_row_index, nip_word_index = get_row_index_by_pattern(self.__matching_block, NIP_PATTERN)
+        return get_nip_row_index(nip_row_index, self.__matching_block.block.rows), nip_word_index
 
     @staticmethod
     def _fit_address_row_index(address_row_index, nip_row_index):

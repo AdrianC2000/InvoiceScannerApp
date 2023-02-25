@@ -37,6 +37,3 @@ class SearchResponse:
     @row_position.setter
     def row_position(self, row_position: Position):
         self.__row_position = row_position
-
-    def __repr__(self):
-        return '(%r, %r)' % (self.__key_word, self.__value)
