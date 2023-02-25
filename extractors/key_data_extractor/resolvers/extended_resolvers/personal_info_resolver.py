@@ -1,14 +1,16 @@
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.key_data_processing.search_response import SearchResponse
-from extractors.key_data_extractor.resolvers.extended_resolvers.constants_key_words import ADDRESS_PATTERN, NIP_PATTERN
-from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creators.full_response_creator import \
-    FullResponseCreator
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creators.full_response_creator \
+    import FullResponseCreator
 from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_utils import \
     get_nip_row_index, get_zip_code_row_index, get_row_index_by_pattern
 from extractors.key_data_extractor.resolvers.resolver_utils import has_numbers
 
 
 class PersonInfoResolver:
+
+    __ADDRESS_PATTERNS = ["ul", "al", "os"]
+    __NIP_PATTERNS = ["nip"]
 
     def __init__(self, matching_block: MatchingBlock, person_type: str, is_preliminary: bool):
         self.__matching_block = matching_block
@@ -30,7 +32,7 @@ class PersonInfoResolver:
         return self.get_final_response(max_address_and_zip_code, nip_row_index, personal_info_response_creator)
 
     def _get_address_row_index(self):
-        row_index, _ = get_row_index_by_pattern(self.__matching_block, ADDRESS_PATTERN)
+        row_index, _ = get_row_index_by_pattern(self.__matching_block, self.__ADDRESS_PATTERNS)
         return row_index if row_index != -1 else self._get_address_row_if_not_found()
 
     def _get_address_row_if_not_found(self):
@@ -44,7 +46,7 @@ class PersonInfoResolver:
         return -1
 
     def _get_nip_row_index(self):
-        nip_row_index, nip_word_index = get_row_index_by_pattern(self.__matching_block, NIP_PATTERN)
+        nip_row_index, nip_word_index = get_row_index_by_pattern(self.__matching_block, self.__NIP_PATTERNS)
         return get_nip_row_index(nip_row_index, self.__matching_block.block.rows), nip_word_index
 
     @staticmethod

@@ -9,7 +9,7 @@ from extractors.value_finding_status import ValueFindingStatus
 class CommonResolver(ABC):
 
     def __init__(self, matching_block: MatchingBlock):
-        self._key_word = matching_block.confidence_calculation.value
+        self._key_word = matching_block.key_word
         self._all_rows = matching_block.block.rows
         self._search_row_index = matching_block.row_index
         self._row_with_key_word = self._all_rows[0]

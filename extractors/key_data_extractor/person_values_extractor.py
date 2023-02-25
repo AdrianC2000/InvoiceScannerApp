@@ -1,14 +1,14 @@
 import logging
 
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
 from entities.key_data_processing.search_response import SearchResponse
 from entities.common.text_position import TextPosition
 from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_resolver import PersonInfoResolver
-from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creators.full_response_creator import \
-    create_common_not_found_response
-from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_utils import calculate_common_data_position
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_response_creators.full_response_creator \
+    import create_common_not_found_response
+from extractors.key_data_extractor.resolvers.extended_resolvers.personal_info_utils import \
+    calculate_common_data_position
 from extractors.key_data_extractor.resolvers.resolver_utils import remove_redundant_lines, \
     get_closest_block_on_the_right, get_closest_block_below
 from extractors.value_finding_status import ValueFindingStatus
@@ -25,9 +25,8 @@ class PersonValuesExtractor:
     def preliminary_extract_key_values(self) -> list[SearchResponse]:
         person_key_values = list()
         for block in self.__matching_blocks_with_keywords:
-            keyword = block.confidence_calculation.value
             block = remove_redundant_lines(block)
-            responses = PersonInfoResolver(block, keyword, True).get_person_info()
+            responses = PersonInfoResolver(block, block.key_word, True).get_person_info()
             person_key_values.extend(responses)
         logging.info("Preliminary search:")
         for person_key_values_response in person_key_values:
@@ -94,7 +93,7 @@ class PersonValuesExtractor:
     def _process_adjacent_block(adjacent_block: BlockPosition, key_row_position: Position, key_word: str) \
             -> list[SearchResponse]:
         if adjacent_block is not None:
-            matching_below_block = MatchingBlock(adjacent_block, ConfidenceCalculation(key_word, 1), 0, 0)
+            matching_below_block = MatchingBlock(adjacent_block, key_word, 0, 0)
             return PersonInfoResolver(matching_below_block, key_word, False).get_person_info()
         else:
             return create_common_not_found_response(key_word, ValueFindingStatus.VALUE_MISSING, key_row_position)

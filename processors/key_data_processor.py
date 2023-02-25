@@ -50,7 +50,7 @@ class KeyDataProcessor:
 
         blocks_with_key_words, blocks_with_personal_data = [], []
         for block in blocks:
-            if block.confidence_calculation.value in ['buyer', 'seller']:
+            if block.key_word in ['buyer', 'seller']:
                 blocks_with_personal_data.append(block)
             else:
                 blocks_with_key_words.append(block)

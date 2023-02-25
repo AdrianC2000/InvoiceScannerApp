@@ -49,19 +49,6 @@ def process_all_word_patterns(all_patterns: list[str], word: str) -> float:
     return best_actual_word_compatibility
 
 
-def process_all_row_for_single_pattern(all_patterns_words, word):
-    """ Given all words contained in a single pattern set and a word check if the word exists in the pattern words """
-    best_actual_word_compatibility, best_actual_pattern_word = 0, ""
-    for pattern_word in all_patterns_words:
-        compatibility = ratio(word, pattern_word)
-        if compatibility > best_actual_word_compatibility:
-            best_actual_word_compatibility = compatibility
-            best_actual_pattern_word = pattern_word
-            if compatibility > 0.9:
-                break
-    return best_actual_word_compatibility, best_actual_pattern_word
-
-
 def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
                                outer_object_ending: int) -> float:
     """ Given object coordinates in one dimension calculate the percentage of inclusion in another given object,

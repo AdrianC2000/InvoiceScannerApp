@@ -1,12 +1,11 @@
 import json
 
+from Levenshtein import ratio
 from numpy import ndarray
+from entities.common.text_position import TextPosition
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.key_data_processing.block_position import BlockPosition
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
-from extractors.key_data_extractor.resolvers.resolver_utils import find_best_data_fit
-from invoice_processing_utils.common_utils import save_image_with_bounding_boxes, process_all_row_for_single_pattern, \
-    prepare_word
+from invoice_processing_utils.common_utils import save_image_with_bounding_boxes, prepare_word
 
 
 class BlockClassifier:
@@ -30,7 +29,7 @@ class BlockClassifier:
         with open('classifiers/block_classifier/key_words_database.json', mode="r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _get_all_blocks_with_key_words(self, data_patterns):
+    def _get_all_blocks_with_key_words(self, data_patterns: dict) -> list[MatchingBlock]:
         matching_blocks = list()
         for patterns_set in data_patterns.items():
             # Matching block to every pattern set
@@ -44,29 +43,41 @@ class BlockClassifier:
                     break
         return matching_blocks
 
-    def _search_block_matching_actual_pattern(self, patterns, column_pattern_name) \
+    def _search_block_matching_actual_pattern(self, patterns: dict, column_pattern_name: str) \
             -> MatchingBlock or None:
         """ Iterate over block lines to check if it matches the pattern_words. """
         for block in self.__block_positions:
             for row_index, row in enumerate(block.rows):
                 last_word_index = self._search_through_row(row, patterns)
                 if last_word_index != -1:
-                    return MatchingBlock(block, ConfidenceCalculation(column_pattern_name, 1), row_index,
-                                         last_word_index)
+                    return MatchingBlock(block, column_pattern_name, row_index, last_word_index)
         return None
 
-    @staticmethod
-    def _search_through_row(row, patterns) -> int:
+    def _search_through_row(self, row: TextPosition, patterns: dict) -> int:
         """ Check if actual row matches actual pattern set. If the return is different that -1 it means that row
             matches the actual pattern set. """
         all_pattern_words, enough_fit = patterns.get('patterns'), patterns.get('enough_fit')
         enough_fit_counter = 0
         for word_index, word in enumerate(row.text.split(" ")):
             best_word_compatibility, best_actual_pattern_word = \
-                process_all_row_for_single_pattern(all_pattern_words, prepare_word(word))
+                self._check_word_compatibility_for_patterns_words(all_pattern_words, prepare_word(word))
             if best_word_compatibility > 0.8:
                 enough_fit_counter += 1
                 if enough_fit_counter == enough_fit:
                     return word_index
         # The enough fit condition not met
         return -1
+
+    @staticmethod
+    def _check_word_compatibility_for_patterns_words(all_patterns_words: list[str], word: str) -> tuple[float, str]:
+        """ Given all words contained in a single pattern set and a word check if the word exists in the pattern
+            words. """
+        best_actual_word_compatibility, best_actual_pattern_word = 0, ""
+        for pattern_word in all_patterns_words:
+            compatibility = ratio(word, pattern_word)
+            if compatibility > best_actual_word_compatibility:
+                best_actual_word_compatibility = compatibility
+                best_actual_pattern_word = pattern_word
+                if compatibility > 0.9:
+                    break
+        return best_actual_word_compatibility, best_actual_pattern_word

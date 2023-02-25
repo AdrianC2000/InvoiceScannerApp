@@ -1,6 +1,5 @@
 import logging
 
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.key_data_processing.search_response import SearchResponse
 from extractors.key_data_extractor.resolvers.simple_resolvers.currency_resolver import CurrencyResolver
@@ -46,9 +45,8 @@ class KeyValuesExtractor:
         preliminary_key_values_search_responses = list()
         logging.info("Preliminary key values search:")
         for block in self.__matching_blocks_with_keywords:
-            keyword = block.confidence_calculation.value
             block = remove_redundant_lines(block)
-            response = self.__methods[keyword](block, True)
+            response = self.__methods[block.key_word](block, True)
             preliminary_key_values_search_responses.append(response)
             logging.info(f'{response.key_word} -> {response.status} => {response.value}')
 
@@ -87,7 +85,7 @@ class KeyValuesExtractor:
         block_on_the_right = get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y)
         if block_on_the_right is not None:
             index = self._get_right_block_corresponding_row_index(block_on_the_right, row_ending_y, row_starting_y)
-            matching_right_block = MatchingBlock(block_on_the_right, ConfidenceCalculation(key_word, 1), index, 0)
+            matching_right_block = MatchingBlock(block_on_the_right, key_word, index, 0)
             return self.__methods[key_word](matching_right_block, False)
         else:
             response.status = ValueFindingStatus.VALUE_MISSING
@@ -114,7 +112,7 @@ class KeyValuesExtractor:
         row_starting_x, row_ending_x = key_row_position.starting_x, key_row_position.ending_x
         block_below = get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x)
         if block_below is not None:
-            matching_below_block = MatchingBlock(block_below, ConfidenceCalculation(key_word, 1), 0, 0, 0)
+            matching_below_block = MatchingBlock(block_below, key_word, 0, 0)
             return self.__methods[key_word](matching_below_block, False)
         else:
             response.status = ValueFindingStatus.VALUE_MISSING
