@@ -94,7 +94,7 @@ class PersonValuesExtractor:
     def _process_adjacent_block(adjacent_block: BlockPosition, key_row_position: Position, key_word: str) \
             -> list[SearchResponse]:
         if adjacent_block is not None:
-            matching_below_block = MatchingBlock(adjacent_block, ConfidenceCalculation(key_word, 1), 0, 0, 0)
+            matching_below_block = MatchingBlock(adjacent_block, ConfidenceCalculation(key_word, 1), 0, 0)
             return PersonInfoResolver(matching_below_block, key_word, False).get_person_info()
         else:
             return create_common_not_found_response(key_word, ValueFindingStatus.VALUE_MISSING, key_row_position)

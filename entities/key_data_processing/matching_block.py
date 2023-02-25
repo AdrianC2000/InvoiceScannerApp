@@ -5,11 +5,10 @@ from entities.key_data_processing.block_position import BlockPosition
 class MatchingBlock:
 
     def __init__(self, block: BlockPosition, confidence_calculation: ConfidenceCalculation, row_index: int,
-                 patterns_set_index: int, last_word_index: int):
+                 last_word_index: int):
         self.__block = block
         self.__confidence_calculation = confidence_calculation
         self.__row_index = row_index
-        self.__patterns_set_index = patterns_set_index
         self.__last_word_index = last_word_index
 
     @property
@@ -27,10 +26,6 @@ class MatchingBlock:
     @property
     def row_index(self) -> int:
         return self.__row_index
-
-    @property
-    def patterns_set_index(self) -> int:
-        return self.__patterns_set_index
 
     @property
     def last_word_index(self) -> int:

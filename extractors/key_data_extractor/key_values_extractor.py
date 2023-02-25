@@ -87,7 +87,7 @@ class KeyValuesExtractor:
         block_on_the_right = get_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y)
         if block_on_the_right is not None:
             index = self._get_right_block_corresponding_row_index(block_on_the_right, row_ending_y, row_starting_y)
-            matching_right_block = MatchingBlock(block_on_the_right, ConfidenceCalculation(key_word, 1), index, 0, 0)
+            matching_right_block = MatchingBlock(block_on_the_right, ConfidenceCalculation(key_word, 1), index, 0)
             return self.__methods[key_word](matching_right_block, False)
         else:
             response.status = ValueFindingStatus.VALUE_MISSING

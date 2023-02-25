@@ -17,26 +17,30 @@
       "enough_fit": 3
     },
     {
-      "patterns": ["faktura", "vat"],
+      "patterns": ["faktura", "nr", "numer"],
       "enough_fit": 2
     },
     {
-      "patterns": ["faktura", "nr", "numer"],
+      "patterns": ["faktura", "vat"],
       "enough_fit": 2
     },
     {
       "patterns": ["numer", "nr", "faktury"],
       "enough_fit": 2
+    },
+    {
+      "patterns": ["faktura"],
+      "enough_fit": 1
     }
   ],
   "currency": [
     {
-      "patterns": ["waluta"],
-      "enough_fit": 1
-    },
-    {
       "patterns": ["do", "zapłaty"],
       "enough_fit": 2
+    },
+    {
+      "patterns": ["waluta", "zapłacono"],
+      "enough_fit": 1
     }
   ],
   "listing_date": [
