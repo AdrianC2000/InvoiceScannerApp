@@ -29,12 +29,12 @@ Data that is extracted by the application includes two main categories:
     * currency
 ### Application's user interface functionalities
 There are three main panels:
-1. <b> Main view panel </b>, where user can sumbit the invoices, and receive the extracted data. Here are the navigation buttons for the configuration panel and the data sending panel. 
-2. <b> Configuration panel </b>, where user can specify three categories of settings:
-  2.1 Endpoint configuration
-  2.2 Request headers configuration 
-  2.3 Data configuration - user can select which values should be omitted, what keys should be used and add some other options, like empty data removal.
-3. <b> External API response panel </b> - after sending the data to the given endpoint panel presents the JSON that was received as a response. 
+1. <b> Main view panel, </b> where user can sumbit the invoices, and receive the extracted data. Here are the navigation buttons for the configuration panel and the data sending panel. 
+2. <b> Configuration panel, </b> where user can specify three categories of settings:
+   1. Endpoint configuration
+   2. Request headers configuration 
+   3. Data configuration - user can select which values should be omitted, what keys should be used and add some other options, like empty data removal.
+3. <b> External API response panel, </b> - where after sending the data to the given endpoint JSON that was received as a response is presented.
 
 ## Invoice documents requirements
 
