@@ -34,7 +34,7 @@ There are three main panels:
    1. Endpoint configuration
    2. Request headers configuration 
    3. Data configuration - user can select which values should be omitted, what keys should be used and add some other options, like empty data removal.
-3. <b> External API response panel, </b> - where after sending the data to the given endpoint JSON that was received as a response is presented.
+3. <b> External API response panel, </b> where after sending the data to the given endpoint JSON that was received as a response is presented.
 
 ## Invoice documents requirements
 
