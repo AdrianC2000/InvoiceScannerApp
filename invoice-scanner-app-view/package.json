@@ -45,7 +45,7 @@
     "react-drag-drop-files": "^2.3.7",
     "react-modal": "^3.16.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
+    "react-scripts": "5.0.1",
     "react-spinning-wheel": "^2.1.0",
     "react-window": "^1.8.8",
     "reactjs-popup": "^2.0.5"
@@ -86,7 +86,7 @@
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "react-dropzone": "^14.2.3",
-    "wait-on": "^3.3.0",
+    "wait-on": "^7.0.1",
     "web-vitals": "^3.0.4"
   }
 }
