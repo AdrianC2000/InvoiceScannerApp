@@ -43,6 +43,7 @@ There are three main panels:
 4. Invoice contains typical words and phrases which allow the invoice to be parsed.
 
 ## 4. Project structure
+<img src="https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/application_structure.png"  width="50%" height="50%"> <br> <br>
 ### Backend
 Implemented with Python 3.9 and libraries such as:
 * open-cv
