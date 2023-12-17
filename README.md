@@ -29,7 +29,7 @@ Data that is extracted by the application includes two main categories:
     * currency
 ### Application's user interface functionalities
 There are three main panels:
-1. <b> Main view panel, </b> where user can sumbit the invoices, and receive the extracted data. Here are the navigation buttons for the configuration panel and the data sending panel. 
+1. <b> Main view panel, </b> where user can submit the invoices, and receive the extracted data. Here are the navigation buttons for the configuration panel and the data sending panel. 
 2. <b> Configuration panel, </b> where user can specify three categories of settings:
    1. Endpoint configuration
    2. Request headers configuration 
@@ -37,17 +37,37 @@ There are three main panels:
 3. <b> External API response panel, </b> where after sending the data to the given endpoint JSON that was received as a response is presented.
 
 ## 3. Invoice documents requirements
-1. Presented version supports only invoices in polish language (but switching the app to handle new language is pretty straightforward and required changes that are described in the *file* file). 
-2. Table product contains borders - bordeless tables are currently not supported.
-3. Only supported file types are jpg, png and pdf - for pdf files each page is processed as separated invoice (multipage invoices are not supported). 
+1. Presented version supports only invoices in Polish language (but switching the app to handle new language is pretty straightforward and requires changes that will be described in this *file*). 
+2. Table product contains borders - borderless tables are currently not supported. (this feature is on the roadmap :)
+3. Only supported file types are jpg, png and pdf - for pdf files each page is processed as separated invoice (multi page invoices are not supported yet). 
 4. Invoice contains typical words and phrases which allow the invoice to be parsed.
 
 ## 4. Project structure
 ### Backend
+Implemented with Python 3.9 and libraries such as:
+* open-cv
+* numpy
+* pillow
+* Levenshtein
+* Google Cloud Vision OCR
+
 ### API
+Implemented with Flask, serves as a communication point between the backend and UI. 
+
 ### Frontend
+Implemented with electron.js and react frameworks, so that the application can run as a desktop app. 
 
 ## 5. Tests
+Tests are available here - put some of your invoices in the ```tests/invoice_parsing_end_to_end_tests/app_testing_set/``` and run tests from the ```invoices_parsing_tests.py``` file. 
+Tests output will be available in the ```tests/invoice_parsing_end_to_end_tests/outputs/invoice_output_set``` and ```tests/invoice_parsing_end_to_end_tests/outputs```
+
+For more information about the project and its implementation checkout [projects wiki](https://github.com/AdrianC2000/InvoiceScannerApp/wiki)
 
 ## 6. Future work
+Most important features that are researched:
+* Borderless products table processing 
+* New languages handling
+* Multi page invoices support
+* Additional panel letting user fast verification of the extracted data
+
 Application is still under the development - more features and functionalities to come!

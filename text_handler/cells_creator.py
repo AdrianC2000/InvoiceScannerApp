@@ -31,9 +31,9 @@ class CellsCreator:
         empty_cells = list()
         columns_number = len(self.__cells_in_columns)
         rows_number = len(self.__cells_in_columns[0].cells)
-        for row in range(rows_number):
+        for _ in range(rows_number):
             cell = list()
-            for column in range(columns_number):
+            for _ in range(columns_number):
                 cell.append(list())
             empty_cells.append(cell)
         logging.info(f'Columns number: {columns_number}, Rows number: {rows_number}')
@@ -41,6 +41,7 @@ class CellsCreator:
 
     def _check_column_belonging(self, coordinates: Position) -> tuple[int, float]:
         """ Calculating which column is given cell in """
+
         for index, column in enumerate(self.__cells_in_columns):
             column_starting_x = column.cells[0].starting_x
             column_ending_x = column.cells[0].starting_x + column.cells[0].ending_x
