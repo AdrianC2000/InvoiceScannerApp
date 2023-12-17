@@ -7,7 +7,6 @@ Application implementation was the subject of an engineering thesis defended in 
 ## 2. Functionalities
 ### Extracted data
 Data that is extracted by the application includes two main categories:
-![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/table_data_extraction.gif) <br> <br>
 1. <b> Products table data </b> - for each position following data is searched:
     * ordinal number
     * name
@@ -20,7 +19,8 @@ Data that is extracted by the application includes two main categories:
     * net value
     * vat
     * vat value
-![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/key_data_extraction.gif) <br> <br>
+![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/table_data_extraction.gif) <br>
+
 2. <b> Key values </b>:
     * data for buyes and seller:
       * name
@@ -29,9 +29,12 @@ Data that is extracted by the application includes two main categories:
     * listing date
     * invoice id
     * currency
-Sample input invoice presented on the gifs:
-![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/test_invoice.png) <br> <br>
-Sample output:
+![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/key_data_extraction.gif) <br>
+
+### Sample input invoice presented on the gifs:
+![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/test_invoice.png)
+
+### Sample output:
 ```json
 {
     "buyer_address": "al. Kijowska 50 33-120 Kraków",
@@ -89,12 +92,15 @@ Sample output:
 
 ### Application's user interface functionalities
 There are three main panels:
-1. <b> Main view panel, </b> where user can submit the invoices, and receive the extracted data. Here are the navigation buttons for the configuration panel and the data sending panel. 
-2. <b> Configuration panel, </b> where user can specify three categories of settings:
+1. <b> Main view panel, </b> where user can submit the invoices, and receive the extracted data. Here are the navigation buttons for the configuration panel and the data sending panel.
+![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/main_panel.png) <br>
+3. <b> Configuration panel, </b> where user can specify three categories of settings:
    1. Endpoint configuration
    2. Request headers configuration 
    3. Data configuration - user can select which values should be omitted, what keys should be used and add some other options, like empty data removal.
-3. <b> External API response panel, </b> where after sending the data to the given endpoint JSON that was received as a response is presented.
+![settings panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/settings_panel.png) <br>
+4. <b> External API response panel, </b> where after sending the data to the given endpoint JSON that was received as a response is presented.
+![response panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/response_panel.png)
 
 ## 3. Invoice documents requirements
 1. Presented version supports only invoices in Polish language (but switching the app to handle new language is pretty straightforward and requires changes that will be described in this *file*). 
@@ -117,13 +123,6 @@ Implemented with Flask, serves as a communication point between the backend and 
 
 ### Frontend
 Implemented with electron.js and react frameworks, so that the application can run as a desktop app. 
-Consists of 3 main panels:
-1. Main panel, where user can add the invoices and get the results
-![main panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/main_panel.png) <br> <br>
-2. Settings panel, where user can provide external endpoint data and set the output data format
-![settings panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/settings_panel.png) <br> <br>
-3. Response panel, where user can see the response from the external API
-![response panel](https://github.com/AdrianC2000/InvoiceScannerApp/blob/main/docs_images/response_panel.png) <br> <br>
 
 ## 5. Tests
 Tests are available here - put some of your invoices in the ```tests/invoice_parsing_end_to_end_tests/app_testing_set/``` and run tests from the ```invoices_parsing_tests.py``` file. 
