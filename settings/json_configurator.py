@@ -20,7 +20,7 @@ class JsonConfigurator:
         self.__invoices_info = json.loads(invoices_info)
 
     def customize_json(self) -> str:
-        """ Customize given invoice_info by the currently settings. """
+        """ Customize given invoice_info by the current settings. """
         configuration = get_configuration()['data_configuration']
 
         for setting_key, setting_value in configuration.items():

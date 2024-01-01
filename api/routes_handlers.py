@@ -1,30 +1,32 @@
-import json
 import os
+import re
+
+from werkzeug.datastructures import FileStorage
 
 from entities.common.invoice_info_response import InvoiceInfoResponse
-from invoice_processing_utils.format_unifier import FormatUnifier
 from processors.invoice_info_processor import InvoiceInfoProcessor
-from settings.settings import dump_to_json
 
 
-def get_invoices_info(invoices_files) -> json:
+def get_invoices_info(invoices_files: list[FileStorage]) -> dict[str, InvoiceInfoResponse]:
     """ Method returns list of all InvoiceInfoResponse transformed into a json """
-    all_invoices_info = list()
+    all_invoices_responses = dict()
+    entire_flow_directory = f"{os.getcwd()}/resources/entire_flow/"
+    invoice_processor = InvoiceInfoProcessor(entire_flow_directory)
     for file in invoices_files:
-        file_name = file.filename
-        directory = f"{os.getcwd()}/resources/entire_flow/{file_name}/"
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        invoice = FormatUnifier(directory, file).unify_format()
-        invoice_info_response = InvoiceInfoProcessor(invoice, directory).extract_info()
-        content = get_response(file_name, invoice_info_response)
-        all_invoices_info.append(content)
-    all_invoices_info_json = dump_to_json(all_invoices_info)
-    return all_invoices_info_json
+        invoice_info_response = invoice_processor.extract_info(file)
+        if file.filename not in all_invoices_responses.keys():
+            all_invoices_responses[file.filename] = invoice_info_response
+        else:
+            duplicated_filename = _get_duplicated_filename(all_invoices_responses, file.filename)
+            all_invoices_responses[duplicated_filename] = invoice_info_response
+    return all_invoices_responses
 
 
-def get_response(file_name: str, invoice_info_response: InvoiceInfoResponse) -> dict:
-    response_value = invoice_info_response.invoice_info if str(invoice_info_response.status)[0] == '2' else \
-        invoice_info_response.message
-    return {file_name: response_value}
+def _get_duplicated_filename(all_invoices_responses: dict[str, InvoiceInfoResponse], filename: str):
+    pattern = re.compile(fr'{filename} \((\d+)\)')
+    filtered_dict = {key: value for key, value in all_invoices_responses.items() if pattern.match(key)}
+    if not filtered_dict:
+        return f'{filename} (1)'
+    numbers = [int(pattern.match(key).group(1)) for key in filtered_dict.keys() if pattern.match(key)]
+    max_number = max(numbers)
+    return f'my_variable ({max_number + 1})'
