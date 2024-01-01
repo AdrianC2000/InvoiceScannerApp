@@ -1,0 +1,150 @@
+{
+    "swagger": "2.0",
+    "basePath": "/",
+    "paths": {
+        "/healthcheck/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Check if application is up",
+                "operationId": "get_health_check",
+                "tags": [
+                    "healthcheck"
+                ]
+            }
+        },
+        "/invoices/": {
+            "post": {
+                "responses": {
+                    "415": {
+                        "description": "One of the files is in the wrong format"
+                    },
+                    "206": {
+                        "description": "Some of the results are not complete due to the input bad format - check messages for details"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Processing multiple invoices",
+                "operationId": "post_invoices",
+                "parameters": [
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "type": "array",
+                        "required": true,
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "multi"
+                    }
+                ],
+                "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "invoices"
+                ]
+            }
+        },
+        "/request/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Send request with your invoice info to endpoint from settings.",
+                "operationId": "post_request",
+                "tags": [
+                    "request"
+                ]
+            }
+        },
+        "/settings/": {
+            "post": {
+                "responses": {
+                    "304": {
+                        "description": "Not modified"
+                    },
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Set new settings",
+                "operationId": "post_settings",
+                "tags": [
+                    "settings"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Get actual settings",
+                "operationId": "get_settings",
+                "tags": [
+                    "settings"
+                ]
+            }
+        },
+        "/settings/customize_json": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Customize extracted invoice information by the current settings.",
+                "operationId": "post_settings_customize_json",
+                "tags": [
+                    "settings"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Invoice Scanner API",
+        "version": "1.0",
+        "description": "Backend API"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "healthcheck",
+            "description": "Health check"
+        },
+        {
+            "name": "invoices",
+            "description": "Invoices processing"
+        },
+        {
+            "name": "settings",
+            "description": "Settings handling"
+        },
+        {
+            "name": "request",
+            "description": "External API requests handling"
+        }
+    ],
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }
+    }
+}
