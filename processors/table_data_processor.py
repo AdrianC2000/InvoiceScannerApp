@@ -16,8 +16,11 @@ class TableDataProcessor:
 
     __INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX = "10.Invoice without table.png"
 
+    def __init__(self):
+        self.__table_extractor = TableExtractor()
+
     def extract_table_data(self, invoice: ndarray) -> tuple[ParsedTable, ndarray]:
-        table_position = TableExtractor(invoice).extract_table()
+        table_position = self.__table_extractor.extract_table(invoice)
         rotated_table, cells_in_columns = ColumnsSeperator(table_position.table_image).separate_cells_in_columns()
         self._check_columns(cells_in_columns)
 

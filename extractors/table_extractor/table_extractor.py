@@ -13,22 +13,20 @@ class TableExtractor:
 
     __EXTRACTED_TABLE_OUTPUT_PATH_PREFIX = "2.Extracted table.png"
 
-    def __init__(self, gray_invoice: ndarray):
-        self.__gray_invoice = gray_invoice
+    def extract_table(self, gray_invoice: ndarray) -> TablePosition:
+        contours = self._get_contours(gray_invoice)
+        return self._find_table(gray_invoice, contours, 2000)
 
-    def extract_table(self) -> TablePosition:
-        contours = self._get_contours()
-        return self._find_table(contours, 2000)
-
-    def _get_contours(self) -> tuple[ndarray]:
-        _, thr = cv2.threshold(self.__gray_invoice, 200, 255, cv2.THRESH_BINARY)
+    @staticmethod
+    def _get_contours(gray_invoice: ndarray) -> tuple[ndarray]:
+        _, thr = cv2.threshold(gray_invoice, 200, 255, cv2.THRESH_BINARY)
         # Morphological closure
         close = cv2.morphologyEx(255 - thr, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
         # Finding outer contours
         contours, _ = cv2.findContours(close, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         return contours
 
-    def _find_table(self, contours: tuple[ndarray], biggest_area: int) -> TablePosition:
+    def _find_table(self, gray_invoice: ndarray, contours: tuple[ndarray], biggest_area: int) -> TablePosition:
         table = list()
         x, y, width, height = 0, 0, 0, 0
         for cnt in contours:
@@ -36,13 +34,14 @@ class TableExtractor:
             if area > biggest_area:
                 biggest_area = area
                 x, y, width, height = cv2.boundingRect(cnt)
-                table = self._assign_table(height, width, x, y)
+                table = self._assign_table(gray_invoice, height, width, x, y)
         save_image(self.__EXTRACTED_TABLE_OUTPUT_PATH_PREFIX, table)
         logging.info(f'Table extracted -> position {x, y, x + width, y + height}')
         return TablePosition(table, Position(x, y, x + width, y + height))
 
-    def _assign_table(self, height, width, x, y):
+    @staticmethod
+    def _assign_table(gray_invoice: ndarray, height, width, x, y):
         try:
-            return self.__gray_invoice[y - 2:y + height + 2, x - 2:x + width + 2]
+            return gray_invoice[y - 2:y + height + 2, x - 2:x + width + 2]
         except IndexError:
-            return self.__gray_invoice[y:y + height, x:x + width]
+            return gray_invoice[y:y + height, x:x + width]
