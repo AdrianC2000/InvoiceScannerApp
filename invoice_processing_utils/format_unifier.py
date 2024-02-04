@@ -8,7 +8,7 @@ from PIL import Image
 from settings.config_consts import ConfigConsts
 
 
-class FormatUnifier:
+class InvoiceFormatUnifier:
     def __init__(self, invoice_directory_path: str):
         self.__invoice_directory_path = invoice_directory_path
 

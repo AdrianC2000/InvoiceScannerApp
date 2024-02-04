@@ -16,11 +16,8 @@ class TableDataProcessor:
 
     __INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX = "10.Invoice without table.png"
 
-    def __init__(self, invoice: ndarray):
-        self.__invoice = invoice
-
-    def extract_table_data(self) -> tuple[ParsedTable, ndarray]:
-        table_position = TableExtractor(self.__invoice).extract_table()
+    def extract_table_data(self, invoice: ndarray) -> tuple[ParsedTable, ndarray]:
+        table_position = TableExtractor(invoice).extract_table()
         rotated_table, cells_in_columns = ColumnsSeperator(table_position.table_image).separate_cells_in_columns()
         self._check_columns(cells_in_columns)
 
@@ -30,7 +27,7 @@ class TableDataProcessor:
         columns_ordered = HeadersClassifier(cells_in_row_content[0]).find_corresponding_columns()
         self._check_confidences(columns_ordered)
 
-        invoice_table_removed = TableRemover(self.__invoice, table_position.position, rotated_table).remove_table()
+        invoice_table_removed = TableRemover(invoice, table_position.position, rotated_table).remove_table()
         save_image(self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
 
         table = TableParser(columns_ordered, cells_in_row_content).get_table_content()

@@ -19,10 +19,11 @@ class KeyDataProcessor:
     __FINAL_SEARCH_OUTPUT_PATH_PREFIX = "14.Final search.png"
     __COMBINE_SEARCH_OUTPUT_PATH_PREFIX = "15.Combine search.png"
 
-    def __init__(self, invoice: ndarray):
-        self.__invoice = invoice
+    def __init__(self):
+        self.__invoice = None
 
-    def extract_key_data(self) -> KeyData:
+    def extract_key_data(self, invoice: ndarray) -> KeyData:
+        self.__invoice = invoice
         key_values_extractor, person_values_extractor = self._get_values_extractors()
 
         preliminary_extracted_keys_values, preliminary_extracted_person_values = \

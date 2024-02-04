@@ -12,11 +12,8 @@ class InvoiceStraightener:
 
     __STRAIGHTENED_INVOICE_OUTPUT_PATH_PREFIX = "1.Rotated invoice.png"
 
-    def __init__(self, invoice_image: ndarray):
-        self.__invoice_image = invoice_image
-
-    def straighten_image(self) -> ndarray:
-        invoice_grayscale = cv2.cvtColor(self.__invoice_image.astype(np.uint8), cv2.COLOR_BGR2GRAY)
+    def straighten_image(self, invoice_image: ndarray) -> ndarray:
+        invoice_grayscale = cv2.cvtColor(invoice_image.astype(np.uint8), cv2.COLOR_BGR2GRAY)
         angle = determine_skew(invoice_grayscale)
         invoice_image = Image.fromarray(invoice_grayscale)
         rotated_invoice = np.array(invoice_image.rotate(angle, resample=Image.BICUBIC, expand=True, fillcolor=255))
