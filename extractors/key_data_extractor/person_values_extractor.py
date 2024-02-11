@@ -43,10 +43,8 @@ class PersonValuesExtractor:
         found_key_words = [response.key_word for response in found_responses
                            if response.status == ValueFindingStatus.FOUND]
 
-        found_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words,
-                                                                      "seller"))
-        found_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words,
-                                                                      "buyer"))
+        found_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words, "seller"))
+        found_responses.extend(self._append_further_search_for_person(not_found_responses, found_key_words, "buyer"))
         return found_responses
 
     def _append_further_search_for_person(self, not_found_responses: list[SearchResponse],
