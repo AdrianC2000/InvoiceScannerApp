@@ -1,4 +1,3 @@
-from typing import Type
 from google.cloud.vision import TextAnnotation
 from google.cloud.vision_v1 import Block, Symbol
 from numpy import ndarray
@@ -20,21 +19,21 @@ class BlocksExtractor:
 
     def read_blocks(self) -> list[BlockPosition]:
         blocks_position, blocks_lines_with_position = [], []
-        break_type = TextAnnotation.DetectedBreak.BreakType
         response = get_ocr_response(self.__invoice)
 
         for page in response.full_text_annotation.pages:
             for block in page.blocks:
-                block_lines = self._process_single_block(block, break_type)
+                block_lines = self._process_single_block(block)
                 blocks_lines_with_position.append(BlockPosition(create_position(block.bounding_box), block_lines))
                 blocks_position.append(create_position(block.bounding_box))
         save_image_with_bounding_boxes(self.__invoice, self.__EXTRACTED_BLOCKS_AND_TEXT_OUTPUT_PATH_PREFIX,
                                        blocks_position)
         return blocks_lines_with_position
 
-    def _process_single_block(self, block: Block, break_type: Type[TextAnnotation.DetectedBreak.BreakType]) \
+    def _process_single_block(self, block: Block) \
             -> list[TextPosition]:
         line, block_lines, starting_position = "", [], None
+        break_type = TextAnnotation.DetectedBreak.BreakType
 
         for paragraph in block.paragraphs:
             for word in paragraph.words:
