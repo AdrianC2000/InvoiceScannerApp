@@ -45,7 +45,7 @@ class ContoursDefiner:
         thresh, table_contours_image = cv2.threshold(table_contours_image, 128, 255,
                                                      cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         # Detect contours for following box detection
-        contours, hierarchy = cv2.findContours(table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(table_contours_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         return table_contours_image, contours
 
     def fix_contours(self) -> ndarray:

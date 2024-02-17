@@ -1,6 +1,6 @@
 from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
-from columns_seperator.column_seperator import ColumnsSeperator
+from columns_seperator.columns_separator import ColumnsSeparator
 from entities.table_processing.parsed_table import ParsedTable
 from extractors.table_extractor.table_extractor import TableExtractor
 from invoice_processing_utils.common_utils import save_image
@@ -21,7 +21,7 @@ class TableDataProcessor:
 
     def extract_table_data(self, invoice: ndarray) -> tuple[ParsedTable, ndarray]:
         table_position = self.__table_extractor.extract_table(invoice)
-        rotated_table, cells_in_columns = ColumnsSeperator(table_position.table_image).separate_cells_in_columns()
+        rotated_table, cells_in_columns = ColumnsSeparator(table_position.table_image).separate_cells_in_columns()
         self._check_columns(cells_in_columns)
 
         text_with_position = TextReader(rotated_table).read_words()

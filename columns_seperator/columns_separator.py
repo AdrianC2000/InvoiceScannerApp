@@ -9,7 +9,7 @@ from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
 
 
-class ColumnsSeperator:
+class ColumnsSeparator:
     """ Separating columns from the given table """
 
     __BINARY_TABLE_PATH_PREFIX = "3.Binary table.png"
@@ -32,7 +32,7 @@ class ColumnsSeperator:
         contours_definer_on_rotated = ContoursDefiner(self.__table_image, self._image_to_binary())
 
         # Get original table contours
-        original_contours_image, original_table_contours = contours_definer_on_rotated.get_table_contours()
+        original_contours_image, _ = contours_definer_on_rotated.get_table_contours()
         save_image(self.__ORIGINALS_CONTOURS_OUTPUT_PATH_PREFIX, original_contours_image)
 
         fixed_table_contours_image = self._get_fixed_table_contours_image(contours_definer_on_rotated)
