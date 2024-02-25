@@ -3,7 +3,7 @@ import json
 from entities.table_processing.matching_header import MatchingHeader
 from entities.table_processing.parsed_table import ParsedTable
 from entities.table_processing.row_content import RowContent
-from parsers.json_encoder import JsonEncoder
+from invoice_processing_utils.parsers.json_encoder import JsonEncoder
 from entities.table_processing.table_item import TableProduct
 from settings.config_consts import ConfigConsts
 

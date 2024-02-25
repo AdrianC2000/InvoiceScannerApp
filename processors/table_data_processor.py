@@ -4,8 +4,8 @@ from columns_seperator.columns_separator import ColumnsSeparator
 from entities.table_processing.parsed_table import ParsedTable
 from extractors.table_extractor.table_extractor import TableExtractor
 from invoice_processing_utils.common_utils import save_image
+from invoice_processing_utils.parsers.table_parser import TableParser
 from invoice_processing_utils.table_remover import TableRemover
-from parsers.table_parser import TableParser
 from text_handler.cells_creator import CellsCreator
 from text_handler.text_reader import TextReader
 from text_handler.words_converter import WordsConverter

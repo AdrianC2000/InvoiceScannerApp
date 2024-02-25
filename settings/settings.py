@@ -1,5 +1,6 @@
 import json
-from parsers.json_encoder import JsonEncoder
+
+from invoice_processing_utils.parsers.json_encoder import JsonEncoder
 
 
 def get_configuration() -> json:

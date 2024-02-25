@@ -11,7 +11,7 @@ from entities.key_data_processing.key_data import KeyData
 from extractors.key_data_extractor.person_values_extractor import PersonValuesExtractor
 from extractors.value_finding_status import ValueFindingStatus
 from invoice_processing_utils.common_utils import save_image
-from parsers.key_data_parser import KeyDataParser
+from invoice_processing_utils.parsers.key_data_parser import KeyDataParser
 
 
 class KeyDataProcessor:
