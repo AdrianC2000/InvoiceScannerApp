@@ -47,7 +47,7 @@ class InvoiceInfoProcessor:
                 return InvoiceInfoResponse(404, self.__ERROR_MESSAGE, None)
 
     def _prepare_configuration(self, filename: str):
-        invoice_directory = self.__entire_flow_directory + filename
+        invoice_directory = self.__entire_flow_directory + filename + "/"
         if not os.path.exists(invoice_directory):
             os.makedirs(invoice_directory)
         ConfigConsts.DIRECTORY_TO_SAVE = invoice_directory
