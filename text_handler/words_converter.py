@@ -85,4 +85,4 @@ class WordsConverter:
         writer = pd.ExcelWriter(ConfigConsts.DIRECTORY_TO_SAVE + self.__EXTRACTED_TABLE_OUTPUT_PATH_PREFIX,
                                 engine='xlsxwriter', engine_kwargs={'options': {'strings_to_numbers': True}})
         df.to_excel(writer, sheet_name='Extracted table', index=False)
-        writer.save()
+        writer.close()
