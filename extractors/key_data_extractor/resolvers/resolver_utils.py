@@ -1,7 +1,7 @@
 from entities.key_data_processing.block_position import BlockPosition
 from entities.key_data_processing.matching_block import MatchingBlock
 from entities.common.position import Position
-from invoice_processing_utils.common_utils import check_percentage_inclusion
+from invoice_processing_utils.common_utils import check_percentage_inclusion, check_percentage_coverage
 
 
 def remove_redundant_lines(matching_block: MatchingBlock) -> MatchingBlock:
@@ -29,7 +29,8 @@ def get_closest_block_on_the_right(all_blocks: list[BlockPosition], key_row_posi
     return block_on_the_right
 
 
-def _find_closest_block_on_the_right(all_blocks, key_row_position, row_starting_y, row_ending_y) -> BlockPosition:
+def _find_closest_block_on_the_right(all_blocks: list[BlockPosition], key_row_position: Position,
+                                     row_starting_y: int, row_ending_y: int) -> BlockPosition:
     closest_block_on_the_right, closest_distance = None, 10000
     for block in all_blocks:
         percentage = check_percentage_inclusion(row_starting_y, row_ending_y, block.position.starting_y,
@@ -43,29 +44,30 @@ def _find_closest_block_on_the_right(all_blocks, key_row_position, row_starting_
     return closest_block_on_the_right
 
 
-def get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x):
+def get_closest_block_below(all_blocks: list[BlockPosition], key_row_position: Position, row_starting_x: int,
+                            row_ending_x: int) -> BlockPosition:
     """ Finding the closest block below the block with the key word based on the position of the key words row """
-    threshold = 300
+    threshold = 100
     extended_row_starting_x = row_starting_x - threshold
     extended_row_ending_x = row_ending_x + threshold
     try:
-        block_below = _get_closest_block_below(all_blocks, key_row_position,
-                                               extended_row_starting_x, extended_row_ending_x)
+        block_below = _get_closest_block_below(all_blocks, key_row_position, extended_row_starting_x,
+                                               extended_row_ending_x)
     except IndexError:
-        block_below = _get_closest_block_below(all_blocks, key_row_position,
-                                               row_starting_x, row_ending_x)
+        block_below = _get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x)
     return block_below
 
 
-def _get_closest_block_below(all_blocks, key_row_position, row_starting_x, row_ending_x):
+def _get_closest_block_below(all_blocks: list[BlockPosition], key_row_position: Position, row_starting_x: int,
+                             row_ending_x: int) -> BlockPosition:
     closest_block_below, closest_distance = None, 10000
     for block in all_blocks:
-        percentage = check_percentage_inclusion(row_starting_x, row_ending_x, block.position.starting_x,
-                                                block.position.ending_x)
+        percentage = check_percentage_coverage(block.position.starting_x, block.position.ending_x, row_starting_x,
+                                               row_ending_x)
         if percentage != 0:
             row_ending_y = key_row_position.ending_y
             block_starting_y = block.position.starting_y
-            if ((block_starting_y - row_ending_y) < closest_distance) and (row_ending_y < block_starting_y):
+            if ((block_starting_y - row_ending_y) < closest_distance) and (row_ending_y <= block_starting_y):
                 closest_block_below = block
                 closest_distance = block_starting_y - row_ending_y
     return closest_block_below

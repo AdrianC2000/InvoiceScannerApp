@@ -51,6 +51,22 @@ def process_all_word_patterns(all_patterns: list[str], word: str) -> float:
 
 def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
                                outer_object_ending: int) -> float:
+    """ Inclusion means that the object is covered in more than 50% """
+
+    return check_percentage_fit(inner_object_starting, inner_object_ending, outer_object_starting,
+                                outer_object_ending, 50)
+
+
+def check_percentage_coverage(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
+                              outer_object_ending: int) -> float:
+    """ Coverage means that the object is covered in any percentage (but not 0 :)) """
+
+    return check_percentage_fit(inner_object_starting, inner_object_ending, outer_object_starting,
+                                outer_object_ending, 0)
+
+
+def check_percentage_fit(inner_object_starting: int, inner_object_ending: int, outer_object_starting: int,
+                         outer_object_ending: int, coverage: int) -> float:
     """ Given object coordinates in one dimension calculate the percentage of inclusion in another given object,
         example: given starting_x and ending_x of the cell calculate how likely is this cell inside the column that
         starts in the point starting_x1 and ends in the ending_x1 """
@@ -62,12 +78,12 @@ def check_percentage_inclusion(inner_object_starting: int, inner_object_ending: 
     elif inner_object_starting < outer_object_starting < inner_object_ending:
         # Inner object starts before the outer object, but ends inside it
         percentage = calculate_percentage(outer_object_starting, inner_object_ending, inner_object_length)
-        if percentage > 50:
+        if percentage > coverage:
             return percentage
     elif inner_object_starting < outer_object_ending < inner_object_ending:
         # Inner object starts inside the outer object, but ends after it
         percentage = calculate_percentage(inner_object_starting, outer_object_ending, inner_object_length)
-        if percentage > 50:
+        if percentage > coverage:
             return percentage
     return 0
 

@@ -9,7 +9,7 @@ CORS(app)
 app.register_blueprint(invoice_blueprint)
 
 
-def configure_logging():
+def configure_logging(log_level: int):
     log_format = "%(asctime)s [%(levelname)s] %(filename)s %(lineno)d - %(message)s"
     log_file = "resources/app.log"
 
@@ -25,7 +25,7 @@ def configure_logging():
     root_logger.addHandler(file_handler)
     root_logger.addHandler(console_handler)
 
-    root_logger.setLevel(logging.INFO)
+    root_logger.setLevel(log_level)
 
 
 def list_routes():
@@ -37,7 +37,7 @@ def list_routes():
 
 
 if __name__ == '__main__':
-    configure_logging()
+    configure_logging(logging.INFO)
 
     with app.app_context():
         logging.info(f'Available routes: \n{list_routes()}')

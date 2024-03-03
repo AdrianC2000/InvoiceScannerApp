@@ -70,6 +70,7 @@ class PersonValuesExtractor:
             Return new found responses and information if every key values has been found
         """
 
+        # TODO -> why index 0, when there is a list? Don't remember, looks like a bug, to be analyzed
         below_person_responses = self._search_below(not_found_person_values[0].row_position, self.__all_blocks,
                                                     person_type)
         new_person_responses = [response for response in below_person_responses if

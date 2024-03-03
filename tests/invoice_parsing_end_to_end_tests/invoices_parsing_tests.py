@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import unittest
 
@@ -9,6 +10,7 @@ from PIL import Image
 from numpy import ndarray
 from pdf2image import convert_from_path
 
+from app import configure_logging
 from invoice_processing_utils.parsers.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
 
@@ -20,6 +22,7 @@ class InvoicesParsingTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        configure_logging(logging.INFO)
         warnings.simplefilter('ignore', category=DeprecationWarning)
         warnings.simplefilter('ignore', category=FutureWarning)
         warnings.simplefilter('ignore', category=ResourceWarning)
@@ -37,7 +40,7 @@ class InvoicesParsingTests(unittest.TestCase):
 
     # @unittest.skip('Comment this line to run the following test')
     def test_single_invoice(self):
-        filename = "test_invoice_10.png"
+        filename = "test_invoice_12.png"
         actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
         self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
