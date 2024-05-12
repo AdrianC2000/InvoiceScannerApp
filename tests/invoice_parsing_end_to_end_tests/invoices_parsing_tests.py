@@ -28,7 +28,7 @@ class InvoicesParsingTests(unittest.TestCase):
         warnings.simplefilter('ignore', category=ResourceWarning)
         cls.maxDiff = None
 
-    @unittest.skip('Comment this line to run the following test')
+    # @unittest.skip('Comment this line to run the following test')
     def test_every_invoice(self):
         for file in os.listdir(self.__INVOICES_SET):
             filename = os.fsdecode(file)
@@ -38,9 +38,9 @@ class InvoicesParsingTests(unittest.TestCase):
             with self.subTest(expected_output=expected_output, msg=filename):
                 self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")
 
-    # @unittest.skip('Comment this line to run the following test')
+    @unittest.skip('Comment this line to run the following test')
     def test_single_invoice(self):
-        filename = "test_invoice_12.png"
+        filename = "test_invoice_15.png"
         actual_output, expected_output = self.get_expected_and_actual_outputs(filename)
 
         self.assertEqual(expected_output, actual_output, f"Invoice {filename} incorrect!")

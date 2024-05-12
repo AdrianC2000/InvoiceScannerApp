@@ -111,6 +111,8 @@ class PersonValuesExtractor:
                 old_row_position = old_response_for_key_word[0].row_position
                 row_list = [TextPosition("", old_row_position), TextPosition("", new_response.row_position)]
                 new_response.row_position = calculate_common_data_position(row_list)
+                if new_response.value != "" and new_response.value != old_response_for_key_word[0].value:
+                    new_response.status = ValueFindingStatus.FOUND
         return new_responses
 
     def _get_right_responses(self, new_person_responses: list[SearchResponse],

@@ -9,7 +9,7 @@ from extractors.key_data_extractor.resolvers.resolver_utils import has_numbers
 
 class PersonInfoResolver:
 
-    __ADDRESS_PATTERNS = ["ul", "al", "os"]
+    __ADDRESS_PATTERNS = ["ul", "al", "os", "ui", "ai", '0s']
     __NIP_PATTERNS = ["nip"]
 
     def __init__(self, matching_block: MatchingBlock, person_type: str, is_preliminary: bool):
