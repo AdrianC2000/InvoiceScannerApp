@@ -21,3 +21,11 @@ class Position:
     @property
     def ending_y(self) -> int:
         return self.__ending_y
+
+    def __eq__(self, other):
+        if isinstance(other, Position):
+            return (self.__starting_x == other.__starting_x and
+                    self.__starting_y == other.__starting_y and
+                    self.__ending_x == other.__ending_x and
+                    self.__ending_y == other.__ending_y)
+        return False
