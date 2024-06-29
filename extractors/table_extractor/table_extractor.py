@@ -43,5 +43,7 @@ class TableExtractor:
     def _assign_table(gray_invoice: ndarray, height, width, x, y) -> ndarray:
         try:
             return gray_invoice[y - 2:y + height + 2, x - 2:x + width + 2]
-        except IndexError:
-            return gray_invoice[y:y + height, x:x + width]
+        except IndexError as e:
+            logging.error(f'Table in the given invoice was too close to the borders and thus would be processed '
+                          f'incorrectly.')
+            raise e

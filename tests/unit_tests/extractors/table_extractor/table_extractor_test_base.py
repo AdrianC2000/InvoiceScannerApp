@@ -1,4 +1,3 @@
-import os
 from typing import Tuple
 
 import cv2
@@ -40,7 +39,7 @@ class TableExtractorTestBase:
         return np.array(Image.open(path))
 
     @staticmethod
-    def find_subimage_position(main_image: np.ndarray, sub_image: np.ndarray, should_crop_image: bool = True):
+    def find_subimage_position(main_image: np.ndarray, sub_image: np.ndarray):
         result = cv2.matchTemplate(main_image, sub_image, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
@@ -52,8 +51,5 @@ class TableExtractorTestBase:
         ending_x = starting_x + width
         ending_y = starting_y + height
 
-        if should_crop_image:
-            # Cropping reversal
-            return Position(starting_x + 2, starting_y + 2, ending_x - 2, ending_y - 2)
-        else:
-            return Position(starting_x, starting_y, ending_x, ending_y)
+        # Cropping reversal
+        return Position(starting_x + 2, starting_y + 2, ending_x - 2, ending_y - 2)
