@@ -11,7 +11,7 @@ from entities.key_data_processing.key_data import KeyData
 from extractors.key_data_extractor.person_values_extractor import PersonValuesExtractor
 from extractors.value_finding_status import ValueFindingStatus
 from invoice_processing_utils.common_utils import save_image
-from invoice_processing_utils.parsers.key_data_parser import KeyDataParser
+from processors.parsers.key_data_parser import KeyDataParser
 
 
 class KeyDataProcessor:
@@ -21,6 +21,7 @@ class KeyDataProcessor:
 
     def __init__(self):
         self.__invoice = None
+        self.__key_data_parser = KeyDataParser()
 
     def extract_key_data(self, invoice: ndarray) -> KeyData:
         self.__invoice = invoice
@@ -33,7 +34,7 @@ class KeyDataProcessor:
                                                   preliminary_extracted_keys_values,
                                                   preliminary_extracted_person_values)
 
-        return KeyDataParser(final_data).parse_key_data()
+        return self.__key_data_parser.parse_key_data(final_data)
 
     def _get_values_extractors(self) -> tuple[KeyValuesExtractor, PersonValuesExtractor]:
         blocks_lines_with_position = BlocksExtractor(self.__invoice).read_blocks()

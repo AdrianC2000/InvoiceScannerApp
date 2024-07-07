@@ -3,7 +3,7 @@ import re
 
 from werkzeug.datastructures import FileStorage
 
-from entities.common.invoice_info_response import InvoiceInfoResponse
+from processors.model.invoice_info_response import InvoiceInfoResponse
 from invoice_processing_utils.format_unifier import InvoiceFormatUnifier
 from processors.invoice_info_processor import InvoiceInfoProcessor
 

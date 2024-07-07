@@ -8,7 +8,7 @@ from flask_restx import Api, Resource, reqparse
 from werkzeug.datastructures import FileStorage
 
 from api.routes_handlers import get_invoices_info
-from entities.common.invoice_info_response import InvoiceInfoResponse
+from processors.model.invoice_info_response import InvoiceInfoResponse
 from settings.json_configurator import JsonConfigurator
 from settings.settings import dump_to_json, get_configuration, set_configuration
 

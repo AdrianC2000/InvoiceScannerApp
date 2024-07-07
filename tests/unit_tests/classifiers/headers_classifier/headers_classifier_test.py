@@ -2,14 +2,14 @@ import unittest
 
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from classifiers.headers_classifier.model.matching_headers import MatchingHeaders
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from classifiers.headers_classifier.model.confidence_calculation import ConfidenceCalculation
 from classifiers.headers_classifier.model.matching_header import MatchingHeader
 from entities.table_processing.row_content import RowContent
 from tests.unit_tests.classifiers.headers_classifier.headers_classifier_test_base import HeadersClassifierTestBase
 from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path
 
 
-class HeadersClassifierTest(HeadersClassifierTestBase, unittest.TestCase):
+class HeadersClassifierTest(HeadersClassifierTestBase):
 
     def setUp(self):
         cd_to_project_root_path()

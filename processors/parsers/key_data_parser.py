@@ -5,12 +5,10 @@ from entities.key_data_processing.key_data import KeyData
 
 class KeyDataParser:
 
-    def __init__(self, search_responses: list[SearchResponse]):
-        self.__search_responses = search_responses
-
-    def parse_key_data(self) -> KeyData:
+    @staticmethod
+    def parse_key_data(search_responses: list[SearchResponse]) -> KeyData:
         key_data = dict()
-        for key_response in self.__search_responses:
+        for key_response in search_responses:
             if key_response.status == ValueFindingStatus.FOUND:
                 key_data[key_response.key_word] = key_response.value
             else:

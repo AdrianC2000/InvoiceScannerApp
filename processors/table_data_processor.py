@@ -1,10 +1,10 @@
 from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
 from columns_seperator.columns_separator import ColumnsSeparator
-from entities.table_processing.parsed_table import ParsedTable
+from processors.model.parsed_table import ParsedTable
 from extractors.table_extractor.table_extractor import TableExtractor
 from invoice_processing_utils.common_utils import save_image
-from invoice_processing_utils.parsers.table_parser import TableParser
+from processors.parsers.table_parser import TableParser
 from invoice_processing_utils.table_remover import TableRemover
 from text_handler.cells_creator import CellsCreator
 from text_handler.text_reader import TextReader
@@ -19,6 +19,7 @@ class TableDataProcessor:
     def __init__(self):
         self.__table_extractor = TableExtractor()
         self.__headers_classifier = HeadersClassifier()
+        self.__table_parser = TableParser()
 
     def extract_table_data(self, invoice: ndarray) -> tuple[ParsedTable, ndarray]:
         table_position = self.__table_extractor.extract_table(invoice)
@@ -33,7 +34,7 @@ class TableDataProcessor:
         invoice_table_removed = TableRemover(invoice, table_position.position, rotated_table).remove_table()
         save_image(self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
 
-        table = TableParser(assigned_headers, cells_in_row_content).get_table_content()
+        table = self.__table_parser.get_table_content(assigned_headers, cells_in_row_content)
         return table, invoice_table_removed
 
     @staticmethod

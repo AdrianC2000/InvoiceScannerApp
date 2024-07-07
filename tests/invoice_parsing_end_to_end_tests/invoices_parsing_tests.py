@@ -11,7 +11,7 @@ from numpy import ndarray
 from pdf2image import convert_from_path
 
 from app import configure_logging
-from invoice_processing_utils.parsers.json_encoder import JsonEncoder
+from invoice_processing_utils.json_encoder import JsonEncoder
 from processors.invoice_info_processor import InvoiceInfoProcessor
 
 
