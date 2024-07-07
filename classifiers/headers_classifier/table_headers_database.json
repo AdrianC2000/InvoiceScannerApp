@@ -1,13 +1,46 @@
-{
-  "ordinal_number": ["lp"],
-  "name": ["nazwa", "towaru", "usługi", "usługa", "rozliczenie", "z", "tytułu", "opis"],
-  "pkwiu": ["pkwiu"],
-  "quantity": ["ilość", "zużycie"],
-  "unit_of_measure": ["jm"],
-  "gross_price": ["cena", "jednostkowa", "jedn", "brutto", "kwota", "zł"],
-  "net_price": ["cena", "jednostkowa", "jedn", "netto", "kwota", "zł"],
-  "net_value": ["wartość", "netto", "zł"],
-  "vat": ["stawka", "vat", "%"],
-  "vat_value": ["wartość", "kwota", "vat", "zł"],
-  "gross_value": ["wartość", "brutto", "zł"]
-}
+[
+  {
+    "header_name": "ordinal_number",
+    "patterns_set": ["lp"]
+  },
+  {
+    "header_name": "name",
+    "patterns_set": ["nazwa", "towaru", "usługi", "usługa", "rozliczenie", "z", "tytułu", "opis"]
+  },
+  {
+    "header_name": "pkwiu",
+    "patterns_set": ["pkwiu"]
+  },
+  {
+    "header_name": "quantity",
+    "patterns_set": ["ilość", "ilosc", "zużycie", "zuzycie"]
+  },
+  {
+    "header_name": "unit_of_measure",
+    "patterns_set": ["jm"]
+  },
+  {
+    "header_name": "gross_price",
+    "patterns_set": ["cena", "jednostkowa", "jedn", "brutto", "kwota", "zł"]
+  },
+  {
+    "header_name": "net_price",
+    "patterns_set": ["cena", "jednostkowa", "jedn", "netto", "kwota", "zł"]
+  },
+  {
+    "header_name": "net_value",
+    "patterns_set": ["wartość", "netto", "zł"]
+  },
+  {
+    "header_name": "vat",
+    "patterns_set": ["stawka", "vat", "%"]
+  },
+  {
+    "header_name": "vat_value",
+    "patterns_set": ["wartość", "kwota", "vat", "zł"]
+  },
+  {
+    "header_name": "gross_value",
+    "patterns_set": ["wartość", "brutto", "zł"]
+  }
+]

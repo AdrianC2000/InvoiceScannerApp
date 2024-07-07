@@ -3,5 +3,6 @@ from typing import List
 
 
 @dataclass
-class RowContent:
-    cells_content: List[str]
+class HeaderPatterns:
+    header_name: str
+    patterns_set: List[str]

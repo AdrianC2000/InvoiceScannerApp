@@ -18,6 +18,7 @@ class TableDataProcessor:
 
     def __init__(self):
         self.__table_extractor = TableExtractor()
+        self.__headers_classifier = HeadersClassifier()
 
     def extract_table_data(self, invoice: ndarray) -> tuple[ParsedTable, ndarray]:
         table_position = self.__table_extractor.extract_table(invoice)
@@ -27,13 +28,12 @@ class TableDataProcessor:
         text_with_position = TextReader(rotated_table).read_words()
         cells_with_words = CellsCreator(text_with_position, cells_in_columns).align_words_to_cells()
         cells_in_row_content = WordsConverter(cells_with_words).merge_words_into_phrases()
-        columns_ordered = HeadersClassifier(cells_in_row_content[0]).find_corresponding_columns()
-        self._check_confidences(columns_ordered)
+        assigned_headers = self.__headers_classifier.assign_corresponding_headers(cells_in_row_content[0])
 
         invoice_table_removed = TableRemover(invoice, table_position.position, rotated_table).remove_table()
         save_image(self.__INVOICE_WITHOUT_TABLE_OUTPUT_PATH_PREFIX, invoice_table_removed)
 
-        table = TableParser(columns_ordered, cells_in_row_content).get_table_content()
+        table = TableParser(assigned_headers, cells_in_row_content).get_table_content()
         return table, invoice_table_removed
 
     @staticmethod
@@ -43,9 +43,3 @@ class TableDataProcessor:
                 raise ValueError("Incorrect invoice table - only 4 or less columns detected.")
         else:
             raise ValueError("Incorrect invoice table - detected columns do not have the same amount of cells.")
-
-    @staticmethod
-    def _check_confidences(columns_ordered):
-        all_confidences = [matching_header.confidence_calculation.confidence for matching_header in columns_ordered]
-        if sum(all_confidences) / len(all_confidences) < 0.3:
-            raise ValueError("Incorrect invoice table - cannot match headers content to known header values.")

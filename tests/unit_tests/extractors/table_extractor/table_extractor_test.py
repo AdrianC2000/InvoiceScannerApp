@@ -13,7 +13,7 @@ class TableExtractorTest(TableExtractorTestBase, unittest.TestCase):
 
     def test_should_return_correct_table_position_when_correct_invoice_1(self):
         # Given
-        preprocess_correct_invoice, expected_table_image = self.get_sample_correct_invoice_one_with_result()
+        preprocess_correct_invoice, expected_table_image = self.get_sample_correct_invoice_one_with_expected_result()
 
         # When
         result = self.__under_test.extract_table(preprocess_correct_invoice)
@@ -23,7 +23,7 @@ class TableExtractorTest(TableExtractorTestBase, unittest.TestCase):
 
     def test_should_return_table_position_when_correct_invoice_2(self):
         # Given
-        preprocess_correct_invoice, expected_table_image = self.get_sample_correct_invoice_two_with_result()
+        preprocess_correct_invoice, expected_table_image = self.get_sample_correct_invoice_two_with_expected_result()
 
         # When
         result = self.__under_test.extract_table(preprocess_correct_invoice)
@@ -33,7 +33,7 @@ class TableExtractorTest(TableExtractorTestBase, unittest.TestCase):
 
     def test_should_return_some_bordered_object_when_incorrect_invoice_with_borderless_table(self):
         # Given
-        preprocess_correct_invoice, expected_table_image = self.get_sample_invoice_without_table()
+        preprocess_correct_invoice, expected_table_image = self.get_sample_invoice_without_table_with_expected_result()
 
         # When
         result = self.__under_test.extract_table(preprocess_correct_invoice)
@@ -43,7 +43,7 @@ class TableExtractorTest(TableExtractorTestBase, unittest.TestCase):
 
     def test_should_return_some_bordered_object_when_incorrect_invoice_document_type(self):
         # Given
-        preprocess_correct_invoice, expected_table_image = self.get_sample_inorrect_document()
+        preprocess_correct_invoice, expected_table_image = self.get_sample_incorrect_document_with_expected_result()
 
         # When
         result = self.__under_test.extract_table(preprocess_correct_invoice)
