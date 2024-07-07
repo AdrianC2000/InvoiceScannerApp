@@ -3,9 +3,9 @@ import numpy as np
 
 from statistics import mean
 from numpy import ndarray
-from entities.table_processing.line import Line
-from entities.table_processing.line_property import LineProperty
-from entities.table_processing.table_lines import TableLines
+from columns_seperator.model.line import Line
+from columns_seperator.model.line_property import LineProperty
+from columns_seperator.model.table_lines import TableLines
 
 
 class ContoursDefiner:

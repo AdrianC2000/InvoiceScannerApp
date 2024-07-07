@@ -1,5 +1,6 @@
 from entities.key_data_processing.key_data import KeyData
-from entities.table_processing.parsed_table import ParsedTable
+from processors.model.parsed_table import ParsedTable
+from processors.model.table_product import TableProduct
 
 
 class InvoiceInfo:
@@ -18,7 +19,7 @@ class InvoiceInfo:
             self.__listing_date = parsed_data.listing_date
 
     @property
-    def table_products(self) -> ParsedTable.table_products:
+    def table_products(self) -> list[TableProduct]:
         return self.__table_products
 
     @property

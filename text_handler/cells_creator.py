@@ -1,10 +1,10 @@
 import logging
 
-from entities.table_processing.cell import Cell
-from entities.table_processing.column import Column
+from text_handler.model.cell import Cell
+from columns_seperator.model.column import Column
 from entities.common.position import Position
-from entities.table_processing.row import Row
-from entities.table_processing.table import Table
+from text_handler.model.row import Row
+from text_handler.model.table import Table
 from entities.common.text_position import TextPosition
 from invoice_processing_utils.common_utils import check_percentage_inclusion
 

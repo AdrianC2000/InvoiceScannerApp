@@ -4,7 +4,7 @@ from numpy import ndarray
 from columns_seperator.contours_definer import ContoursDefiner
 from columns_seperator.image_rotator import ImageRotator
 from entities.common.position import Position
-from entities.table_processing.column import Column
+from columns_seperator.model.column import Column
 from invoice_processing_utils.common_utils import save_image
 from settings.config_consts import ConfigConsts
 

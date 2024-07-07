@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from classifiers.headers_classifier.model.confidence_calculation import ConfidenceCalculation
 
 
 @dataclass

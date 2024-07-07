@@ -7,8 +7,8 @@ import warnings
 from PIL import Image
 from numpy import ndarray
 from columns_seperator.contours_definer import ContoursDefiner
-from entities.table_processing.line import Line
-from entities.table_processing.line_property import LineProperty
+from columns_seperator.model.line import Line
+from columns_seperator.model.line_property import LineProperty
 from settings.config_consts import ConfigConsts
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)

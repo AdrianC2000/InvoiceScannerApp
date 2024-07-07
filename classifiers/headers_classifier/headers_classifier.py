@@ -6,7 +6,7 @@ from classifiers.headers_classifier.model.header_patterns import HeaderPatterns
 from classifiers.headers_classifier.model.matching_headers import MatchingHeaders
 from classifiers.headers_classifier.model.table_headers_patterns import TableHeadersPatterns
 from classifiers.headers_classifier.model.matching_header import MatchingHeader
-from entities.table_processing.confidence_calculation import ConfidenceCalculation
+from classifiers.headers_classifier.model.confidence_calculation import ConfidenceCalculation
 from entities.table_processing.row_content import RowContent
 from invoice_processing_utils.common_utils import prepare_word, process_all_word_patterns
 

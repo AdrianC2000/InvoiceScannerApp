@@ -2,7 +2,7 @@ import warnings
 import pandas as pd
 
 from entities.table_processing.row_content import RowContent
-from entities.table_processing.table import Table
+from text_handler.model.table import Table
 from invoice_processing_utils.common_utils import check_percentage_inclusion, SIGNS_WITHOUT_SPACE_AFTER, \
     SIGNS_WITHOUT_SPACE_BEFORE
 from settings.config_consts import ConfigConsts
