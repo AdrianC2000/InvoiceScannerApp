@@ -7,20 +7,16 @@ from entities.common.position import Position
 
 class TableRemover:
 
-    def __init__(self, invoice: ndarray, position: Position, cut_table: ndarray):
-        self.__invoice = invoice
-        self.__position = position
-        self.__cut_table = cut_table
+    @staticmethod
+    def remove_table(invoice: ndarray, position: Position, cut_table: ndarray) -> ndarray:
+        hei_cut, _ = cut_table.shape
+        height, width = invoice.shape
 
-    def remove_table(self) -> ndarray:
-        hei_cut, _ = self.__cut_table.shape
-        height, width = self.__invoice.shape
-
-        desired_height = height - (height - self.__position.starting_y) + hei_cut
-        first_crop_start_height, first_crop_end_height = 0, self.__position.starting_y
+        desired_height = height - (height - position.starting_y) + hei_cut
+        first_crop_start_height, first_crop_end_height = 0, position.starting_y
         second_crop_start_height, second_crop_end_height = desired_height, height
 
-        first_part = self.__invoice[first_crop_start_height:first_crop_end_height, 0:width]
-        second_part = self.__invoice[second_crop_start_height:second_crop_end_height, 0:width]
+        first_part = invoice[first_crop_start_height:first_crop_end_height, 0:width]
+        second_part = invoice[second_crop_start_height:second_crop_end_height, 0:width]
         logging.info('Table removed from the invoice.')
         return np.vstack([first_part, second_part])
