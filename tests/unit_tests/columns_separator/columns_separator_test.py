@@ -11,7 +11,7 @@ class ColumnsSeparatorTest(ColumnsSeparatorTestBase):
 
     def test_should_return_cells_in_columns_with_cropped_and_rotated_table_image(self):
         # Given
-        table_image = self.load_input_table("correct_invoice_with_table_1.png")
+        table_image = self.load_input_table("correct_invoice_table_1.png")
 
         # When
         result_table, cells_in_columns = self.__under_test.separate_cells_in_columns(table_image)
@@ -20,9 +20,7 @@ class ColumnsSeparatorTest(ColumnsSeparatorTestBase):
         rotation_angle = 0.5047955685558208
         cropped_lines = 5
         self.assert_tables_images(table_image, result_table, rotation_angle, cropped_lines)
-
-        self.assertEqual(len(cells_in_columns), 7)  # columns number
-        self.assertEqual(len(cells_in_columns[0].cells), 8)  # rows number
+        self.assert_columns_and_rows_number(cells_in_columns, 7, 8)
 
         # There will always be a * b cells, and its coordinates will be the product of these two arrays
         starting_and_ending_x = [(3, 29), (31, 243), (273, 95), (367, 85), (451, 76), (526, 85), (610, 75)]
@@ -33,7 +31,7 @@ class ColumnsSeparatorTest(ColumnsSeparatorTestBase):
 
     def test_should_return_cells_in_columns_with_cropped_redundant_part_and_rotated_table_image(self):
         # Given
-        table_image = self.load_input_table("correct_invoice_with_table_2.png")
+        table_image = self.load_input_table("correct_invoice_table_2.png")
 
         # When
         result_table, cells_in_columns = self.__under_test.separate_cells_in_columns(table_image)
@@ -42,9 +40,7 @@ class ColumnsSeparatorTest(ColumnsSeparatorTestBase):
         rotation_angle = 0.07811280711021595
         cropped_lines = 39
         self.assert_tables_images(table_image, result_table, rotation_angle, cropped_lines)
-
-        self.assertEqual(len(cells_in_columns), 9)  # columns number
-        self.assertEqual(len(cells_in_columns[0].cells), 4)  # rows number
+        self.assert_columns_and_rows_number(cells_in_columns, 9, 4)
 
         starting_and_ending_x = [(4, 62), (65, 583), (647, 119), (765, 103), (867, 119), (985, 126), (1110, 119),
                                  (1228, 118), (1345, 126)]

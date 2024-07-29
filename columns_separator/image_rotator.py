@@ -15,10 +15,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 class ImageRotator:
     """ Given original table, rotate it based on the tables contours """
 
-    __STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX = "2.5.Table rotated by small angle.png"
+    __STRAIGHTENED_TABLE_OUTPUT_PATH_PREFIX = "correct_invoice_table_1.png"
 
     def rotate_image(self, table_image: ndarray, horizontal_lines: ndarray) -> ndarray:
         first_horizontal_line = self._find_first_horizontal_line(horizontal_lines)
+        if not first_horizontal_line.lines_properties:
+            return table_image
+
         horizontal_line_first_point, horizontal_line_last_point = self._get_horizontal_line_points(
             first_horizontal_line)
         angle = self._calculate_angle(horizontal_line_first_point, horizontal_line_last_point)
