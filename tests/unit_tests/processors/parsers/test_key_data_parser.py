@@ -8,7 +8,7 @@ from processors.parsers.key_data_parser import KeyDataParser
 from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path
 
 
-class KeyDataParserTest(unittest.TestCase):
+class TestKeyDataParser(unittest.TestCase):
 
     def setUp(self):
         cd_to_project_root_path()

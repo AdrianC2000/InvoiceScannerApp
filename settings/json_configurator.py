@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 from settings.settings import get_configuration
 
@@ -57,7 +58,7 @@ class JsonConfigurator:
         invoices_info = self._change_value_for_key(self.__invoices_info, ".", "", self.__NUMERICAL_KEYS)
         return self._change_value_for_key(invoices_info, ",", "", self.__NUMERICAL_KEYS)
 
-    def _change_value_for_key(self, dict_element, value_to_remove: str, replacing_value: str, keys: list):
+    def _change_value_for_key(self, dict_element, value_to_remove: str, replacing_value: str, keys: List[str]):
         if isinstance(dict_element, (str, int, float)):
             return dict_element
         if isinstance(dict_element, dict):
@@ -70,7 +71,7 @@ class JsonConfigurator:
             return dict_element
         return new_element
 
-    def replace_value_in_dict(self, dict_element, keys: list, new_element: dict, replacing_value: str,
+    def replace_value_in_dict(self, dict_element, keys: List[str], new_element: dict, replacing_value: str,
                               value_to_remove: str):
         for element_key, dict_value in dict_element.items():
             if element_key in keys:

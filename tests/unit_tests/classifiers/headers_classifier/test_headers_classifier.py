@@ -9,7 +9,7 @@ from tests.unit_tests.classifiers.headers_classifier.headers_classifier_test_bas
 from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path
 
 
-class HeadersClassifierTest(HeadersClassifierTestBase):
+class TestHeadersClassifier(HeadersClassifierTestBase):
 
     def setUp(self):
         cd_to_project_root_path()
@@ -123,6 +123,3 @@ class HeadersClassifierTest(HeadersClassifierTestBase):
         # Check the exception message
         self.assertEqual(str(context.exception), "Incorrect invoice table - cannot match headers content to known "
                                                  "header values.")
-
-    if __name__ == '__main__':
-        unittest.main()

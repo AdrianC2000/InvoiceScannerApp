@@ -7,7 +7,7 @@ from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path
 from tests.unit_tests.extractors.table_extractor.table_extractor_test_base import TableExtractorTestBase
 
 
-class TableExtractorTest(TableExtractorTestBase, unittest.TestCase):
+class TestTableExtractor(TableExtractorTestBase, unittest.TestCase):
 
     def setUp(self):
         cd_to_project_root_path()
@@ -61,6 +61,3 @@ class TableExtractorTest(TableExtractorTestBase, unittest.TestCase):
         assert_array_equal(result.table_image, expected_table_image)
         calculated_position = self.find_subimage_position(preprocess_correct_invoice, result.table_image)
         self.assertEqual(result.position, calculated_position)
-
-    if __name__ == '__main__':
-        unittest.main()

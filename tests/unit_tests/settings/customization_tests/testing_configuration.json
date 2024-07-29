@@ -39,27 +39,27 @@
         },
         "gross_price": {
             "value": "gross_price",
-            "included": false
+            "included": true
         },
         "net_price": {
             "value": "unit_net_price",
-            "included": false
+            "included": true
         },
         "net_value": {
             "value": "net_price",
             "included": true
         },
         "vat": {
-            "value": "tax_symbol",
+            "value": "vat",
             "included": true
         },
         "vat_value": {
             "value": "vat_value",
-            "included": false
+            "included": true
         },
         "gross_value": {
             "value": "gross_value",
-            "included": false
+            "included": true
         },
         "invoice_number": {
             "value": "number",

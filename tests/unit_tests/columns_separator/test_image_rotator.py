@@ -9,7 +9,7 @@ from tests.unit_tests.columns_separator.image_rotator_test_base import ImageRota
 from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path, image_to_binary, load_file
 
 
-class ImageRotatorTest(ImageRotatorTestBase,  unittest.TestCase):
+class TestImageRotator(ImageRotatorTestBase,  unittest.TestCase):
 
     def setUp(self):
         cd_to_project_root_path()

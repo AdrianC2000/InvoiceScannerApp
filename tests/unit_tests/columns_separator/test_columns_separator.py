@@ -3,7 +3,7 @@ from tests.unit_tests.columns_separator.columns_separator_test_base import Colum
 from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path
 
 
-class ColumnsSeparatorTest(ColumnsSeparatorTestBase):
+class TestColumnsSeparator(ColumnsSeparatorTestBase):
 
     def setUp(self):
         cd_to_project_root_path()

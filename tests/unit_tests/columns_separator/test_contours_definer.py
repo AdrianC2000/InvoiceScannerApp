@@ -7,7 +7,7 @@ from tests.unit_tests.columns_separator.contours_definer_test_base import Contou
 from tests.unit_tests.common_unit_tests_utils import cd_to_project_root_path, image_to_binary
 
 
-class ContoursDefinerTest(ContoursDefinerTestBase, unittest.TestCase):
+class TestContoursDefiner(ContoursDefinerTestBase, unittest.TestCase):
 
     def setUp(self):
         cd_to_project_root_path()
