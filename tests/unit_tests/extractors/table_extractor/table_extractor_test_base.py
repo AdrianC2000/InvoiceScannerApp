@@ -2,41 +2,22 @@ from typing import Tuple
 
 import cv2
 import numpy as np
-from PIL import Image
 from numpy import ndarray
 
 from entities.common.position import Position
+from tests.unit_tests.common_unit_tests_utils import load_file
 
 
 class TableExtractorTestBase:
 
-    __TEST_INPUT_DOCUMENTS_BASE_PATH = "../test_resources/preprocessed_input_documents"
-    __TEST_EXPECTED_TABLES_BASE_PATH = "expected_tables"
+    __BASE_TEST_PATH = "tests/unit_tests/extractors"
+    __TEST_INPUT_DOCUMENTS_BASE_PATH = f"{__BASE_TEST_PATH}/test_resources/preprocessed_input_documents"
+    __TEST_EXPECTED_TABLES_BASE_PATH = f"{__BASE_TEST_PATH}/table_extractor/expected_tables"
 
-    def get_sample_correct_invoice_one_with_expected_result(self) -> Tuple[ndarray, ndarray]:
-        file_name = "correct_invoice_with_table_1.png"
-        return self._input_and_expected_table(file_name)
-
-    def get_sample_correct_invoice_two_with_expected_result(self) -> Tuple[ndarray, ndarray]:
-        file_name = "correct_invoice_with_table_2.png"
-        return self._input_and_expected_table(file_name)
-
-    def get_sample_invoice_without_table_with_expected_result(self) -> Tuple[ndarray, ndarray]:
-        file_name = "incorrect_invoice_with_borderless_table.png"
-        return self._input_and_expected_table(file_name)
-
-    def get_sample_incorrect_document_with_expected_result(self) -> Tuple[ndarray, ndarray]:
-        file_name = "incorrect_document.png"
-        return self._input_and_expected_table(file_name)
-
-    def _input_and_expected_table(self, file_name: str) -> Tuple[ndarray, ndarray]:
-        input_invoice = self._load_file(f"{self.__TEST_INPUT_DOCUMENTS_BASE_PATH}/{file_name}")
-        expected_output = self._load_file(f"{self.__TEST_EXPECTED_TABLES_BASE_PATH}/{file_name}")
+    def input_and_expected_table(self, file_name: str) -> Tuple[ndarray, ndarray]:
+        input_invoice = load_file(f"{self.__TEST_INPUT_DOCUMENTS_BASE_PATH}/{file_name}")
+        expected_output = load_file(f"{self.__TEST_EXPECTED_TABLES_BASE_PATH}/{file_name}")
         return input_invoice, expected_output
-
-    @staticmethod
-    def _load_file(path: str) -> ndarray:
-        return np.array(Image.open(path))
 
     @staticmethod
     def find_subimage_position(main_image: np.ndarray, sub_image: np.ndarray):

@@ -3,9 +3,9 @@ import numpy as np
 
 from statistics import mean
 from numpy import ndarray
-from columns_seperator.model.line import Line
-from columns_seperator.model.line_property import LineProperty
-from columns_seperator.model.table_lines import TableLines
+from columns_separator.model.line import Line
+from columns_separator.model.line_property import LineProperty
+from columns_separator.model.table_lines import TableLines
 
 
 class ContoursDefiner:
@@ -48,13 +48,13 @@ class ContoursDefiner:
                                                      cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         return table_contours_image
 
-    def fix_contours(self) -> ndarray:
+    def calculate_fixed_contours(self) -> ndarray:
         horizontal_lines_separated, _ = self._separate_lines(self.__horizontal_lines)
         vertical_lines_separated, height = self._separate_lines(self.__vertical_lines.transpose())
         _, width = self.__horizontal_lines.shape
 
-        horizontal_single_lines = self._find_middle_lines(horizontal_lines_separated, height, width)
-        vertical_single_lines = self._find_middle_lines(vertical_lines_separated, width, height).transpose()
+        horizontal_single_lines = self._calculate_mean_lines(horizontal_lines_separated, height, width)
+        vertical_single_lines = self._calculate_mean_lines(vertical_lines_separated, width, height).transpose()
 
         return cv2.bitwise_or(horizontal_single_lines, vertical_single_lines).astype(np.uint8)
 
@@ -67,11 +67,11 @@ class ContoursDefiner:
         all_horizontal_lines = list of Line objects, which are the lists of LineProperty objects that are the
                                indexes of a line single row and its content
         last_elements = list of last 255 elements in each row
-        last_elements_indexes = list of maximum last elements from each line -> the minimum of it will be equal to the
+        last_element_indexes = list of maximum last elements from each line -> the minimum of it will be equal to the
                                 height - this value will be used to cut the redundant part of the table
         """
 
-        all_horizontal_lines, single_line, last_element_indexes, last_elements = list(), list(), list(), list()
+        all_horizontal_lines, single_line, last_elements, last_element_indexes = list(), list(), list(), list()
         next_zero_break = False
         for index, line in enumerate(horizontal_lines):
             if not np.all(line == 0):
@@ -87,7 +87,7 @@ class ContoursDefiner:
         return TableLines(all_horizontal_lines), height
 
     @staticmethod
-    def _find_middle_lines(table_lines: TableLines, height: int, width: int) -> ndarray:
+    def _calculate_mean_lines(table_lines: TableLines, height: int, width: int) -> ndarray:
         """ Method calculates mean position of every line, and return perfectly aligned contours of the table,
         out of which the cells positions will be calculated. """
         middle_lines = np.zeros(shape=(height, width))

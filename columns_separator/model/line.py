@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from columns_seperator.model.line_property import LineProperty
+from columns_separator.model.line_property import LineProperty
 
 
 @dataclass

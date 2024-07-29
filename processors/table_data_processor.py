@@ -1,6 +1,6 @@
 from numpy import ndarray
 from classifiers.headers_classifier.headers_classifier import HeadersClassifier
-from columns_seperator.columns_separator import ColumnsSeparator
+from columns_separator.columns_separator import ColumnsSeparator
 from processors.model.parsed_table import ParsedTable
 from extractors.table_extractor.table_extractor import TableExtractor
 from invoice_processing_utils.common_utils import save_image

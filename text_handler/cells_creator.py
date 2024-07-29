@@ -2,7 +2,7 @@ import logging
 from typing import List, Tuple
 
 from text_handler.model.cell import Cell
-from columns_seperator.model.column import Column
+from columns_separator.model.column import Column
 from entities.common.position import Position
 from text_handler.model.row import Row
 from text_handler.model.table import Table
